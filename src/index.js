@@ -14,6 +14,7 @@ app.set("view engine", "ejs");
 app.set("views", join(__dirname, "views"));
 app.use(indexRouter);
 app.listen(port);
+app.use(express.static(join(__dirname, "public")));
 
 
 
