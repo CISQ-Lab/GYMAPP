@@ -1,4 +1,4 @@
-function Sidebar() {
+function Sidebar({minimized, onToggle}) {
 
     const MenuItems = [
         "Dashboard",
@@ -11,10 +11,13 @@ function Sidebar() {
     ]
 
     return (
-        <aside className="w-64 h-screen bg-gray-800 text-white p-4">
+        <aside className={`h-screen bg-gray-800 text-white p-4 transition-all duration-300 ease-in-out ${minimized ? 'w-20' : 'w-64'}`}>
             <nav >
+                <button onClick={onToggle}>
+                    {minimized ? "Expandir" : "Contraer"}
+                </button>
                 <ul className="space-y-4">
-                    {MenuItems.map((item, index) => (
+                    {minimized ? <p>GYM</p> : MenuItems.map((item, index) => (
                         <li key={index}>
                             <a href={`/${item.toLowerCase()}`}
                             className="block px-4 py-2 rounded hover:bg-gray-700">

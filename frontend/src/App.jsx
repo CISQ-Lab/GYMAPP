@@ -4,14 +4,13 @@
 //import heroImg from './assets/hero.png'
 //import './App.css'
 import Layout from './components/Layout'
+import Dashboard from './pages/DashBoard'
 
 function App() {
   return (
     <>
       <Layout>
-        <h1>
-          Dashboard
-        </h1>
+        <Dashboard />
       </Layout>
     </>
   )
