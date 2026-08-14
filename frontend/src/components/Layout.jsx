@@ -10,10 +10,9 @@ function Layout({ children }) {
 
     return (
         <div className="min-h-screen bg-gray-100">
-            <Navbar />
+            <Navbar sidebarMinimized={sidebarMinimized} onToggle={() => setSidebarMinimized(!sidebarMinimized)} />
             <div className="flex">
-                <Sidebar minimized={sidebarMinimized} 
-                onToggle={() => setSidebarMinimized(!sidebarMinimized)} />
+                <Sidebar minimized={sidebarMinimized} />
                 <main className="flex-1 p-6 bg-gray-400">
                     {children}
                 </main>
