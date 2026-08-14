@@ -4,14 +4,13 @@
 //import heroImg from './assets/hero.png'
 //import './App.css'
 import Layout from './components/Layout'
-import Dashboard from './pages/DashBoard'
+import Dashboard from './pages/gymPages/DashBoard'
+import AppRoutes from './routes/AppRoutes'
 
 function App() {
   return (
     <>
-      <Layout>
-        <Dashboard />
-      </Layout>
+      <AppRoutes/>
     </>
   )
 }

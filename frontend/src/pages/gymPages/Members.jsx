@@ -1,6 +1,6 @@
-import StatCard from "../components/cards/StatCard";
+import StatCard from "../../components/cards/StatCard";
 
-function Dashboard() {
+function Members() {
 
     const stats = [
         { title: "Miembros", value: "150" },
@@ -12,7 +12,7 @@ function Dashboard() {
 
     return (
         <>
-            <h1>Dashboard</h1>
+            <h1>Members</h1>
             <h2>Bienvenido, Christian!</h2>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -31,4 +31,4 @@ function Dashboard() {
     );
 }
 
-export default Dashboard;
+export default Members;

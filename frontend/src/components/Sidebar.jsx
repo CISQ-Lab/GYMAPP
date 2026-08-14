@@ -1,3 +1,6 @@
+import { useState } from 'react';
+import { NavLink } from 'react-router-dom';
+
 import DashboardIcon from '../assets/icons/dashboard-icon.jsx';
 import MembersIcon from '../assets/icons/members-icon.jsx';
 import TrainersIcon from '../assets/icons/trainers-icon.jsx';
@@ -52,15 +55,13 @@ function Sidebar({ minimized }) {
         <aside className={`h-screen bg-gray-800 text-white transition-all duration-300 ease-in-out ${minimized ? 'w-15' : 'w-48'}`}>
             <nav >
                 <ul className="space-y-4 text-left px-3">
-                    
+
                     {MenuItems.map((item, index) => (
-                        <li key={index} className="space-x-2 px-2 py-2 rounded hover:bg-gray-700">
-                            
-                            
-                            <a href={`/${item.path}`} className="flex items-center space-x-2">
+                        <li key={index}>
+                            <NavLink to={item.path} className={({ isActive }) => `flex items-center p-2 rounded space-x-2 hover:bg-gray-700 ${isActive ? 'bg-gray-600' : ''}`}>
                                 <item.icon size={24} color="white" />
-                                 {minimized ? null : <span>{item.name}</span>}
-                            </a>
+                                {minimized ? null : <span>{item.name}</span>}
+                            </NavLink>
                         </li>
                     ))}
                 </ul>

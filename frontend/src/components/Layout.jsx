@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Navbar from "./NavBar";
 import Sidebar from "./Sidebar";
+import { Outlet } from "react-router-dom";
 
 
 
@@ -14,7 +15,7 @@ function Layout({ children }) {
             <div className="flex">
                 <Sidebar minimized={sidebarMinimized} />
                 <main className="flex-1 p-6 bg-gray-400">
-                    {children}
+                    <Outlet />
                 </main>
             </div>
         </div>
