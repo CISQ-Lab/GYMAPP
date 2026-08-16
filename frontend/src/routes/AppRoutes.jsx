@@ -8,6 +8,7 @@ import Products from "../pages/gymPages/Products";
 import Payments from "../pages/gymPages/Payments";
 import Settings from "../pages/gymPages/Settings";
 import Layout from "../components/Layout";
+import SetTheme from "../pages/gymPages/SetTheme";
 
 function AppRoutes() {
 
@@ -21,6 +22,7 @@ function AppRoutes() {
                 <Route path="/products" element={<Products />} />
                 <Route path="/payments" element={<Payments />} />
                 <Route path="/settings" element={<Settings />} />
+                <Route path="/settings/theme" element={<SetTheme />} />
 
             </Route>
 

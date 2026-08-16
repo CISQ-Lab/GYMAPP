@@ -1,29 +1,24 @@
 import StatCard from "../../components/cards/StatCard";
+import SettingCard from "../../components/cards/SettingCard";
 
 function Settings() {
 
-    const stats = [
-        { title: "Miembros", value: "150" },
-        { title: "Entrenadores", value: "10" },
-        { title: "Planes", value: "5" },
-        { title: "Productos", value: "20" },
-        { title: "Pagos del mes", value: "$5000" }
+    const settings = [
+        { title: "Tema", description: "Configura el tema de tu gimnasio", path: "./theme" },
+        { title: "Miembros", description: "Gestiona los miembros de tu gimnasio" },
+        { title: "Entrenadores", description: "Administra los entrenadores" },
+        { title: "Planes", description: "Crea y gestiona planes de entrenamiento" },
+        { title: "Productos", description: "Administra los productos disponibles" },
+        { title: "Pagos del mes", description: "Revisa los pagos del mes" }
     ];
 
     return (
         <>
-            <h1>Settings</h1>
-            <h2>Bienvenido, Christian!</h2>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-
-                {
-                    stats.map((stat, index) => (
-                        <StatCard key={index} title={stat.title} value={stat.value} />
-                    ))
-                }
-
-            </div>
+            <h1 className="text-gray-950">Settings</h1>
+            
+            {settings.map((setting, index) => (
+                <SettingCard key={index} title={setting.title} description={setting.description} path={setting.path} />
+            ))}
 
         </>
 
