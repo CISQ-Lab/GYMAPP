@@ -1,6 +1,30 @@
 @import "tailwindcss";
 
-@theme{
-  --color-primary: #0d255b
+@layer base {
+  h1 {
+    @apply text-3xl font-bold
+  }
 }
 
+
+
+@theme {
+  /* Marca / identidad */
+  --color-primary: #0d255b;
+
+  --color-background: #ffffff;
+  --color-surface: #f8fafc;
+  --color-text: #0f172a;
+  --color-muted: #64748b;
+  --color-border: #e2e8f0;
+
+
+}
+
+html.dark {
+    --color-background: #16223c;
+    --color-surface: #6b7b95;
+    --color-text: #f8fafc;
+    --color-muted: #94a3b8;
+    --color-border: #334155;
+}

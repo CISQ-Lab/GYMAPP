@@ -9,11 +9,15 @@ import Payments from "../pages/gymPages/Payments";
 import Settings from "../pages/gymPages/Settings";
 import Layout from "../components/Layout";
 import SetTheme from "../pages/gymPages/SetTheme";
+import Login from "../pages/auth/Login";
 
 function AppRoutes() {
 
     return (
         <Routes >
+
+            <Route path="/" element={<Login/>}/>
+
             <Route element={<Layout />}>
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/members" element={<Members />} />

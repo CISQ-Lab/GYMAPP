@@ -14,7 +14,7 @@ function Layout({ children }) {
             <Navbar sidebarMinimized={sidebarMinimized} onToggle={() => setSidebarMinimized(!sidebarMinimized)} />
             <div className="flex">
                 <Sidebar minimized={sidebarMinimized} />
-                <main className="flex-1 p-6 bg-gray-400">
+                <main className="flex-1 p-6 bg-background">
                     <Outlet />
                 </main>
             </div>

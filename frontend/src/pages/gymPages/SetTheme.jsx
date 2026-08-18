@@ -11,6 +11,11 @@ export default function SetTheme() {
         primaryColor: color
     }))
 
+    const changeTheme = (theme) => setTheme(prev => ({
+        ...prev,
+        mode: theme
+    }))
+
     return (
 
         <>
@@ -24,8 +29,8 @@ export default function SetTheme() {
                 <div>
                     <p>Cambiar modo Claro/Oscuro</p>
                     <div className="flex space-x-3 mt-2">
-                        <ColorButton color="white" value="light" />
-                        <ColorButton color="black" value="dark" />
+                        <ColorButton color="white" value="light" onClick={(e) => changeTheme(e.target.value)}/>
+                        <ColorButton color="black" value="dark" onClick={(e) => changeTheme(e.target.value)}/>
                     </div>
 
                 </div>
