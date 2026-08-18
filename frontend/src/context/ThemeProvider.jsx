@@ -2,10 +2,10 @@ import { ThemeContext } from './ThemeContext'
 import { useState, useEffect } from 'react';
 const colors = {
         blue: '#0d255b',
-        green: '#16a34a',
-        purple: '#9333ea',
-        red: '#dc2626',
-        orange: '#ea580c'
+        green: '#086f2e',
+        purple: '#611aa3',
+        red: '#c51717',
+        orange: '#ee5511'
     }
 
 
