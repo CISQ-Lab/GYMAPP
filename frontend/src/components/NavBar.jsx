@@ -4,7 +4,7 @@ import { NavLink } from 'react-router-dom';
 function Navbar({ sidebarMinimized, onToggle }) {
   return (
 
-    <nav className="flex justify-between items-center px-5 bg-gray-800 text-white h-15">
+    <nav className="flex justify-between items-center px-5 bg-primary text-white h-15">
       <button onClick={onToggle} className="p-1 rounded hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-white">
         <svg xmlns="http://www.w3.org/2000/svg" height="24"
           viewBox="0 0 24 24" width="24" fill="white">

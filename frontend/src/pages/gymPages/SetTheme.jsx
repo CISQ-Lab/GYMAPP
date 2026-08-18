@@ -1,8 +1,15 @@
 import { useNavigate } from "react-router-dom";
+import ColorButton from "../../components/buttons/ColorButton";
+import UseTheme from "../../hooks/useTheme"
 
 export default function SetTheme() {
 
     const navigate = useNavigate();
+    const {theme, setTheme} = UseTheme();
+    const changeColor = (color) => setTheme(prev => ({
+        ...prev,
+        primaryColor: color
+    }))
 
     return (
 
@@ -12,9 +19,27 @@ export default function SetTheme() {
                 Go Back
             </button>
 
-            <div className="flex flex-col justify-between bg-white shadow-md rounded p-4 m-2 text-gray-800">
-                <h3 className="pb-1 border-b-2 border-double">Set Theme</h3>
-                <p className="py-1">Here you can set the theme of your gym.</p>
+
+            <div className="flex flex-col justify-between bg-white shadow-md rounded p-4 m-2 text-gray-800 space-y-3">
+                <div>
+                    <p>Cambiar modo Claro/Oscuro</p>
+                    <div className="flex space-x-3 mt-2">
+                        <ColorButton color="white" value="light" />
+                        <ColorButton color="black" value="dark" />
+                    </div>
+
+                </div>
+                <div>
+                    <p>Cambiar Color Principal</p>
+                    <div>
+                        <ColorButton color="#2563eb" value="blue" onClick={(e) => changeColor(e.target.value)}/>
+                        <ColorButton color="#16a34a" value="green" onClick={(e) => changeColor(e.target.value)}/>
+                        <ColorButton color="#9333ea" value="purple" onClick={(e) => changeColor(e.target.value)}/>
+                        <ColorButton color="#dc2626" value="red" onClick={(e) => changeColor(e.target.value)}/>
+                        <ColorButton color="#ea580c" value="orange" onClick={(e) => changeColor(e.target.value)}/>
+                    </div>
+
+                </div>
             </div>
 
 

@@ -52,7 +52,7 @@ function Sidebar({ minimized }) {
     return (
 
 
-        <aside className={`h-screen bg-gray-800 text-white transition-all duration-300 ease-in-out ${minimized ? 'w-15' : 'w-48'}`}>
+        <aside className={`h-screen bg-primary text-white transition-all duration-300 ease-in-out ${minimized ? 'w-15' : 'w-48'}`}>
             <nav >
                 <ul className="space-y-4 text-left px-3">
 
