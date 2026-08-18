@@ -1,19 +1,9 @@
 import { ThemeContext } from './ThemeContext'
 import { useState, useEffect } from 'react';
-const colors = {
-        blue: '#0d255b',
-        green: '#086f2e',
-        purple: '#611aa3',
-        red: '#c51717',
-        orange: '#ee5511'
-    }
-
+import { colors, defaultTheme, loadTheme } from '../config/theme';
 
 function ThemeProvider({ children }) {
-    const [theme, setTheme] = useState({
-        mode: "light",
-        primaryColor: "blue"
-    });
+    const [theme, setTheme] = useState( () => loadTheme());
     useEffect(() => {
         document.documentElement.classList.toggle(
             'dark',
@@ -29,6 +19,8 @@ function ThemeProvider({ children }) {
         );
 
     }, [theme.primaryColor])
+
+    useEffect(() => {localStorage.setItem('theme', JSON.stringify(theme))}, [theme])
 
     return (
         <ThemeContext.Provider value={{ theme, setTheme }}>
