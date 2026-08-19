@@ -9,4 +9,13 @@ router.get("/api/test", (req, res) => {
     });
 });
 
+router.post("/api/login", (req, res) => {
+
+    console.log(req.body);
+    res.json({
+        mensaje : `Datos recibidos ${req.body}`
+    })
+
+})
+
 export default router;

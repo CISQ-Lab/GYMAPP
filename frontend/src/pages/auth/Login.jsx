@@ -10,7 +10,18 @@ export default function Login() {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const response = await fetch("http://localhost:3000/api/test")
+        const response = await fetch("http://localhost:3000/api/login" , {
+            method: "POST",
+            headers: {
+                "Content-Type" : "application/json"
+            },
+            body : JSON.stringify({
+                email,
+                password
+            }) 
+
+        }
+        )
         const data = await response.json();
 
         console.log(email);
@@ -26,7 +37,7 @@ export default function Login() {
                 <div className="flex flex-col space-y-3 p-3 w-100">
                     <input className="border" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
                     <input className="border" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-                    <button className="border" type="submit" disabled={email.length === 0 && password.length === 0 ? true : false }>Enviar</button>
+                    <button className="border" type="submit" >Enviar</button>
 
                 </div>
 
