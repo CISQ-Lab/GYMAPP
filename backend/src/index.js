@@ -1,7 +1,8 @@
 import express from "express";
 import {dirname, join}from "path";
 import { fileURLToPath } from "url";
-import indexRouter from "./routes/index.js";
+import indexRouter from "./routes/routes.js";
+import cors from "cors";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -10,6 +11,9 @@ const __dirname = dirname(__filename);
 const app = express();
 const port = process.env.PORT || 3000;
 
+app.use(cors({
+    origin: "http://localhost:5173"
+}));
 app.set("view engine", "ejs");
 app.set("views", join(__dirname, "views"));
 app.use(indexRouter);
