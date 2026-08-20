@@ -3,6 +3,7 @@ import {dirname, join}from "path";
 import { fileURLToPath } from "url";
 import indexRouter from "./routes/routes.js";
 import cors from "cors";
+import connection from "./database/connection.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
