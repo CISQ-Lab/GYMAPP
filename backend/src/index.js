@@ -14,6 +14,7 @@ const port = process.env.PORT || 3000;
 app.use(cors({
     origin: "http://localhost:5173"
 }));
+app.use(express.json())
 app.set("view engine", "ejs");
 app.set("views", join(__dirname, "views"));
 app.use(indexRouter);
