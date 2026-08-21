@@ -4,13 +4,13 @@ export default function Login() {
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [dataR, setData] = useState([]);
+    const [dataR, setData] = useState('');
   
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const response = await fetch("http://localhost:3000/users" , {
+        const response = await fetch("http://localhost:3000/api/auth/login" , {
             method: "POST",
             headers: {
                 "Content-Type" : "application/json"
@@ -26,8 +26,8 @@ export default function Login() {
 
         console.log(email);
         console.log(password);
-        console.log(data.mensaje)
-        setData(data.mensaje)
+        console.log(data.message)
+        setData(data.message)
     }
 
     const getUsers = async (e) => {
@@ -43,7 +43,7 @@ export default function Login() {
 
     return (
         <>
-            <form onSubmit={getUsers} id="login">
+            <form onSubmit={handleSubmit} id="login">
                 <div className="flex flex-col space-y-3 p-3 w-100">
                     <input className="border" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
                     <input className="border" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
@@ -56,15 +56,7 @@ export default function Login() {
 
             <p>Tu email es: {email}</p>
             <p>Tu contraseña es: {password}</p>
-            <p >Respuesta del servidor: {dataR.map((user) => (
-                <div key={user.id}>
-                    <p>{user.name}</p>
-                    <p>{user.surname}</p>
-                    <p>{user.email}</p>
-                    <p>{user.password}</p>
-
-                </div>
-            ))}</p>
+            <p >Respuesta del servidor: {dataR}</p>
 
         </>
 
