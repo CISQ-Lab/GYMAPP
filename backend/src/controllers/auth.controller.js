@@ -1,26 +1,56 @@
 import * as authModel from "../models/auth.model.js"
+import bcrypt from "bcrypt";
 
-export async function login(req, res){
-    try{
-        const {email, password} = req.body
+export async function login(req, res, next) {
+    try {
+        const { email, password } = req.body
         const user = await authModel.findUserByEmail(email);
-        if(user.length === 0){
+        if (user.length === 0) {
             return res.status(401).json({
-                message: "Usuario no encontrado"
+                message: "Credenciales incorrectas"
+            })
+        }
+
+        const validCredentials = await bcrypt.compare(password, user[0].password);
+
+        if (!validCredentials) {
+            return res.status(401).json({
+                message: "Credenciales incorrectas"
             })
         }
 
         return res.json({
-            user: user,
             message: "Usuario encontrado"
         })
 
-        
-    }catch(error){
-        console.error(error);
 
-        return res.status(500).json({
-            message: "Error del servidor"
+    } catch (error) {
+        next(error);
+    }
+
+
+}
+
+export async function register(req, res, next) {
+
+
+    try {
+        const { email, password, name, surname } = req.body;
+        const passwordHashed = await bcrypt.hash(password, 10);
+        await authModel.register(name, surname, email, passwordHashed);
+
+        return res.status(201).json({
+            message: "Usuario registrado exitosamente"
         })
     }
+    catch (error) {
+        if (error.code === "ER_DUP_ENTRY") {
+            return res.status(409).json({
+                message: "El email ya está registrado"
+            });
+        }
+        next(error);
+    }
+
+
 }
