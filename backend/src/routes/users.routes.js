@@ -1,20 +1,9 @@
-import { Router } from "express";
-import pool from "../database/connection.js"
+import { json, Router } from "express";
+import * as authMiddleware from "../middlewares/auth.middleware.js"
+import * as userController from "../controllers/users.controller.js"
 
 const router = Router();
 
-router.get("/", (req, res) => {
-    pool.query("SELECT * FROM users", (e, results) => {
-        if (e) {
-            console.log(e);
-            return res.status(500).json({
-                message: "Error al Consultar la Base de Datos"
-            })
-        }
-        else {
-            res.json(results);
-        }
-    })
-});
+router.get("/me", authMiddleware.verifyToken, userController.getUserData);
 
 export default router;
