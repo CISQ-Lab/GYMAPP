@@ -1,5 +1,7 @@
 import * as authModel from "../models/auth.model.js"
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
+import "dotenv/config";
+import jwt from "jsonwebtoken"
 
 export async function login(req, res, next) {
     try {
@@ -19,8 +21,17 @@ export async function login(req, res, next) {
             })
         }
 
+        const payload = {
+            id: user[0].id
+        }
+
+        const token = jwt.sign(payload, process.env.JWT_SECRET, {
+            expiresIn: "1d"
+        })
+
         return res.json({
-            message: "Usuario encontrado"
+            message: "Usuario encontrado",
+            token
         })
 
 
