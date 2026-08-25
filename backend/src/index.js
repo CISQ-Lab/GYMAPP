@@ -1,5 +1,5 @@
 import express from "express";
-import {dirname, join}from "path";
+import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 import { errorHandler } from "./middlewares/error.middleware.js";
 
@@ -18,7 +18,7 @@ const port = process.env.PORT || 3000;
 
 app.use(express.json());
 app.use(cors({
-    origin: "http://localhost:5173"
+    origin: "http://localhost:5173",
 }));
 app.use("/api", testRoutes);
 app.use("/api/users", usersRoutes)
