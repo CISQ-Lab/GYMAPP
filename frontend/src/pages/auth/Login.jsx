@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { apiFetch } from "../../services/api" 
 
 export default function Login() {
 
@@ -10,24 +11,23 @@ export default function Login() {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const response = await fetch("http://localhost:3000/api/auth/login" , {
+        const response = await apiFetch("/auth/login", {
             method: "POST",
-            headers: {
-                "Content-Type" : "application/json"
-            },
-            body : JSON.stringify({
+            body: {
                 email,
                 password
-            }) 
-
-        }
-        )
+            }
+        })
         const data = await response.json();
 
         console.log(email);
         console.log(password);
         console.log(data.message)
         setData(data.message)
+
+        if(data.token){
+            localStorage.setItem("token", data.token);
+        }
     }
 
     const getUsers = async (e) => {

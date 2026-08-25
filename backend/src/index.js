@@ -8,7 +8,6 @@ import testRoutes from "./routes/test.routes.js"
 import usersRoutes from "./routes/users.routes.js"
 import authRoutes from "./routes/auth.routes.js"
 import cors from "cors";
-import { error } from "console";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
