@@ -38,8 +38,6 @@ export async function login(req, res, next) {
     } catch (error) {
         next(error);
     }
-
-
 }
 
 export async function register(req, res, next) {

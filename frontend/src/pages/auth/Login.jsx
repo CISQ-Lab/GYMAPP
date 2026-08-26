@@ -1,32 +1,29 @@
 import { useState } from "react"
-import { apiFetch } from "../../services/api" 
+import useAuth from "../../hooks/useAuth"
+import Swal from "sweetalert2"
+
 
 export default function Login() {
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [dataR, setData] = useState('');
-  
+    const { login, loading, user, logout } = useAuth();
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
-        const data = await apiFetch("/auth/login", {
-            method: "POST",
-            body: JSON.stringify({
-                email,
-                password
+        try {
+            await login(email, password);
+        }
+        catch (error) {
+            Swal.fire({
+                title: 'Error!',
+                text: error.message,
+                icon: 'error',
+                confirmButtonText: 'Okey'
             })
-        })
-
-        if(data.token){
-            localStorage.setItem("token", data.token);
         }
 
-        const {user} = await apiFetch("/users/me");
-        console.log(user[0]);
-
-        
     }
 
     return (
@@ -42,9 +39,12 @@ export default function Login() {
 
             </form>
 
+            <button className="p-5 bg-amber-200" onClick={logout}>Logout</button>
+
             <p>Tu email es: {email}</p>
             <p>Tu contraseña es: {password}</p>
-            <p >Respuesta del servidor: {dataR}</p>
+            <p >Cargando: {loading ? "true" : "false"}</p>
+            <p>User = {user ? `SI HAY ${user.name}` : "NO HAY"}</p>
 
         </>
 
