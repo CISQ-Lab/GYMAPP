@@ -11,23 +11,23 @@ export const defaultTheme = {
     primaryColor: 'blue'
 };
 
-export function loadTheme(){
+export function loadTheme() {
     const savedTheme = localStorage.getItem('theme');
 
-    if(!savedTheme){
+    if (!savedTheme) {
         return defaultTheme;
     }
 
-    try{
+    try {
         const theme = JSON.parse(savedTheme);
 
-        const validModes = 
-        theme.mode === 'light' ||
-        theme.mode === 'dark';
+        const validModes =
+            theme.mode === 'light' ||
+            theme.mode === 'dark';
 
         const validColors = Object.hasOwn(colors, theme.primaryColor)
 
-        if(!validColors || !validModes){
+        if (!validColors || !validModes) {
             return defaultTheme;
         }
 

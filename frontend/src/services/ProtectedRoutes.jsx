@@ -5,9 +5,6 @@ export default function ProtectedRoutes(){
 
     const {loading, authenticated} = useAuth();
 
-    if(loading){
-        return <p>Cargando...</p>
-    }
     if(!authenticated){
         return <Navigate to={"/"} replace/>
     }

@@ -1,10 +1,15 @@
 import logo from '../assets/logo.jpg';
 import { NavLink } from 'react-router-dom';
+import useAuth from '../hooks/useAuth';
+import { APP_NAME } from '../config/env';
 
 function Navbar({ sidebarMinimized, onToggle }) {
+
+  const { logout } = useAuth();
+
   return (
 
-    <nav className={`flex justify-between items-center pr-5 bg-primary text-white h-20`}>
+    <nav className={`flex justify-between items-center p-5 bg-primary text-white h-15 `}>
       <div className="flex items-center space-x-3">
         <button onClick={onToggle} className="p-2 ml-2 rounded hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-white">
           <svg xmlns="http://www.w3.org/2000/svg" height="24"
@@ -14,25 +19,15 @@ function Navbar({ sidebarMinimized, onToggle }) {
         </button>
         <div className={`flex items-center`}>
           <img src={logo} alt="Gym App Logo" className="h-20 w-20 mr-4" />
-          <h1>Gym App</h1>
+          <h1 className='ml-3 text-center'>{APP_NAME}</h1>
 
         </div>
-
       </div>
 
 
       <ul className="flex space-x-4">
-        <li>
-          <NavLink to="/" end>
-            Home
-          </NavLink>
-        </li>
-        <li>
-          <a href="/about">About</a>
-        </li>
-        <li>
-          <a href="/contact">Contact</a>
-        </li>
+        <li><button onClick={logout} className='p-5 bg-amber-400'>Logout</button></li>
+        <li><NavLink to="/" className="text-lg text-blue-400 hover:underline">Conoce nuestra app!</NavLink></li>
       </ul>
 
 
