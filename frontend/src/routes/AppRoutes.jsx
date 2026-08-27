@@ -11,6 +11,7 @@ import SetTheme from "../pages/gymPages/SetTheme";
 import Login from "../pages/auth/Login";
 import ProtectedRoutes from "../services/ProtectedRoutes";
 import GuestRoutes from "../services/GuestRoutes";
+import CreateNewGym from "../pages/auth/createNewGym";
 
 function AppRoutes() {
 
@@ -23,6 +24,9 @@ function AppRoutes() {
 
 
             <Route element={<ProtectedRoutes />}>
+
+                <Route path="/createNewGym" element={<CreateNewGym/>}/>
+
                 <Route element={<Layout />}>
                     <Route path="/dashboard" element={<Dashboard />} />
                     <Route path="/members" element={<Members />} />

@@ -2,15 +2,11 @@ import { useState } from "react"
 import useAuth from "../../hooks/useAuth"
 import Success from "../../components/messages/success.js"
 import showError from "../../components/messages/showError.js"
-import bg from "../../assets/fondoLogin.jpg"
-import NavbarPublic from "../../components/NavBarPublic"
-import { NavLink } from 'react-router-dom';
-import { APP_NAME } from "../../config/env"
-import Spinner from "../../components/spinner"
 import GenericFormPublic from "../../components/forms/GenericFormPublic"
 import LoginForm from "../../components/forms/loginForm"
 import RegisterForm from "../../components/forms/registerForm"
 import { apiFetch } from "../../services/api"
+import LayoutPublic from "../../components/layoutPublic"
 
 export default function Login() {
 
@@ -27,9 +23,7 @@ export default function Login() {
 
     const [formHidden, setFormHidden] = useState(false);
 
-    const { login, loading, user, logout } = useAuth();
-    const year = new Date().getFullYear();
-
+    const { login, loading } = useAuth();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -72,6 +66,7 @@ export default function Login() {
 
             if (data.message) {
                 Success(data.message);
+
             }
 
 
@@ -83,32 +78,20 @@ export default function Login() {
 
     return (
 
-        <div className="flex flex-col min-h-screen bg-cover bg-center bg-no-repeat overflow-hidden " style={{ backgroundImage: `url(${bg})` }}>
-            <Spinner />
-            <div className="absolute inset-0 bg-black/60" />
-            <NavbarPublic />
-            <main className="relative flex-1 flex items-center justify-center ">
-                <GenericFormPublic handleSubmit={handleSubmit} hidden={formHidden}>
-                    <LoginForm email={email} setEmail={setEmail} password={password} setPassword={setPassword} loading={loading} setHidden={setFormHidden} />
-                </GenericFormPublic>
+        <LayoutPublic>
+            <GenericFormPublic handleSubmit={handleSubmit} hidden={formHidden}>
+                <LoginForm email={email} setEmail={setEmail} password={password} setPassword={setPassword} loading={loading} setHidden={setFormHidden} />
+            </GenericFormPublic>
 
-                <GenericFormPublic handleSubmit={handleRegister} hidden={!formHidden} setHidden={setFormHidden}>
-                    <RegisterForm email={emailRegister} setEmail={setEmailRegister} password={passwordRegister} setPassword={setPasswordRegister}
-                        name={nameRegister} setName={setNameRegister} lastName={lastNameRegister} setLastName={setLastNameRegister}
-                        confirmPassword={confirmPasswordRegister} setConfirmPassword={setConfirmPasswordRegister} loading={loadingRegister} setHidden={setFormHidden} />
-                </GenericFormPublic>
-            </main>
+            <GenericFormPublic handleSubmit={handleRegister} hidden={!formHidden} setHidden={setFormHidden}>
+                <RegisterForm email={emailRegister} setEmail={setEmailRegister} password={passwordRegister} setPassword={setPasswordRegister}
+                    name={nameRegister} setName={setNameRegister} lastName={lastNameRegister} setLastName={setLastNameRegister}
+                    confirmPassword={confirmPasswordRegister} setConfirmPassword={setConfirmPasswordRegister} loading={loadingRegister} setHidden={setFormHidden} />
+            </GenericFormPublic>
 
-            <footer className="p-3 bg-red-900/20 text-white backdrop-blur-xs flex justify-between items-center px-4 pb-20 sm:px-15 sm:pb-5">
-                <div>
-                    <p className="text-xs sm:text-lg">©{year} {APP_NAME} Todos los derechos reservados.</p>
-                    <p className="text-xs sm:text-lg">Hecho con ❤️ por CISQ-Lab</p>
-                </div>
+        </LayoutPublic>
 
-                <NavLink to="/contact" className="text-blue-400 hover:underline text-xs sm:text-lg">Contáctanos</NavLink>
 
-            </footer>
 
-        </div>
     );
 }
