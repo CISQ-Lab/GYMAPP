@@ -11,6 +11,7 @@ export default function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const { login, loading, user, logout } = useAuth();
+    const year = new Date().getFullYear();
 
 
     const handleSubmit = async (e) => {
@@ -76,7 +77,7 @@ export default function Login() {
             </main>
 
             <footer className="p-3 bg-red-900/20 text-white backdrop-blur-xs flex justify-around items-center space-x-4">
-                <p>© 2024 {APP_NAME}. Todos los derechos reservados.</p>
+                <p>©{year} {APP_NAME} Todos los derechos reservados.</p>
                 <p>Hecho con ❤️ por CISQ-Lab</p>
                 <NavLink to="/contact" className="text-blue-400 hover:underline">Contáctanos</NavLink>
 
