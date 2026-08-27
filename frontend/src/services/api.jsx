@@ -14,11 +14,11 @@ export async function apiFetch(endpoint, options = {}) {
 
     try {
         const response = await fetch(url, { ...options, headers });
-        const data = await response.json();
+        
+        const data = await response.json(); 
         if (!response.ok) {
             throw new Error(data.message);
         }
-
         return data;
     }
     catch(error){
