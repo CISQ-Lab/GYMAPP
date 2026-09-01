@@ -81,5 +81,31 @@ export async function register(req, res, next) {
 }
 
 export async function createNewGym(req, res, next) {
+
+    const {gymName} = req.body;
+    const logopath = req.file.path;
+    const userId = req.user.id;
    
+    try {
+        if(!gymName || !req.file){
+            return res.status(400).json({
+                message: "Por favor, complete todos los campos"
+            })
+        }
+        else if(!logopath || !userId){
+            return res.status(400).json({
+                message: "Ocurrio un error, recarga la pagina para continuar"
+            })
+        }
+        
+        const gymId = await authModel.registerGym(gymName, logopath, userId);
+    
+        return res.status(201).json({
+            message: "Se registro el gimnasio",
+            gymId
+        })
+
+    } catch (error) {
+        next(error)
+    }
 }
