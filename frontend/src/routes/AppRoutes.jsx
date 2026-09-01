@@ -22,10 +22,10 @@ function AppRoutes() {
                 <Route path="/" element={<Login />} />
             </Route>
 
-
+            <Route path="/createNewGym" element={<CreateNewGym/>}/>
             <Route element={<ProtectedRoutes />}>
 
-                <Route path="/createNewGym" element={<CreateNewGym/>}/>
+                
 
                 <Route element={<Layout />}>
                     <Route path="/dashboard" element={<Dashboard />} />

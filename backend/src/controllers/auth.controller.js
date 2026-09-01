@@ -79,3 +79,7 @@ export async function register(req, res, next) {
 
 
 }
+
+export async function createNewGym(req, res, next) {
+   
+}

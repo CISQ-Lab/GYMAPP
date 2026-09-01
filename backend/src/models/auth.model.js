@@ -15,3 +15,6 @@ export async function register(name, surname, email, passwordHashed){
 
     return result;
 }
+
+export async function createNewGym(gymName, userId) {
+}
