@@ -14,6 +14,10 @@ export default function ProtectedRoutes(){
         return <Navigate to={"/"} replace/>
     }
 
+    if(!user.hasGym){
+        return <Navigate to={"/createNewGym"} replace/>
+    }
+
     return <Outlet/>;
 
 }

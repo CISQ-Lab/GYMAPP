@@ -8,7 +8,7 @@ import Success from "../../components/messages/success.js";
 import { useNavigate } from "react-router-dom";
 
 export default function CreateNewGym() {
-    const { user } = useAuth();
+    const { user, setUser } = useAuth();
     const navigate = useNavigate()
 
     // Estados para manejar el formulario y el dropzone
@@ -75,15 +75,19 @@ export default function CreateNewGym() {
         formData.append("gymLogo", file);
 
         const data = await apiFetch("/auth/createNewGym", {
-            method: "POST", 
+            method: "POST",
             body: formData
         })
 
-        await Success(data.message);
-        navigate("/dashboard", { replace: true });
-        
+        if (data.gymId) {
+            setUser(prev => ({
+                ...prev,
+                hasGym: true
+            }));
+            await Success(data.message);
+            navigate("/dashboard", { replace: true });
 
-        // Aquí puedes agregar tu lógica de envío (Fetch, Axios, etc.)
+        }
     };
 
     return (

@@ -13,7 +13,7 @@ export async function register(name, surname, email, passwordHashed) {
         [name, surname, email, passwordHashed]
     );
 
-    return result;
+    return result.insertId
 }
 
 export async function registerGym(gymName, logoPath, userId) {

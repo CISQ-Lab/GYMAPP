@@ -7,6 +7,7 @@ import LoginForm from "../../components/forms/loginForm"
 import RegisterForm from "../../components/forms/registerForm"
 import { apiFetch } from "../../services/api"
 import LayoutPublic from "../../components/layoutPublic"
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
 
@@ -23,7 +24,9 @@ export default function Login() {
 
     const [formHidden, setFormHidden] = useState(false);
 
-    const { login, loading } = useAuth();
+    const {register, login, loading } = useAuth();
+
+    const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -53,21 +56,7 @@ export default function Login() {
                 throw new Error("Las contraseñas no coinciden");
             }
 
-            const data = await apiFetch('/auth/register', {
-                method: 'POST',
-                body: JSON.stringify({
-                    email: emailRegister,
-                    password: passwordRegister,
-                    confirmedPassword: confirmPasswordRegister,
-                    name: nameRegister,
-                    surname: lastNameRegister
-                })
-            })
-
-            if (data.message) {
-                Success(data.message);
-
-            }
+            register(emailRegister, passwordRegister, confirmPasswordRegister, nameRegister, lastNameRegister);
 
 
         } catch (error) {

@@ -1,5 +1,6 @@
 import { createContext, useState, useEffect } from "react";
 import { apiFetch } from "../services/api"
+import Success from "../components/messages/success";
 
 export const AuthContext = createContext();
 
@@ -40,7 +41,7 @@ export function AuthProvider({ children }) {
         if (token) {
             loadUserData();
         }
-        else{
+        else {
             setLoading(false);
         }
 
@@ -75,6 +76,28 @@ export function AuthProvider({ children }) {
         }
     }
 
+    async function register(emailRegister, passwordRegister, confirmPasswordRegister, nameRegister, lastNameRegister) {
+        const data = await apiFetch('/auth/register', {
+            method: 'POST',
+            body: JSON.stringify({
+                email: emailRegister,
+                password: passwordRegister,
+                confirmedPassword: confirmPasswordRegister,
+                name: nameRegister,
+                surname: lastNameRegister
+            })
+        })
+
+        if (data.message && data.token) {
+            localStorage.setItem("token", data.token);
+            const userdata = await apiFetch("/users/me");
+            setUser(userdata.user[0]);
+            setAuthenticated(true);
+            await Success(data.message);
+            navigate("/createNewGym", { replace: true });
+        }
+    }
+
     function logout() {
         setLoading(true);
         localStorage.removeItem("token");
@@ -84,7 +107,7 @@ export function AuthProvider({ children }) {
     }
 
     return (
-        <AuthContext.Provider value={{ user, loading, authenticated, login, logout }}>
+        <AuthContext.Provider value={{ user, loading, authenticated, login, logout, register , setUser}}>
             {children}
         </AuthContext.Provider>
     )

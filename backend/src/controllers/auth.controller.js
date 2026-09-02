@@ -62,10 +62,15 @@ export async function register(req, res, next) {
         }
 
         const passwordHashed = await bcrypt.hash(password, 10);
-        await authModel.register(name, surname, email, passwordHashed);
+        const userId = await authModel.register(name, surname, email, passwordHashed);
+        
+        const token = jwt.sign({id: userId}, process.env.JWT_SECRET, {
+            expiresIn: "1d"
+        })
 
         return res.status(201).json({
-            message: "Usuario registrado exitosamente"
+            message: "Usuario registrado exitosamente",
+            token
         })
     }
     catch (error) {

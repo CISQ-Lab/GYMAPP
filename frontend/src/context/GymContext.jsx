@@ -20,7 +20,10 @@ export function GymProvider({ children }) {
 
             try {
                 const data = await apiFetch("/gyms/getGym");
-                setGym(data)
+                if(data.gym){
+                    setGym(data.gym)
+                }
+                
             } catch (error) {
                 throw(error);
             }
