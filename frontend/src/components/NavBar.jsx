@@ -21,7 +21,7 @@ function Navbar({ sidebarMinimized, onToggle }) {
           </svg>
         </button>
         <div className={`flex items-center`}>
-          <img src={SERVER_URL + gym?.logo_path} alt="Gym App Logo" className="h-15 w-15 my-10 rounded-full" />
+          <img src={SERVER_URL + gym?.logo_path} alt="Gym App Logo" className="h-15 w-15 rounded-full" />
           <h1 className='ml-3 text-center'>{gym?.name}</h1>
 
         </div>
