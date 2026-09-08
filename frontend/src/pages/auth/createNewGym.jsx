@@ -66,7 +66,6 @@ export default function CreateNewGym() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(user);
 
         const formData = new FormData();
 
@@ -74,26 +73,33 @@ export default function CreateNewGym() {
         formData.append("userId", user.id);
         formData.append("gymLogo", file);
 
-        const data = await apiFetch("/auth/createNewGym", {
-            method: "POST",
-            body: formData
-        })
+        try {
+            const data = await apiFetch("/auth/createNewGym", {
+                method: "POST",
+                body: formData
+            })
 
-        if (data.gymId) {
-            setUser(prev => ({
-                ...prev,
-                hasGym: true
-            }));
-            await Success(data.message);
-            navigate("/dashboard", { replace: true });
+            if (data.gymId) {
+                setUser(prev => ({
+                    ...prev,
+                    hasGym: true
+                }));
+                await Success(data.message);
+                navigate("/dashboard", { replace: true });
 
+            }
+        } catch (error) {
+            showError(error.message)
         }
+
+
+
     };
 
     return (
 
         <LayoutPublic>
-            <GenericForm handleSubmit={handleSubmit}>
+            <GenericForm handleSubmit={handleSubmit} loginBool={false}>
                 <h2 className="text-2xl font-bold text-center mb-2 text-white">
                     Bienvenido, {user?.name}!
                 </h2>

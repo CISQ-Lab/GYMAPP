@@ -1,6 +1,6 @@
 import { motion } from "motion/react";
 
-export default function GenericFormPublic({ handleSubmit, children, hidden }) {
+export default function GenericFormPublic({ handleSubmit, children, hidden , loginBool = true}) {
     return (
         <motion.div
             // Estado inicial al montar el componente en el DOM
@@ -23,7 +23,7 @@ export default function GenericFormPublic({ handleSubmit, children, hidden }) {
             }}
             
             // Clases de Tailwind limpias (sin transition ni transform)
-            className="absolute z-10 w-[calc(100%-4rem)] max-w-md p-7 sm:p-8 rounded-xl shadow-2xl bg-red-400/10 backdrop-blur-sm"
+            className={`${loginBool ? "absolute" : ""} w-[calc(100%-4rem)] max-w-md p-7 my-3 sm:p-8 rounded-xl shadow-2xl bg-red-400/10 backdrop-blur-sm`}
         >
             <form onSubmit={handleSubmit} id="login">
                 <div className="flex flex-col space-y-4">

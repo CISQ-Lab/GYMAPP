@@ -7,26 +7,29 @@ export const GymContext = createContext();
 export function GymProvider({ children }) {
 
     const [gym, setGym] = useState(null);
-    const {authenticated, user} = useAuth()
+    const { authenticated, user } = useAuth()
 
     useEffect(() => {
 
-        async function loadGym(){
-            if(!user || !authenticated){
+        async function loadGym() {
+            if (!user || !authenticated) {
                 setGym(null);
                 return;
             }
 
-
             try {
                 const data = await apiFetch("/gyms/getGym");
-                if(data.gym){
+                console.log(data.gym);
+                if (data.gym) {
                     setGym(data.gym)
                 }
-                
+
             } catch (error) {
-                throw(error);
+                throw (error);
             }
+
+
+
         }
 
         loadGym();
@@ -37,7 +40,7 @@ export function GymProvider({ children }) {
 
 
     return (
-        <GymContext.Provider value={{gym, setGym}}>
+        <GymContext.Provider value={{ gym, setGym }}>
             {children}
         </GymContext.Provider>
     )

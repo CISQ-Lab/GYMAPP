@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
+import { motion } from 'framer-motion'; // Nota: Cambiado a framer-motion que es el estándar actual
 
 import DashboardIcon from '../assets/icons/dashboard-icon.jsx';
 import MembersIcon from '../assets/icons/members-icon.jsx';
@@ -9,59 +10,44 @@ import ProductsIcon from '../assets/icons/products-icon.jsx';
 import PaymentsIcon from '../assets/icons/payments-icon.jsx';
 import SettingsIcon from '../assets/icons/settings-icon.jsx';
 
+// 1. Creamos el NavLink animado fuera del componente
+const MotionNavLink = motion(NavLink);
+
 function Sidebar({ minimized }) {
 
     const MenuItems = [
-        {
-            name: "Dashboard",
-            path: "/dashboard",
-            icon: DashboardIcon
-        },
-        {
-            name: "Miembros",
-            path: "/members",
-            icon: MembersIcon
-        },
-        {
-            name: "Entrenadores",
-            path: "/trainers",
-            icon: TrainersIcon
-        },
-        {
-            name: "Planes",
-            path: "/plans",
-            icon: PlansIcon
-        },
-        {
-            name: "Productos",
-            path: "/products",
-            icon: ProductsIcon
-        },
-        {
-            name: "Pagos",
-            path: "/payments",
-            icon: PaymentsIcon
-        },
-        {
-            name: "Configuración",
-            path: "/settings",
-            icon: SettingsIcon
-        }
-    ]
+        { name: "Dashboard", path: "/dashboard", icon: DashboardIcon },
+        { name: "Miembros", path: "/members", icon: MembersIcon },
+        { name: "Entrenadores", path: "/trainers", icon: TrainersIcon },
+        { name: "Planes", path: "/plans", icon: PlansIcon },
+        { name: "Productos", path: "/products", icon: ProductsIcon },
+        { name: "Pagos", path: "/payments", icon: PaymentsIcon },
+        { name: "Configuración", path: "/settings", icon: SettingsIcon }
+    ];
 
     return (
-
-
-        <aside className={`h-screen bg-primary text-white transition-all duration-300 ease-in-out ${minimized ? 'w-15' : 'w-48'}`}>
-            <nav >
-                <ul className="space-y-4 text-left px-3">
-
+        <aside className={`h-screen bg-primary/10 text-black transition-all duration-300 ease-in-out ${minimized ? 'w-16' : 'w-48'}`}>
+            <nav className="pt-4">
+                <ul className="space-y-2 text-left px-3">
                     {MenuItems.map((item, index) => (
                         <li key={index}>
-                            <NavLink to={item.path} className={({ isActive }) => `flex items-center p-2 rounded space-x-2 hover:bg-gray-700 ${isActive ? 'bg-gray-600' : ''}`}>
-                                <item.icon size={24} color="white" />
-                                {minimized ? null : <span>{item.name}</span>}
-                            </NavLink>
+                            {/* 2. Usamos el MotionNavLink directamente */}
+                            <MotionNavLink
+                                to={item.path}
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                className={({ isActive }) => `
+                                    flex items-center p-2 rounded-2xl gap-3 transition-colors duration-200 w-full
+                                    ${isActive
+                                        ? 'bg-primary/40 backdrop-blur-md border border-primary/50 text-primary font-medium shadow-sm'
+                                        : 'text-gray-700 hover:bg-primary/10 hover:text-primary'
+                                    }
+                                `}
+                            >
+                                {/* 3. El ícono puede heredar el color del texto activo/inactivo usando currentColor si tus SVGs lo soportan */}
+                                <item.icon size={24} />
+                                {!minimized && <span className="truncate">{item.name}</span>}
+                            </MotionNavLink>
                         </li>
                     ))}
                 </ul>

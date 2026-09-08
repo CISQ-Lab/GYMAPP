@@ -1,11 +1,14 @@
 import logo from '../assets/logo.jpg';
 import { NavLink } from 'react-router-dom';
 import useAuth from '../hooks/useAuth';
-import { APP_NAME } from '../config/env';
+import { SERVER_URL } from '../config/env';
+
+import useGym from '../hooks/useGym';
 
 function Navbar({ sidebarMinimized, onToggle }) {
 
   const { logout } = useAuth();
+  const {gym} = useGym();
 
   return (
 
@@ -18,8 +21,8 @@ function Navbar({ sidebarMinimized, onToggle }) {
           </svg>
         </button>
         <div className={`flex items-center`}>
-          <img src={logo} alt="Gym App Logo" className="h-20 w-20 mr-4" />
-          <h1 className='ml-3 text-center'>{APP_NAME}</h1>
+          <img src={SERVER_URL + gym?.logo_path} alt="Gym App Logo" className="h-15 w-15 my-10 rounded-full" />
+          <h1 className='ml-3 text-center'>{gym?.name}</h1>
 
         </div>
       </div>
@@ -27,7 +30,7 @@ function Navbar({ sidebarMinimized, onToggle }) {
 
       <ul className="flex space-x-4">
         <li><button onClick={logout} className='p-5 bg-amber-400'>Logout</button></li>
-        <li><NavLink to="/" className="text-lg text-blue-400 hover:underline">Conoce nuestra app!</NavLink></li>
+        
       </ul>
 
 

@@ -2,8 +2,12 @@ import StatCard from "../../components/cards/StatCard";
 import LogCard from "../../components/cards/logCard";
 import ClockIcon from "../../assets/icons/ClockIcon";
 import useAuth from "../../hooks/useAuth";
+import useGym from "../../hooks/useGym"
 
 function Dashboard() {
+
+    const {gym} = useGym();
+    const { user } = useAuth();
 
     const stats = [
         { title: "Asistencias", value: "30" },
@@ -26,7 +30,7 @@ function Dashboard() {
         { title: "Salida", value: "Pedro Ramírez" }
     ];
 
-    const { user } = useAuth();
+    
 
     const ahora = new Date();
     // Configura las opciones para el formato de fecha
@@ -45,14 +49,14 @@ function Dashboard() {
     // Une ambas partes con el guion
     const resultadoFinal = `${fechaParte} - ${horaParte}`;
 
-    console.log(resultadoFinal);
+    console.log(gym);
 
     return (
         <>
 
             <div className="flex justify-between items-center pb-2 font-normal text-gray-950">
 
-                <h2 className="text-2xl ">Bienvenido, {user.name}!</h2>
+                <h2 className="text-2xl ">Bienvenido, {user?.name}!</h2>
                 <div className="flex items-center space-x-2">
                     <ClockIcon />
                     <p className="ml-2 ">{resultadoFinal}</p>

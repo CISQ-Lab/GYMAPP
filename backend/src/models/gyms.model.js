@@ -1,4 +1,4 @@
-import pool from "../database/connection";
+import pool from "../database/connection.js";
 
 export async function getGymData(userId) {
 

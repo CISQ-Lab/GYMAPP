@@ -7,6 +7,8 @@ import indexRouter from "./routes/routes.js";
 import testRoutes from "./routes/test.routes.js"
 import usersRoutes from "./routes/users.routes.js"
 import authRoutes from "./routes/auth.routes.js"
+import gymsRoutes from "./routes/gyms.routes.js"
+
 import cors from "cors";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -17,14 +19,15 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 app.use(express.json());
-app.use("/upload", express.static("uploads"));
 app.use(cors({
     origin: "http://localhost:5173",
 }));
+
+app.use("/upload", express.static("upload"));
 app.use("/api", testRoutes);
 app.use("/api/users", usersRoutes)
 app.use("/api/auth", authRoutes)
-
+app.use("/api/gyms", gymsRoutes)
 
 app.set("view engine", "ejs");
 app.set("views", join(__dirname, "views"));

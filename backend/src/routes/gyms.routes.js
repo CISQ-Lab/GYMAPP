@@ -4,4 +4,6 @@ import { Router } from "express"
 
 const router = Router();
 
-router.get(authMiddleware.verifyToken, gymsController.getGymData)
+router.get("/getGym",authMiddleware.verifyToken, gymsController.getGymData)
+
+export default router;

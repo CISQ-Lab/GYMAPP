@@ -63,8 +63,8 @@ export async function register(req, res, next) {
 
         const passwordHashed = await bcrypt.hash(password, 10);
         const userId = await authModel.register(name, surname, email, passwordHashed);
-        
-        const token = jwt.sign({id: userId}, process.env.JWT_SECRET, {
+
+        const token = jwt.sign({ id: userId }, process.env.JWT_SECRET, {
             expiresIn: "1d"
         })
 
@@ -87,24 +87,31 @@ export async function register(req, res, next) {
 
 export async function createNewGym(req, res, next) {
 
-    const {gymName} = req.body;
-    const logopath = req.file.path;
-    const userId = req.user.id;
-   
     try {
-        if(!gymName || !req.file){
+
+        const { gymName } = req.body;
+
+        if(!req.file){
+            return res.status(400).json({
+                message: "Por favor, suba un logo"
+            })
+        }
+        const logopath = req.file.path;
+        const userId = req.user.id;
+
+        if (!gymName || !req.file) {
             return res.status(400).json({
                 message: "Por favor, complete todos los campos"
             })
         }
-        else if(!logopath || !userId){
+        else if (!logopath || !userId) {
             return res.status(400).json({
                 message: "Ocurrio un error, recarga la pagina para continuar"
             })
         }
-        
+
         const gymId = await authModel.registerGym(gymName, logopath, userId);
-    
+
         return res.status(201).json({
             message: "Se registro el gimnasio",
             gymId
