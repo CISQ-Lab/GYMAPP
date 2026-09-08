@@ -1,4 +1,4 @@
-import bg from "../assets/fondoLogin.jpg"
+import bg from "../assets/fondoLogin.webp"
 import NavbarPublic from "../components/NavBarPublic"
 import { NavLink } from 'react-router-dom';
 import { APP_NAME } from "../config/env"
