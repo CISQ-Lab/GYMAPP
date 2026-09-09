@@ -1,9 +1,24 @@
-import StatCard from "../../components/cards/StatCard";
+import PlanCard from "../../components/cards/PlanCard";
 import Button from "../../components/buttons/button";
 import FormAdd from "../../components/forms/formAdd";
 import { NavLink } from "react-router-dom";
+import { apiFetch } from "../../services/api";
+import { useEffect , useState} from "react";
 
 function Plans() {
+
+    const [plans, setPlans] = useState([]);
+
+    useEffect(() => {
+        const getPlans = async () => {
+            const data = await apiFetch("/gyms/getPlans");
+            setPlans(data.plans)
+           
+        }
+
+        getPlans();
+        
+    } , [])
 
     const stats = [
         { title: "Miembros", value: "150" },
@@ -23,11 +38,12 @@ function Plans() {
                 </NavLink>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            <div className="mt-5 grid grid-cols-1 place-content-center w-full sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
 
                 {
-                    stats.map((stat, index) => (
-                        <StatCard key={index} title={stat.title} value={stat.value} />
+                    plans.map((plan, index) => (
+                        <PlanCard key={index} name={plan.name} isActive={plan.isActive} id={plan.id}
+                         description={plan.description} price={plan.price} duration={plan.durationDays} />
                     ))
                 }
 

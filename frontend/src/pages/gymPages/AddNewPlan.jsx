@@ -10,7 +10,8 @@ export default function AddNewPlan() {
     const [form, setForm] = useState({
         name: "",
         description: "",
-        price: ""
+        price: "",
+        duration: ""
     })
 
     const handleChange = (e) => {
@@ -47,10 +48,10 @@ export default function AddNewPlan() {
 
     return (
         <FormAdd title="Agregar nuevo plan" onSubmit={handleSubmit} >
-            <Input type="text" ph="Nombre" name="name" value={form.name} onChange={handleChange} />
+            <Input type="text" ph="Nombre" name="name" value={form.name} onChange={handleChange} required/>
             <Input type="text" ph="Descripcion" name="description" value={form.description} onChange={handleChange} />
-            <Input type="number" ph="Precio" step="any" name="price" value={form.price} onChange={handleChange} />
-
+            <Input type="number" ph="Precio" step="any" name="price" value={form.price} onChange={handleChange} required />
+            <Input type="number" ph="Duracion en dias" name="duration" value={form.duration} onChange={handleChange} required/>
         </FormAdd>
     )
 
