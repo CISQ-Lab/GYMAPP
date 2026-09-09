@@ -41,7 +41,7 @@ function Sidebar({ minimized, onToggle }) {
                 <ul className="space-y-2 text-left px-3 flex flex-col flex-1">
                     <li>
                         <motion.button onClick={onToggle} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
-                            className="flex items-center p-2 rounded-2xl gap-3 transition-colors duration-200 w-full text-gray-700 hover:bg-primary/10 hover:text-primary ">
+                            className="flex items-center p-2 rounded-2xl gap-3 transition-colors duration-200 w-full cursor-pointer text-gray-700 hover:bg-primary/10 hover:text-primary ">
                             <svg xmlns="http://www.w3.org/2000/svg" height="24"
                                 viewBox="0 0 24 24" width="24" fill="currentColor">
                                 <path d="M20 5H4a1 1 0 000 2h16a1 1 0 100-2Zm0 6H4a1 1 0 000 2h16a1 1 0 000-2Zm0 6H4a1 1 0 000 2h16a1 1 0 000-2Z"></path>
@@ -65,7 +65,7 @@ function Sidebar({ minimized, onToggle }) {
                             onClick={logout}
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
-                            className="flex items-center p-2 rounded-2xl gap-3 transition-colors duration-200 w-full text-gray-700 hover:bg-primary/10 hover:text-primary"
+                            className="flex items-center p-2 rounded-2xl gap-3 transition-colors cursor-pointer duration-200 w-full text-gray-700 hover:bg-primary/10 hover:text-primary"
                         >
                             <LogoutIcon size={24} />
                             {!minimized && <span className="truncate">Logout</span>}

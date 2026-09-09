@@ -1,4 +1,5 @@
 import StatCard from "../../components/cards/StatCard";
+import Button from "../../components/buttons/button";
 
 function Members() {
 
@@ -12,8 +13,11 @@ function Members() {
 
     return (
         <>
-            <h1>Members</h1>
-            <h2>Bienvenido, Christian!</h2>
+            <div className="flex justify-between items-center mb-2">
+                <h1>Miembros</h1>
+                <Button>+ Agregar nuevo miembro</Button> 
+            </div>
+
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
 
@@ -24,6 +28,8 @@ function Members() {
                 }
 
             </div>
+
+            <form action=""></form>
 
         </>
 

@@ -1,4 +1,7 @@
 import StatCard from "../../components/cards/StatCard";
+import Button from "../../components/buttons/button";
+import FormAdd from "../../components/forms/formAdd";
+import { NavLink } from "react-router-dom";
 
 function Plans() {
 
@@ -7,13 +10,18 @@ function Plans() {
         { title: "Entrenadores", value: "10" },
         { title: "Planes", value: "5" },
         { title: "Productos", value: "20" },
-        { title: "Pagos del mes", value: "$5000" }
     ];
 
     return (
         <>
-            <h1>Plans</h1>
-            <h2>Bienvenido, Christian!</h2>
+            <div className="flex justify-between items-center mb-2">
+                <h1>Planes del gimnasio</h1>
+                <NavLink to="/plans/addplan">
+                    <Button>
+                        + Agregar nuevo plan
+                    </Button>
+                </NavLink>
+            </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
 

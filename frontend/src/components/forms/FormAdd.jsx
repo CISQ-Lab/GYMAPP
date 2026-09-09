@@ -1,0 +1,31 @@
+import Button from "../buttons/button";
+import { useNavigate } from 'react-router-dom';
+
+export default function FormAdd({ children, onSubmit, title }) {
+
+    const navigate = useNavigate();
+
+    return (
+        <div className="flex items-center justify-center w-full ">
+            <form
+                onSubmit={onSubmit}
+                className="bg-primary/50 border border-primary p-3 w-1/2 rounded-xl text-center"
+            >
+                <h1 className="mb-4">{title}</h1>
+
+                <div className="flex flex-col items-center space-y-4">
+                    {children}
+                </div>
+
+                <div className="space-x-10 pt-5">
+                    <Button>
+                        Subir
+                    </Button>
+                    <Button type="button" onClick={() => navigate(-1)}>
+                        Cancelar
+                    </Button>
+                </div>
+            </form>
+        </div>
+    );
+}

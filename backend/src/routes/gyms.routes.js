@@ -5,5 +5,6 @@ import { Router } from "express"
 const router = Router();
 
 router.get("/getGym",authMiddleware.verifyToken, gymsController.getGymData)
+router.post("/addPlan", authMiddleware.verifyToken, gymsController.addPlan )
 
 export default router;
