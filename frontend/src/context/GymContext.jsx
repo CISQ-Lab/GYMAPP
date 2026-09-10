@@ -28,8 +28,6 @@ export function GymProvider({ children }) {
                 throw (error);
             }
 
-
-
         }
 
         loadGym();

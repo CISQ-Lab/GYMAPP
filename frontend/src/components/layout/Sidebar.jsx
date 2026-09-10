@@ -1,18 +1,18 @@
 import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { SERVER_URL } from '../config/env';
-import useGym from "../hooks/useGym";
-import useAuth from '../hooks/useAuth.jsx';
+import { SERVER_URL } from '../../config/env.js';
+import useGym from "../../hooks/useGym.jsx";
+import useAuth from '../../hooks/useAuth.jsx';
 
-import DashboardIcon from '../assets/icons/dashboard-icon.jsx';
-import MembersIcon from '../assets/icons/members-icon.jsx';
-import TrainersIcon from '../assets/icons/trainers-icon.jsx';
-import PlansIcon from '../assets/icons/plans-icon.jsx';
-import ProductsIcon from '../assets/icons/products-icon.jsx';
-import PaymentsIcon from '../assets/icons/payments-icon.jsx';
-import SettingsIcon from '../assets/icons/settings-icon.jsx';
-import LogoutIcon from "../assets/icons/LogoutIcon.jsx"
+import DashboardIcon from '../../assets/icons/dashboard-icon.jsx';
+import MembersIcon from '../../assets/icons/members-icon.jsx';
+import TrainersIcon from '../../assets/icons/trainers-icon.jsx';
+import PlansIcon from '../../assets/icons/plans-icon.jsx';
+import ProductsIcon from '../../assets/icons/products-icon.jsx';
+import PaymentsIcon from '../../assets/icons/payments-icon.jsx';
+import SettingsIcon from '../../assets/icons/settings-icon.jsx';
+import LogoutIcon from "../../assets/icons/LogoutIcon.jsx"
 
 function Sidebar({ minimized, onToggle }) {
 

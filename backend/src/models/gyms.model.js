@@ -14,7 +14,7 @@ export async function getGymData(userId) {
     const gymId = staffRows[0].gym_id;
 
     const [gymRows] = await pool.query(
-        "SELECT name, logo_path FROM gyms WHERE id = ?",
+        "SELECT id, name, logo_path FROM gyms WHERE id = ?",
         [gymId]
     );
 
@@ -25,38 +25,18 @@ export async function getGymData(userId) {
     return gymRows[0];
 }
 
-export async function getPlans(userId) {
-    const [staffRows] = await pool.query(
-        "SELECT gym_id FROM staff WHERE user_id = ?",
-        [userId]
-    );
-
-    if (staffRows.length === 0) {
-        return [];
-    }
-
-    const gymId = staffRows[0].gym_id;
+export async function getPlans(gymId) {
 
     const [planRows] = await pool.query(
         "SELECT * FROM plans WHERE gym_id = ?",
         [gymId]
     );
-
     return planRows;
 }
 
-export async function addPlan(userId, name, description, price, durationDays) {
-    const [staffRows] = await pool.query(
-        "SELECT gym_id FROM staff WHERE user_id = ?",
-        [userId]
-    );
+export async function addPlan(gymId, name, description, price, durationDays) {
 
-    if (staffRows.length === 0) {
-        return null;
-    }
-
-    const gymId = staffRows[0].gym_id;
-
+    console.log(gymId);
     const [result] = await pool.query("INSERT INTO plans (name, description, price, durationDays, gym_id) VALUES (?,?,?,?, ?)",
         [name, description, price, durationDays, gymId]
     );
@@ -64,17 +44,7 @@ export async function addPlan(userId, name, description, price, durationDays) {
     return result.insertId
 }
 
-export async function changePlanActive(userId, planId) {
-    const [staffRows] = await pool.query(
-        "SELECT gym_id FROM staff WHERE user_id = ?",
-        [userId]
-    );
-
-    if (staffRows.length === 0) {
-        return null;
-    }
-
-    const gymId = staffRows[0].gym_id;
+export async function changePlanActive(gymId, planId) {
 
     const [result] = await pool.query("UPDATE plans SET isActive = 1 - isActive WHERE gym_id = ? AND id = ?",
         [gymId, planId]

@@ -1,6 +1,6 @@
-import Logo from "../assets/icons/logo";
+import Logo from "../../assets/icons/logo";
 import { NavLink } from 'react-router-dom';
-import { APP_NAME } from "../config/env";
+import { APP_NAME } from "../../config/env";
 
 export default function NavBarPublic() {
 

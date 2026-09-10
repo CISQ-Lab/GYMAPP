@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import LayoutPublic from "../../components/layoutPublic";
+import LayoutPublic from "../../components/layout/layoutPublic";
 import GenericForm from "../../components/forms/GenericFormPublic";
 import useAuth from "../../hooks/useAuth";
 import showError from "../../components/messages/showError.js";

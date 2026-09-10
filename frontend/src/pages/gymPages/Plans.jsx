@@ -1,24 +1,27 @@
 import PlanCard from "../../components/cards/PlanCard";
 import Button from "../../components/buttons/button";
-import FormAdd from "../../components/forms/formAdd";
 import { NavLink } from "react-router-dom";
 import { apiFetch } from "../../services/api";
 import { useEffect , useState} from "react";
+import useGym from "../../hooks/useGym";
 
 function Plans() {
 
     const [plans, setPlans] = useState([]);
-
+    const {gym} = useGym();
     useEffect(() => {
+
+        if(!gym?.id){
+            return;
+        }
         const getPlans = async () => {
-            const data = await apiFetch("/gyms/getPlans");
+            const data = await apiFetch(`/gyms/${gym?.id}/getPlans`);
             setPlans(data.plans)
-           
         }
 
         getPlans();
         
-    } , [])
+    } , [gym?.id])
 
     const stats = [
         { title: "Miembros", value: "150" },

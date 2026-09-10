@@ -2,10 +2,11 @@ import React from 'react';
 import { apiFetch } from '../../services/api';
 import { useState } from 'react';
 import showError from "../messages/showError.js"
+import useGym from "../../hooks/useGym.jsx"
 
 export default function PlanCard({ name, onEdit, onDelete, onToggleStatus, ...props }) {
 
-
+  const {id} = useGym();
   const [isActive, setActive] = useState(props.isActive ?? true)
 
   const toggleStatus = async () => {
@@ -13,7 +14,8 @@ export default function PlanCard({ name, onEdit, onDelete, onToggleStatus, ...pr
       const data = await apiFetch("/gyms/changePlanActive", {
         method: 'PATCH',
         body: JSON.stringify({
-          planId: props.id
+          planId: props.id,
+          gymId: id
         })
       })
       if (data.success) {
@@ -82,7 +84,7 @@ export default function PlanCard({ name, onEdit, onDelete, onToggleStatus, ...pr
         <button
           type="button"
           onClick={() => onEdit && onEdit(props)}
-          className="flex-1 sm:flex-initial flex items-center justify-center gap-1 px-2.5 py-1.5 rounded-md bg-neutral-800/80 hover:bg-neutral-700 text-neutral-200 hover:text-white text-xs font-medium transition-colors border border-primary"
+          className="flex-1 sm:flex-initial flex items-center justify-center gap-1 px-2.5 py-1.5 rounded-md bg-neutral-800/80 hover:bg-neutral-700 text-neutral-200 hover:text-white text-xs font-medium transition-colors border border-primary/40"
           title="Editar plan"
         >
           <svg className="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -101,9 +103,6 @@ export default function PlanCard({ name, onEdit, onDelete, onToggleStatus, ...pr
             }`}
           title={isActive ? 'Desactivar plan' : 'Activar plan'}
         >
-          <svg className="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
-          </svg>
           <span>{isActive ? 'Desactivar' : 'Activar'}</span>
         </button>
 

@@ -1,5 +1,5 @@
 import useAuth from "../hooks/useAuth";
-import Spinner from "../components/spinner";
+import Spinner from "../components/layout/spinner";
 
 import { Navigate, Outlet } from "react-router-dom";
 

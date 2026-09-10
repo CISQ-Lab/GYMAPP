@@ -6,7 +6,7 @@ import Plans from "../pages/gymPages/Plans";
 import Products from "../pages/gymPages/Products";
 import Payments from "../pages/gymPages/Payments";
 import Settings from "../pages/gymPages/Settings";
-import Layout from "../components/Layout";
+import Layout from "../components/layout/Layout";
 import SetTheme from "../pages/gymPages/SetTheme";
 import Login from "../pages/auth/Login";
 import ProtectedRoutes from "../services/ProtectedRoutes";

@@ -6,7 +6,7 @@ const router = Router();
 
 router.get("/getGym", authMiddleware.verifyToken, gymsController.getGymData);
 
-router.get("/getPlans", authMiddleware.verifyToken, gymsController.getPlans);
+router.get("/:id/getPlans", authMiddleware.verifyToken, gymsController.getPlans);
 router.post("/addPlan", authMiddleware.verifyToken, gymsController.addPlan)
 router.patch("/changePlanActive", authMiddleware.verifyToken, gymsController.changePlanActive)
 

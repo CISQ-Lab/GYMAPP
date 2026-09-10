@@ -1,7 +1,7 @@
 import Button from "../buttons/button";
 import { useNavigate } from 'react-router-dom';
 
-export default function FormAdd({ children, onSubmit, title }) {
+export default function FormAdd({ children, onSubmit, title, loading }) {
 
     const navigate = useNavigate();
 
@@ -18,7 +18,7 @@ export default function FormAdd({ children, onSubmit, title }) {
                 </div>
 
                 <div className="space-x-10 pt-5">
-                    <Button>
+                    <Button loading={loading}>
                         Subir
                     </Button>
                     <Button type="button" onClick={() => navigate(-1)}>

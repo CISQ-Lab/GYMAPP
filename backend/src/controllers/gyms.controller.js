@@ -20,7 +20,10 @@ export async function getGymData(req, res, next) {
 
 export async function getPlans(req, res, next) {
     try {
-        const plans = await GymModel.getPlans(req.user.id)
+
+        const {id} = req.params;
+        console.log(id);
+        const plans = await GymModel.getPlans(id)
         if (plans.length === 0) {
             return res.status(404).json({
                 message: "No se encontraron planes"
@@ -40,9 +43,9 @@ export async function addPlan(req, res, next) {
     try {
 
         req.body = req.body.form
-        const { name, description, price, duration } = req.body;
+        const { name, description, price, duration, gymId } = req.body;
 
-        const planId = await GymModel.addPlan(req.user.id, name, description, price, duration);
+        const planId = await GymModel.addPlan(gymId, name, description, price, duration);
         if (planId.length === 0) {
             return res.status(400).json({
                 message: "No pudo agregarse, intentalo de nuevo"
@@ -61,9 +64,9 @@ export async function addPlan(req, res, next) {
 export async function changePlanActive(req, res, next) {
     try {
 
-        const {planId} = req.body;
+        const {planId, gymId} = req.body;
 
-        const result = await GymModel.changePlanActive(req.user.id, planId);
+        const result = await GymModel.changePlanActive(gymId, planId);
         console.log(result);
         if (result.length === 0) {
             return res.status(400).json({

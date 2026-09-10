@@ -3,8 +3,6 @@
 //import viteLogo from './assets/vite.svg'
 //import heroImg from './assets/hero.png'
 //import './App.css'
-import Layout from './components/Layout'
-import Dashboard from './pages/gymPages/DashBoard'
 import AppRoutes from './routes/AppRoutes'
 
 function App() {

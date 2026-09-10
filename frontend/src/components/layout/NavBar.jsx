@@ -1,7 +1,7 @@
-import ClockIcon from '../assets/icons/ClockIcon';
+import ClockIcon from '../../assets/icons/ClockIcon';
 import { useEffect, useState } from 'react';
 
-import useGym from '../hooks/useGym';
+import useGym from '../../hooks/useGym';
 
 function Navbar({ sidebarMinimized, onToggle }) {
   const { gym } = useGym();

@@ -6,7 +6,7 @@ import GenericFormPublic from "../../components/forms/GenericFormPublic"
 import LoginForm from "../../components/forms/loginForm"
 import RegisterForm from "../../components/forms/registerForm"
 import { apiFetch } from "../../services/api"
-import LayoutPublic from "../../components/layoutPublic"
+import LayoutPublic from "../../components/layout/layoutPublic"
 import { useNavigate } from "react-router-dom";
 
 export default function Login() {
