@@ -7,7 +7,8 @@ const router = Router();
 router.get("/getGym", authMiddleware.verifyToken, gymsController.getGymData);
 
 router.get("/:id/getPlans", authMiddleware.verifyToken, gymsController.getPlans);
-router.post("/addPlan", authMiddleware.verifyToken, gymsController.addPlan)
-router.patch("/changePlanActive", authMiddleware.verifyToken, gymsController.changePlanActive)
+router.post("/addPlan", authMiddleware.verifyToken, gymsController.addPlan);
+router.delete("/deletePlan", authMiddleware.verifyToken, gymsController.deletePlan);
+router.patch("/changePlanActive", authMiddleware.verifyToken, gymsController.changePlanActive);
 
 export default router;

@@ -44,6 +44,14 @@ export async function addPlan(gymId, name, description, price, durationDays) {
     return result.insertId
 }
 
+export async function deletePlan(gymId, planId) {
+    const [result] = await pool.query("DELETE FROM plans WHERE id = ? AND gym_id = ?",
+        [planId, gymId]
+    );
+    console.log(result);
+    return result;
+}
+
 export async function changePlanActive(gymId, planId) {
 
     const [result] = await pool.query("UPDATE plans SET isActive = 1 - isActive WHERE gym_id = ? AND id = ?",

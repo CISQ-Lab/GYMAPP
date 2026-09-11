@@ -2,33 +2,27 @@ import PlanCard from "../../components/cards/PlanCard";
 import Button from "../../components/buttons/button";
 import { NavLink } from "react-router-dom";
 import { apiFetch } from "../../services/api";
-import { useEffect , useState} from "react";
+import { useEffect, useState } from "react";
 import useGym from "../../hooks/useGym";
 
 function Plans() {
 
     const [plans, setPlans] = useState([]);
-    const {gym} = useGym();
-    useEffect(() => {
 
-        if(!gym?.id){
+    const { gym } = useGym();
+
+    const fetchPlans = async () => {
+        if (!gym?.id) {
             return;
         }
-        const getPlans = async () => {
-            const data = await apiFetch(`/gyms/${gym?.id}/getPlans`);
-            setPlans(data.plans)
-        }
+        const data = await apiFetch(`/gyms/${gym?.id}/getPlans`);
+        setPlans(data.plans)
+    }
 
-        getPlans();
-        
-    } , [gym?.id])
+    useEffect(() => {
+        fetchPlans();
+    }, [gym?.id])
 
-    const stats = [
-        { title: "Miembros", value: "150" },
-        { title: "Entrenadores", value: "10" },
-        { title: "Planes", value: "5" },
-        { title: "Productos", value: "20" },
-    ];
 
     return (
         <>
@@ -45,8 +39,9 @@ function Plans() {
 
                 {
                     plans.map((plan, index) => (
-                        <PlanCard key={index} name={plan.name} isActive={plan.isActive} id={plan.id}
-                         description={plan.description} price={plan.price} duration={plan.durationDays} />
+                        <PlanCard key={index} name={plan.name} isActive={plan.isActive} 
+                        id={plan.id} onDelete={fetchPlans} description={plan.description} 
+                        price={plan.price} duration={plan.durationDays} />
                     ))
                 }
 

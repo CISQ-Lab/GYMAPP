@@ -4,7 +4,7 @@ import { useState } from 'react';
 import showError from "../messages/showError.js"
 import useGym from "../../hooks/useGym.jsx"
 
-export default function PlanCard({ name, onEdit, onDelete, onToggleStatus, ...props }) {
+export default function PlanCard({ name, onEdit, onDelete, ...props }) {
 
   const {id} = useGym();
   const [isActive, setActive] = useState(props.isActive ?? true)
@@ -26,6 +26,22 @@ export default function PlanCard({ name, onEdit, onDelete, onToggleStatus, ...pr
       showError(error)
     }
 
+  }
+
+  const deletePlan = () => {
+    try {
+      apiFetch("/gyms/deletePlan", {
+        method: 'DELETE',
+        body: JSON.stringify({
+          planId: props.id,
+          gymId: id
+        })
+      })
+
+      onDelete();
+    } catch (error) {
+      
+    }
   }
 
   return (
@@ -109,7 +125,7 @@ export default function PlanCard({ name, onEdit, onDelete, onToggleStatus, ...pr
         {/* Botón Eliminar */}
         <button
           type="button"
-          onClick={() => onDelete && onDelete(props)}
+          onClick={deletePlan}
           className="flex-1 sm:flex-initial flex items-center justify-center gap-1 px-2.5 py-1.5 rounded-md bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/20 text-xs font-medium transition-colors"
           title="Eliminar plan"
         >
