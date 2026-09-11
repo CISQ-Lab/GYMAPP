@@ -19,6 +19,12 @@ function Plans() {
         setPlans(data.plans)
     }
 
+    const deletePlanFromUI = (id) => {
+        setPlans(prevPlans =>
+            prevPlans.filter(plan => plan.id !== id)
+        );
+    };
+
     useEffect(() => {
         fetchPlans();
     }, [gym?.id])
@@ -38,10 +44,10 @@ function Plans() {
             <div className="mt-5 grid grid-cols-1 place-content-center w-full sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
 
                 {
-                    plans.map((plan, index) => (
-                        <PlanCard key={index} name={plan.name} isActive={plan.isActive} 
-                        id={plan.id} onDelete={fetchPlans} description={plan.description} 
-                        price={plan.price} duration={plan.durationDays} />
+                    plans.map((plan) => (
+                        <PlanCard key={plan.id} name={plan.name} isActive={plan.isActive}
+                            id={plan.id} Delete={deletePlanFromUI} description={plan.description}
+                            price={plan.price} duration={plan.durationDays} />
                     ))
                 }
 

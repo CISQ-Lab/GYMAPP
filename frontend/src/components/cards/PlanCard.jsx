@@ -1,10 +1,11 @@
-import React from 'react';
 import { apiFetch } from '../../services/api';
 import { useState } from 'react';
 import showError from "../messages/showError.js"
 import useGym from "../../hooks/useGym.jsx"
+import Success from '../messages/success.js';
+import confirmation from '../messages/confirmation.js';
 
-export default function PlanCard({ name, onEdit, onDelete, ...props }) {
+export default function PlanCard({ name, onEdit, Delete, ...props }) {
 
   const {gym} = useGym();
   const [isActive, setActive] = useState(props.isActive ?? true)
@@ -28,9 +29,10 @@ export default function PlanCard({ name, onEdit, onDelete, ...props }) {
 
   }
 
-  const deletePlan = () => {
+  const deletePlan = async () => {
+
     try {
-      apiFetch("/gyms/deletePlan", {
+       const data = await apiFetch("/gyms/deletePlan", {
         method: 'DELETE',
         body: JSON.stringify({
           planId: props.id,
@@ -38,11 +40,17 @@ export default function PlanCard({ name, onEdit, onDelete, ...props }) {
         })
       })
 
-      onDelete();
+      if(data.success){
+        Delete(props.id);
+        Success(data.message);
+      }
+
     } catch (error) {
-      
+      showError(error)
     }
   }
+
+   const deleteConfirmation = () => confirmation({text: "¿Quieres eliminar el plan? Esto no se puede deshacer.", onConfirm: deletePlan});
 
   return (
     <div className="group relative bg-neutral-900 border border-neutral-800 hover:border-primary/50 rounded-xl p-5 shadow-md overflow-hidden transition-all duration-200 flex flex-col justify-between">
@@ -125,7 +133,7 @@ export default function PlanCard({ name, onEdit, onDelete, ...props }) {
         {/* Botón Eliminar */}
         <button
           type="button"
-          onClick={deletePlan}
+          onClick={deleteConfirmation}
           className="flex-1 sm:flex-initial flex items-center justify-center gap-1 px-2.5 py-1.5 rounded-md bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/20 text-xs font-medium transition-colors"
           title="Eliminar plan"
         >
