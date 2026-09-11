@@ -62,8 +62,9 @@ export async function addPlan(req, res, next) {
 export async function deletePlan(req, res, next) {
     try {
         const { planId, gymId } = req.body;
+        console.log(planId + " " + gymId);
         const result = await GymModel.deletePlan(planId, gymId);
-        if (result.length === 0) {
+        if (result.affectedRows === 0) {
             return res.status(400).json({
                 success: false,
                 message: "No se pudo eliminar, intentalo de nuevo."
@@ -84,9 +85,9 @@ export async function changePlanActive(req, res, next) {
     try {
 
         const { planId, gymId } = req.body;
+        console.log(gymId);
 
         const result = await GymModel.changePlanActive(gymId, planId);
-        console.log(result);
         if (result.length === 0) {
             return res.status(400).json({
                 message: "No se pudo cambiar el estado, intenta nuevamente."

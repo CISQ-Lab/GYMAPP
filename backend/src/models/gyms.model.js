@@ -44,11 +44,10 @@ export async function addPlan(gymId, name, description, price, durationDays) {
     return result.insertId
 }
 
-export async function deletePlan(gymId, planId) {
+export async function deletePlan(planId, gymId) {
     const [result] = await pool.query("DELETE FROM plans WHERE id = ? AND gym_id = ?",
         [planId, gymId]
     );
-    console.log(result);
     return result;
 }
 

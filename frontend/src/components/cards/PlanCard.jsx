@@ -6,7 +6,7 @@ import useGym from "../../hooks/useGym.jsx"
 
 export default function PlanCard({ name, onEdit, onDelete, ...props }) {
 
-  const {id} = useGym();
+  const {gym} = useGym();
   const [isActive, setActive] = useState(props.isActive ?? true)
 
   const toggleStatus = async () => {
@@ -15,7 +15,7 @@ export default function PlanCard({ name, onEdit, onDelete, ...props }) {
         method: 'PATCH',
         body: JSON.stringify({
           planId: props.id,
-          gymId: id
+          gymId: gym?.id
         })
       })
       if (data.success) {
@@ -34,7 +34,7 @@ export default function PlanCard({ name, onEdit, onDelete, ...props }) {
         method: 'DELETE',
         body: JSON.stringify({
           planId: props.id,
-          gymId: id
+          gymId: gym?.id
         })
       })
 
