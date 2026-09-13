@@ -33,7 +33,7 @@ function Sidebar({ minimized, onToggle }) {
         <aside className={`h-screen bg-primary/10 text-black transition-all duration-300 ease-in-out ${minimized ? 'w-16' : 'w-48'}`}>
             <nav className="pt-4 h-full flex flex-col">
 
-                <div className='m-3 px-3 rounded-2xl flex flex-col items-center '>
+                <div className='m-3 rounded-2xl flex flex-col items-center '>
                     <img src={SERVER_URL + gym?.logo_path} alt="Gym App Logo" className={`${minimized ? "h-10 w-10" : "h-25 w-25"} border border-primary rounded-full`} />
                     <h1>{!minimized && gym?.name}</h1>
                 </div>

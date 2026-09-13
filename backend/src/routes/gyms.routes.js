@@ -8,7 +8,9 @@ router.get("/getGym", authMiddleware.verifyToken, gymsController.getGymData);
 
 router.get("/:id/getPlans", authMiddleware.verifyToken, gymsController.getPlans);
 router.post("/addPlan", authMiddleware.verifyToken, gymsController.addPlan);
+router.put("/editPlan/:planId", authMiddleware.verifyToken, gymsController.updatePlan);
 router.delete("/deletePlan", authMiddleware.verifyToken, gymsController.deletePlan);
 router.patch("/changePlanActive", authMiddleware.verifyToken, gymsController.changePlanActive);
+router.get("/getPlan/:id", authMiddleware.verifyToken, gymsController.getPlan);
 
 export default router;

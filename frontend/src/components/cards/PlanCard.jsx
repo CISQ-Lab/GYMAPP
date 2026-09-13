@@ -4,10 +4,11 @@ import showError from "../messages/showError.js"
 import useGym from "../../hooks/useGym.jsx"
 import Success from '../messages/success.js';
 import confirmation from '../messages/confirmation.js';
+import { NavLink } from 'react-router-dom';
 
 export default function PlanCard({ name, onEdit, Delete, ...props }) {
 
-  const {gym} = useGym();
+  const { gym } = useGym();
   const [isActive, setActive] = useState(props.isActive ?? true)
 
   const toggleStatus = async () => {
@@ -32,7 +33,7 @@ export default function PlanCard({ name, onEdit, Delete, ...props }) {
   const deletePlan = async () => {
 
     try {
-       const data = await apiFetch("/gyms/deletePlan", {
+      const data = await apiFetch("/gyms/deletePlan", {
         method: 'DELETE',
         body: JSON.stringify({
           planId: props.id,
@@ -40,7 +41,7 @@ export default function PlanCard({ name, onEdit, Delete, ...props }) {
         })
       })
 
-      if(data.success){
+      if (data.success) {
         Delete(props.id);
         Success(data.message);
       }
@@ -50,7 +51,7 @@ export default function PlanCard({ name, onEdit, Delete, ...props }) {
     }
   }
 
-   const deleteConfirmation = () => confirmation({text: "¿Quieres eliminar el plan? Esto no se puede deshacer.", onConfirm: deletePlan});
+  const deleteConfirmation = () => confirmation({ text: "¿Quieres eliminar el plan? Esto no se puede deshacer.", onConfirm: deletePlan });
 
   return (
     <div className="group relative bg-neutral-900 border border-neutral-800 hover:border-primary/50 rounded-xl p-5 shadow-md overflow-hidden transition-all duration-200 flex flex-col justify-between">
@@ -105,17 +106,20 @@ export default function PlanCard({ name, onEdit, Delete, ...props }) {
       <div className="relative grid items-center gap-1.5 pt-3 border-t border-neutral-800/80">
 
         {/* Botón Editar */}
-        <button
-          type="button"
-          onClick={() => onEdit && onEdit(props)}
-          className="flex-1 sm:flex-initial flex items-center justify-center gap-1 px-2.5 py-1.5 rounded-md bg-neutral-800/80 hover:bg-neutral-700 text-neutral-200 hover:text-white text-xs font-medium transition-colors border border-primary/40"
-          title="Editar plan"
-        >
-          <svg className="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-          </svg>
-          <span>Editar</span>
-        </button>
+        <NavLink to="./editplan" state={{ id: props.id }} className="flex-1 sm:flex-initial flex items-center justify-center gap-1 px-2.5 py-1.5 rounded-md
+         bg-neutral-800/80 hover:bg-neutral-700 text-neutral-200 hover:text-white text-xs font-medium transition-colors border border-primary/40">
+          <button
+            type="button"
+            title="Editar plan"
+          >
+            <div className='flex space-x-1'>
+              <svg className="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+              </svg>
+              <span>Editar</span>
+            </div>
+          </button>
+        </NavLink>
 
         {/* Botón Activar / Desactivar */}
         <button

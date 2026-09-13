@@ -34,14 +34,28 @@ export async function getPlans(gymId) {
     return planRows;
 }
 
+export async function getPlan(planId) {
+    const [planRows] = await pool.query("SELECT * FROM plans WHERE id = ?",
+        [planId]
+    )
+
+    return planRows[0];
+}
+
 export async function addPlan(gymId, name, description, price, durationDays) {
 
-    console.log(gymId);
     const [result] = await pool.query("INSERT INTO plans (name, description, price, durationDays, gym_id) VALUES (?,?,?,?, ?)",
         [name, description, price, durationDays, gymId]
     );
 
     return result.insertId
+}
+
+export async function updatePlan(name, description, price, duration, planId) {
+    const [result] = await pool.query("UPDATE plans SET name = ?, description = ?, price = ?, durationDays = ? WHERE id = ?",
+        [name, description, price, duration, planId]
+    );
+    return result;
 }
 
 export async function deletePlan(planId, gymId) {
@@ -56,6 +70,6 @@ export async function changePlanActive(gymId, planId) {
     const [result] = await pool.query("UPDATE plans SET isActive = 1 - isActive WHERE gym_id = ? AND id = ?",
         [gymId, planId]
     );
-    
+
     return result
 }

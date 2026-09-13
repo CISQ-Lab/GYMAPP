@@ -14,6 +14,7 @@ import GuestRoutes from "../services/GuestRoutes";
 import UserFirstGym from "../services/userFirstGym";
 import CreateNewGym from "../pages/auth/createNewGym";
 import AddNewPlan from "../pages/gymPages/addNewPlan";
+import EditPlan from "../pages/gymPages/EditPlan";
 
 function AppRoutes() {
 
@@ -35,6 +36,7 @@ function AppRoutes() {
                     <Route path="/trainers" element={<Trainers />} />
                     <Route path="/plans" element={<Plans />} />
                     <Route path="/plans/addplan" element={<AddNewPlan/>} />
+                    <Route path="/plans/editplan" element={<EditPlan/>} />
                     <Route path="/products" element={<Products />} />
                     <Route path="/payments" element={<Payments />} />
                     <Route path="/settings" element={<Settings />} />

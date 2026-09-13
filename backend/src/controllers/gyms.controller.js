@@ -37,6 +37,27 @@ export async function getPlans(req, res, next) {
     }
 }
 
+export async function getPlan(req, res, next) {
+
+    try {
+        const { id } = req.params;
+        const plan = await GymModel.getPlan(id);
+        if (plan.length === 0) {
+            return res.status(404).json({
+                message: "No se encuentra el plan solicitado"
+            })
+        }
+
+        return res.status(200).json({
+            success: true,
+            plan
+        })
+    }
+    catch (error) {
+        next(error);
+    }
+}
+
 export async function addPlan(req, res, next) {
     try {
 
@@ -59,10 +80,36 @@ export async function addPlan(req, res, next) {
     }
 }
 
+export async function updatePlan(req, res, next) {
+
+    const {planId} = req.params;
+
+    req.body = req.body.form;
+
+    const { name, description, price, duration } = req.body
+
+    try {
+        const result = await GymModel.updatePlan(name, description, price, duration, planId);
+        if (result.affectedRows === 0  ) {
+            return res.status(400).json({
+                success: false,
+                message: "No se pudo editar, intentalo de nuevo."
+            })
+        }
+
+        return res.status(200).json({
+            success: true,
+            message: "Cambios realizados con exito."
+        })
+
+    } catch (error) {
+        next(error);
+    }
+}
+
 export async function deletePlan(req, res, next) {
     try {
         const { planId, gymId } = req.body;
-        console.log(planId + " " + gymId);
         const result = await GymModel.deletePlan(planId, gymId);
         if (result.affectedRows === 0) {
             return res.status(400).json({
@@ -85,7 +132,6 @@ export async function changePlanActive(req, res, next) {
     try {
 
         const { planId, gymId } = req.body;
-        console.log(gymId);
 
         const result = await GymModel.changePlanActive(gymId, planId);
         if (result.length === 0) {
