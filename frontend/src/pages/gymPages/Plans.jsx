@@ -41,17 +41,40 @@ function Plans() {
                 </NavLink>
             </div>
 
-            <div className="mt-5 grid grid-cols-1 place-content-center w-full sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
 
-                {
-                    plans.map((plan) => (
-                        <PlanCard key={plan.id} name={plan.name} isActive={plan.isActive}
-                            id={plan.id} Delete={deletePlanFromUI} description={plan.description}
-                            price={plan.price} duration={plan.durationDays} />
-                    ))
-                }
 
-            </div>
+            {plans.length !== 0 ?
+                <div className="mt-5 grid grid-cols-1 place-content-center w-full sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                    {
+                        plans.map((plan) => (
+                            <PlanCard key={plan.id} name={plan.name} isActive={plan.isActive}
+                                id={plan.id} Delete={deletePlanFromUI} description={plan.description}
+                                price={plan.price} duration={plan.durationDays} />
+                        ))
+                    }
+                </div>
+                :
+                <div className="flex flex-col items-center mt-5">
+
+                    <div className="border border-primary p-10 space-y-5 flex flex-col items-center
+                    rounded-2xl bg-primary/30">
+
+                        <p>No hay planes para mostrar</p>
+                        <NavLink to="/plans/addplan">
+                            <Button>
+                                + Agrega un plan para comenzar!
+                            </Button>
+                        </NavLink>
+
+                    </div>
+
+
+                </div>
+
+
+            }
+
+
 
         </>
 

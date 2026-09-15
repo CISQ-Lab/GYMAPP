@@ -74,6 +74,26 @@ export default function AddNewPlan() {
                 <Input type="text" ph="Descripcion" name="description" value={form.description} onChange={handleChange} />
                 <Input type="number" ph="Precio" step="any" name="price" value={form.price} onChange={handleChange} required />
                 <Input type="number" ph="Duracion en dias" name="duration" value={form.duration} onChange={handleChange} required />
+                <Input type="text" ph="Nombre" name="name" value={form.name} onChange={handleChange} required />
+                <Input type="text" ph="Descripcion" name="description" value={form.description} onChange={handleChange} />
+                <Input type="number" ph="Precio" step="any" name="price" value={form.price} onChange={handleChange} required />
+                <Input type="number" ph="Duracion en dias" name="duration" value={form.duration} onChange={handleChange} required />
+                <Input type="text" ph="Nombre" name="name" value={form.name} onChange={handleChange} required />
+                <Input type="text" ph="Descripcion" name="description" value={form.description} onChange={handleChange} />
+                <Input type="number" ph="Precio" step="any" name="price" value={form.price} onChange={handleChange} required />
+                <Input type="number" ph="Duracion en dias" name="duration" value={form.duration} onChange={handleChange} required />
+                <Input type="text" ph="Nombre" name="name" value={form.name} onChange={handleChange} required />
+                <Input type="text" ph="Descripcion" name="description" value={form.description} onChange={handleChange} />
+                <Input type="number" ph="Precio" step="any" name="price" value={form.price} onChange={handleChange} required />
+                <Input type="number" ph="Duracion en dias" name="duration" value={form.duration} onChange={handleChange} required />
+                <Input type="text" ph="Nombre" name="name" value={form.name} onChange={handleChange} required />
+                <Input type="text" ph="Descripcion" name="description" value={form.description} onChange={handleChange} />
+                <Input type="number" ph="Precio" step="any" name="price" value={form.price} onChange={handleChange} required />
+                <Input type="number" ph="Duracion en dias" name="duration" value={form.duration} onChange={handleChange} required />
+                <Input type="text" ph="Nombre" name="name" value={form.name} onChange={handleChange} required />
+                <Input type="text" ph="Descripcion" name="description" value={form.description} onChange={handleChange} />
+                <Input type="number" ph="Precio" step="any" name="price" value={form.price} onChange={handleChange} required />
+                <Input type="number" ph="Duracion en dias" name="duration" value={form.duration} onChange={handleChange} required />
             </FormAdd>
         </>
     )

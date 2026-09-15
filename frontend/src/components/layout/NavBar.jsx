@@ -19,7 +19,7 @@ function Navbar({ sidebarMinimized, onToggle }) {
 
   return (
 
-    <nav className={`flex justify-between items-center text-black h-15 mb-5`}>
+    <nav className={`flex justify-between items-center text-black h-10 px-10 mt-5`}>
 
       <div className=''>
         <h1 className=' text-center'>{gym?.name}</h1>

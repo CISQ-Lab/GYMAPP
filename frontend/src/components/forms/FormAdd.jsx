@@ -6,10 +6,10 @@ export default function FormAdd({ children, onSubmit, title, loading }) {
     const navigate = useNavigate();
 
     return (
-        <div className="flex items-center justify-center w-full ">
+        <div className="flex items-center justify-center w-full h-full">
             <form
                 onSubmit={onSubmit}
-                className="bg-primary/50 border border-primary p-3 w-1/2 rounded-xl text-center"
+                className="bg-primary/50 border border-primary py-10 w-1/2 rounded-xl text-center"
             >
                 <h1 className="mb-4">{title}</h1>
 
