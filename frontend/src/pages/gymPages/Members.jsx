@@ -1,5 +1,6 @@
 import StatCard from "../../components/cards/StatCard";
 import Button from "../../components/buttons/button";
+import { NavLink } from "react-router-dom";
 
 function Members() {
 
@@ -15,7 +16,10 @@ function Members() {
         <>
             <div className="flex justify-between items-center mb-2">
                 <h1>Miembros</h1>
-                <Button>+ Agregar nuevo miembro</Button> 
+                <NavLink to="./addMember">
+                    <Button>+ Agregar nuevo miembro</Button>
+                </NavLink>
+                
             </div>
 
 

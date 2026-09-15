@@ -13,8 +13,9 @@ import ProtectedRoutes from "../services/ProtectedRoutes";
 import GuestRoutes from "../services/GuestRoutes";
 import UserFirstGym from "../services/userFirstGym";
 import CreateNewGym from "../pages/auth/createNewGym";
-import AddNewPlan from "../pages/gymPages/addNewPlan";
+import AddNewPlan from "../pages/gymPages/AddNewPlan";
 import EditPlan from "../pages/gymPages/EditPlan";
+import AddNewMember from "../pages/gymPages/AddNewMember";
 
 function AppRoutes() {
 
@@ -33,6 +34,8 @@ function AppRoutes() {
                 <Route element={<Layout />}>
                     <Route path="/dashboard" element={<Dashboard />} />
                     <Route path="/members" element={<Members />} />
+                    <Route path="/members/addMember" element={<AddNewMember/>} />
+                    <Route path="/members/editMember" element={<EditPlan/>} />
                     <Route path="/trainers" element={<Trainers />} />
                     <Route path="/plans" element={<Plans />} />
                     <Route path="/plans/addplan" element={<AddNewPlan/>} />

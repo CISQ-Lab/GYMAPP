@@ -24,11 +24,13 @@ export async function getPlans(req, res, next) {
         const plans = await GymModel.getPlans(id)
         if (plans.length === 0) {
             return res.status(404).json({
+                success: false,
                 message: "No se encontraron planes"
             })
         }
 
         return res.status(200).json({
+            success: true,
             message: "Planes encontrados correctamente",
             plans
         })
