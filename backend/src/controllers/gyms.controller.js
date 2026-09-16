@@ -1,4 +1,5 @@
 import * as GymModel from "../models/gyms.model.js"
+import fs from "fs"
 
 export async function getGymData(req, res, next) {
     try {
@@ -15,6 +16,43 @@ export async function getGymData(req, res, next) {
     } catch (error) {
         next(error);
     }
+}
+
+export async function addNewMember(req, res, next) {
+
+    if (!req.file) {
+        return res.status(400).json({
+            success: false,
+            message: "Sube una foto del usuario"
+        })
+    }
+
+    const { name, surname, phone, email, planId, gymId } = req.body;
+    const photo_pat = req.file.path;
+
+    try {
+        const data = await GymModel.addNewMember(name, surname, planId, phone, email, photo_pat, gymId);
+        if (data.affectedRows === 0) return res.status(400).json({
+            success: false,
+            message: "No fue posible agregar el usuario, intentalo mas tarde"
+        })
+
+        return res.status(200).json({
+            success: true,
+            message: "El usuario fue agregado con exito!!"
+        })
+    }
+    catch (error) {
+
+        fs.unlink(req.file.path, (e) => {
+            if (e) console.error("No se pudo borrar el archivo físicamente:", err);
+            else console.log("Archivo fantasma eliminado correctamente del servidor.");
+        })
+
+        req.body.error = "Este usuario ya esta agregado en la base de datos";
+        next(error);
+    }
+
 }
 
 export async function getPlans(req, res, next) {
@@ -84,7 +122,7 @@ export async function addPlan(req, res, next) {
 
 export async function updatePlan(req, res, next) {
 
-    const {planId} = req.params;
+    const { planId } = req.params;
 
     req.body = req.body.form;
 
@@ -92,7 +130,7 @@ export async function updatePlan(req, res, next) {
 
     try {
         const result = await GymModel.updatePlan(name, description, price, duration, planId);
-        if (result.affectedRows === 0  ) {
+        if (result.affectedRows === 0) {
             return res.status(400).json({
                 success: false,
                 message: "No se pudo editar, intentalo de nuevo."

@@ -25,6 +25,13 @@ export async function getGymData(userId) {
     return gymRows[0];
 }
 
+export async function addNewMember(name, surname, membership_id, phone, email, photo_pat, gymId){
+    const [result] = await pool.query("INSERT INTO members (name, surname, membership_id, phone, email, photo_pat, gym_id) VALUES (?, ?, ?, ?, ?, ?, ?)",
+       [name, surname, membership_id, phone, email, photo_pat, gymId] 
+    )
+    return result;
+}
+
 export async function getPlans(gymId) {
 
     const [planRows] = await pool.query(

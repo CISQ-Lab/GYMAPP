@@ -9,7 +9,7 @@ export default function FormAdd({ children, onSubmit, title, loading }) {
         <div className="flex items-center justify-center w-full min-h-[calc(100vh-20rem)]">
             <form
                 onSubmit={onSubmit}
-                className="bg-primary/50 border border-primary py-10 my-auto w-1/2 rounded-xl text-center"
+                className="bg-primary/50 border border-primary py-10 my-auto w-2/3 rounded-xl text-center"
             >
                 <h1 className="mb-4">{title}</h1>
 

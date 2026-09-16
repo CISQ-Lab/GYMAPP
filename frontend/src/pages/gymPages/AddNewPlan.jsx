@@ -1,4 +1,4 @@
-import FormAdd from "../../components/forms/formAdd";
+import FormAdd from "../../components/forms/FormAdd";
 import Input from "../../components/layout/input";
 import { useState, useEffect } from "react";
 import { apiFetch } from "../../services/api";

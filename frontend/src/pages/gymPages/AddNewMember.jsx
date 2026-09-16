@@ -1,4 +1,4 @@
-import FormAdd from "../../components/forms/formAdd";
+import FormAdd from "../../components/forms/FormAdd";
 import Input from "../../components/layout/input";
 import { useState, useEffect, useRef } from "react";
 import { apiFetch } from "../../services/api";
@@ -8,6 +8,7 @@ import useGym from "../../hooks/useGym";
 import Button from "../../components/buttons/button";
 import { useNavigate } from "react-router-dom";
 import Select from "../../components/layout/Select";
+import { motion } from "framer-motion";
 
 export default function AddNewMember() {
 
@@ -51,11 +52,6 @@ export default function AddNewMember() {
                 setPlans(p);
                 setLoading(false);
             }
-        })
-
-        setForm({
-            ...form,
-            gymId: gym.id
         })
 
 
@@ -118,22 +114,32 @@ export default function AddNewMember() {
     const handleSubmit = async (e) => {
 
         e.preventDefault();
+        const formData = new FormData(e.currentTarget);
 
-        return console.log(form);
+        const foto = formData.get("foto_perfil");
+
+        if(!foto || foto.name === "" || foto.size === 0){
+            showError("Sube una foto del usuario")
+            return;
+        }
+        
+        formData.append("gymId", gym?.id);
+
         try {
-            const data = await apiFetch("/gyms/addPlan", {
-                method: 'POST',
-                body: JSON.stringify({
-                    form
-                })
+            const data = await apiFetch("/gyms/addNewMember", {
+                method: "POST",
+                body: formData
             })
 
-            if (data.planId) {
+            if (data.success) {
                 Success(data.message)
+            }
+            else{
+                showError(data.message);
             }
         }
         catch (error) {
-            showError(error)
+            showError(error.message)
         }
 
 
@@ -142,7 +148,7 @@ export default function AddNewMember() {
     return (
         <>
             <Button type="button" onClick={() => navigate(-1)}> ← Regresar </Button>
-            <FormAdd title="Agregar nuevo Miembro" onSubmit={handleSubmit} loading={loading} >
+            <FormAdd title="Agregar nuevo Miembro" onSubmit={handleSubmit} loading={loading} id="myform">
                 <div className="grid grid-cols-1 2xl:grid-cols-[2fr_1fr] m-5 mr-15">
 
                     <div className="space-y-4">
@@ -164,8 +170,8 @@ export default function AddNewMember() {
                                 onDrop={handleDrop}
                                 onClick={() => fileInputRef.current?.click()}
                                 className={`relative flex flex-col items-center justify-center w-full h-64 border-2 border-dashed rounded-xl cursor-pointer transition-all duration-200 overflow-hidden ${isDragging
-                                    ? "border-red-500 bg-red-500/10"
-                                    : "border-gray-500 bg-gray-800/30 hover:bg-gray-800/60 hover:border-red-400"
+                                    ? "border-primary bg-primary/50"
+                                    : "border-primary hover:bg-gray-800/60 hover:primary"
                                     }`}
                             >
                                 {preview ? (
@@ -176,34 +182,35 @@ export default function AddNewMember() {
                                             alt="Preview"
                                             className="max-h-full max-w-full object-contain rounded-lg shadow-lg"
                                         />
-                                        <button
+                                        <motion.button whileHover={{scale: 1.3}} whileTap={{scale: 0.90}} 
                                             type="button"
                                             onClick={removeImage}
-                                            className="absolute top-4 right-4 bg-red-600 hover:bg-red-700 text-white p-2 rounded-full shadow-md transition-colors"
+                                            className="cursor-pointer absolute top-4 right-4 bg-red-600 hover:bg-red-700 text-white p-2 rounded-full shadow-md transition-colors"
                                             title="Eliminar imagen"
                                         >
                                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                                        </button>
+                                        </motion.button>
                                     </div>
                                 ) : (
                                     // Estado vacío del dropzone
                                     <div className="flex flex-col items-center justify-center text-center p-6">
-                                        <svg className={`w-12 h-12 mb-4 transition-colors ${isDragging ? "text-red-500" : "text-gray-400"}`} aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                        <svg className={`w-12 h-12 mb-4 transition-colors ${isDragging ? "text-red-500" : "text-gray-600"}`} aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                             <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 5v9m-5 0H5a1 1 0 0 0-1 1v4a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-4a1 1 0 0 0-1-1h-2M8 9l4-5 4 5m1 8h.01" />
                                         </svg>
-                                        <p className="mb-2 text-sm text-gray-300">
-                                            <span className="font-semibold text-red-400">Haz clic para subir</span> o arrastra y suelta
+                                        <p className="mb-2 text-sm text-black">
+                                            <span className="font-semibold text-primary">Haz clic para subir</span> o arrastra y suelta
                                         </p>
-                                        <p className="text-xs text-gray-500">PNG, JPG o WEBP (Max. 30MB)</p>
+                                        <p className="text-xs text-gray-700">PNG, JPG o WEBP (Max. 30MB)</p>
                                     </div>
                                 )}
 
                                 <input
                                     ref={fileInputRef}
+                                    name="foto_perfil"
                                     type="file"
                                     accept="image/*"
                                     onChange={handleFileChange}
-                                    className="hidden"
+                                    className="hidden" 
                                 />
                             </div>
                         </div>
