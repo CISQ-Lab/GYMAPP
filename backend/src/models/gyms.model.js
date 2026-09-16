@@ -25,6 +25,13 @@ export async function getGymData(userId) {
     return gymRows[0];
 }
 
+export async function getMembers(id){
+    const [members] = await pool.query('SELECT * FROM members WHERE gym_id = ?',
+        id
+    ) 
+    return members;
+}
+
 export async function addNewMember(name, surname, membership_id, phone, email, photo_pat, gymId){
 
     const [data] = await pool.query("SELECT durationDays FROM plans WHERE id = ?",

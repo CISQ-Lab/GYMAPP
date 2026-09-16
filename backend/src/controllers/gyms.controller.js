@@ -18,6 +18,30 @@ export async function getGymData(req, res, next) {
     }
 }
 
+export async function getMembers(req, res, next) {
+
+    try {
+
+        const { id } = req.params;
+        const members = await GymModel.getMembers(id)
+        console.log(members);
+        if (members.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: "No se encontraron Miembros"
+            })
+        }
+
+        return res.status(200).json({
+            success: true,
+            message: "Miembros encontrados correctamente",
+            members
+        })
+    } catch (error) {
+        next(error);
+    }
+}
+
 export async function addNewMember(req, res, next) {
 
     if (!req.file) {

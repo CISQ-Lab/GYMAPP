@@ -14,6 +14,7 @@ router.delete("/deletePlan", authMiddleware.verifyToken, gymsController.deletePl
 router.patch("/changePlanActive", authMiddleware.verifyToken, gymsController.changePlanActive);
 router.get("/getPlan/:id", authMiddleware.verifyToken, gymsController.getPlan);
 
+router.get("/:id/getMembers", authMiddleware.verifyToken, gymsController.getMembers);
 router.post("/addNewMember", authMiddleware.verifyToken, uploadMemberPhoto.single("foto_perfil"), gymsController.addNewMember);
 
 export default router;
