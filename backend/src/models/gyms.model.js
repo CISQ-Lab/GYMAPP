@@ -26,8 +26,17 @@ export async function getGymData(userId) {
 }
 
 export async function addNewMember(name, surname, membership_id, phone, email, photo_pat, gymId){
-    const [result] = await pool.query("INSERT INTO members (name, surname, membership_id, phone, email, photo_pat, gym_id) VALUES (?, ?, ?, ?, ?, ?, ?)",
-       [name, surname, membership_id, phone, email, photo_pat, gymId] 
+
+    const [data] = await pool.query("SELECT durationDays FROM plans WHERE id = ?",
+        membership_id
+    )
+
+    const days = data[0].durationDays;
+
+    const [result] = await pool.query(`INSERT INTO members 
+        (name, surname, membership_id, membership_start, membership_end, phone, email, photo_pat, gym_id) VALUES 
+        (?, ?, ?, CURDATE(), DATE_ADD(CURDATE(), INTERVAL ? DAY), ?, ?, ?, ?)`,
+       [name, surname, membership_id, days, phone, email, photo_pat, gymId] 
     )
     return result;
 }
