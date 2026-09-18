@@ -16,6 +16,7 @@ import CreateNewGym from "../pages/auth/createNewGym";
 import AddNewPlan from "../pages/gymPages/AddNewPlan";
 import EditPlan from "../pages/gymPages/EditPlan";
 import AddNewMember from "../pages/gymPages/AddNewMember";
+import ViewMember from "../pages/gymPages/ViewMember"
 
 function AppRoutes() {
 
@@ -34,6 +35,7 @@ function AppRoutes() {
                 <Route element={<Layout />}>
                     <Route path="/dashboard" element={<Dashboard />} />
                     <Route path="/members" element={<Members />} />
+                    <Route path="/members/viewmember" element={<ViewMember />}/>
                     <Route path="/members/addMember" element={<AddNewMember/>} />
                     <Route path="/members/editMember" element={<EditPlan/>} />
                     <Route path="/trainers" element={<Trainers />} />

@@ -1,4 +1,7 @@
 import { SERVER_URL } from '../../config/env';
+import Button from '../buttons/button';
+import { NavLink } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
 function MemberCard({ member }) {
     const isMembershipActive = member.membership_status === 1;
@@ -6,16 +9,16 @@ function MemberCard({ member }) {
 
     return (
         <div className="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm hover:shadow-md hover:border-primary/40 transition-all duration-300 flex flex-col justify-between max-w-sm">
-            
+
             {/* Header: Avatar y Columna de Información */}
             <div className="flex items-start gap-3">
-                
+
                 {/* Avatar */}
                 <div className="w-12 h-12 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center text-primary font-bold text-base shadow-sm overflow-hidden shrink-0">
                     {member.photo_pat ? (
-                        <img 
-                            src={`${SERVER_URL}${member.photo_pat.replace(/\\/g, '/')}`} 
-                            alt={`${member.name}`} 
+                        <img
+                            src={`${SERVER_URL}${member.photo_pat.replace(/\\/g, '/')}`}
+                            alt={`${member.name}`}
                             className="w-full h-full object-cover"
                         />
                     ) : (
@@ -34,20 +37,18 @@ function MemberCard({ member }) {
                     {/* Badges posicionados abajo del texto con flex-wrap */}
                     <div className="mt-2 flex flex-wrap gap-1.5">
                         {/* Badge 1: Estado del Usuario */}
-                        <span className={`px-2 py-0.5 rounded-md text-[10px] font-medium border ${
-                            isUserActive 
-                                ? 'bg-blue-50 text-blue-600 border-blue-200' 
-                                : 'bg-slate-100 text-slate-500 border-slate-200'
-                        }`}>
+                        <span className={`px-2 py-0.5 rounded-md text-[10px] font-medium border ${isUserActive
+                            ? 'bg-blue-50 text-blue-600 border-blue-200'
+                            : 'bg-slate-100 text-slate-500 border-slate-200'
+                            }`}>
                             {isUserActive ? 'Cuenta Activa' : 'Suspendido'}
                         </span>
 
                         {/* Badge 2: Estado de la Membresía */}
-                        <span className={`px-2 py-0.5 rounded-md text-[10px] font-medium border ${
-                            isMembershipActive 
-                                ? 'bg-emerald-50 text-emerald-600 border-emerald-200' 
-                                : 'bg-rose-50 text-rose-600 border-rose-200'
-                        }`}>
+                        <span className={`px-2 py-0.5 rounded-md text-[10px] font-medium border ${isMembershipActive
+                            ? 'bg-emerald-50 text-emerald-600 border-emerald-200'
+                            : 'bg-rose-50 text-rose-600 border-rose-200'
+                            }`}>
                             {isMembershipActive ? 'Vigente' : 'Vencida'}
                         </span>
                     </div>
@@ -70,16 +71,26 @@ function MemberCard({ member }) {
             </div>
 
             {/* Acciones */}
+
             <div className="mt-4 flex gap-2">
-                <button className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-medium py-1.5 rounded-xl transition-colors">
-                    Ver
-                </button>
-                <button className="flex-1 bg-primary hover:opacity-90 text-white text-xs font-medium py-1.5 rounded-xl transition-colors shadow-sm shadow-primary/20">
+                <motion.div whileHover={{ scale: 1.2 }} whileTap={{ scale: 0.8 }}
+                    className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-medium py-1.5 rounded-xl transition-colors">
+                    <NavLink to="./viewmember" state={{ member: member }}
+                    >
+                        <Button className="w-full ">
+                            Ver
+                        </Button>
+                    </NavLink>
+                    <div />
+                </motion.div>
+
+
+                <Button className="flex-1 bg-primary hover:opacity-90 text-white text-xs font-medium py-1.5 rounded-xl transition-colors shadow-sm shadow-primary/20">
                     Renovar
-                </button>
+                </Button>
             </div>
 
-        </div>
+        </div >
     );
 }
 
