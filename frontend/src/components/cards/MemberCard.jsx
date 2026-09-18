@@ -1,3 +1,5 @@
+import { SERVER_URL } from '../../config/env';
+
 function MemberCard({ member }) {
     const isActive = member.membership_status === 1;
 
@@ -11,7 +13,7 @@ function MemberCard({ member }) {
                     <div className="w-12 h-12 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center text-primary font-bold text-base shadow-sm overflow-hidden shrink-0">
                         {member.photo_pat ? (
                             <img 
-                                src={`http://localhost:3000/${member.photo_pat.replace(/\\/g, '/')}`} 
+                                src={`${SERVER_URL}${member.photo_pat.replace(/\\/g, '/')}`} 
                                 alt={`${member.name}`} 
                                 className="w-full h-full object-cover"
                             />

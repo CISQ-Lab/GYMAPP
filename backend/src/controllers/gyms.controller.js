@@ -24,7 +24,6 @@ export async function getMembers(req, res, next) {
 
         const { id } = req.params;
         const members = await GymModel.getMembers(id)
-        console.log(members);
         if (members.length === 0) {
             return res.status(404).json({
                 success: false,
@@ -82,8 +81,9 @@ export async function addNewMember(req, res, next) {
 export async function getPlans(req, res, next) {
     try {
 
+        const { active } = req.query;
         const { id } = req.params;
-        const plans = await GymModel.getPlans(id)
+        const plans = await GymModel.getPlans(id, active)
         if (plans.length === 0) {
             return res.status(404).json({
                 success: false,

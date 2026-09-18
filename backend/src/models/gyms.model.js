@@ -48,12 +48,18 @@ export async function addNewMember(name, surname, membership_id, phone, email, p
     return result;
 }
 
-export async function getPlans(gymId) {
+export async function getPlans(gymId, active) {
 
-    const [planRows] = await pool.query(
-        "SELECT * FROM plans WHERE gym_id = ?",
-        [gymId]
-    );
+    let query = "SELECT * FROM plans WHERE gym_id = ?";
+    const params = [gymId];
+
+    if(active){
+        query = query + " AND isActive = ?";
+        params.push(active);
+    }
+    
+
+    const [planRows] = await pool.query(query, params);
     return planRows;
 }
 
