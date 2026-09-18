@@ -88,8 +88,6 @@ export default function AddNewMember() {
 
         formData.append("gymId", gym?.id);
 
-        console.log(Object.fromEntries(formData));
-
         try {
             const data = await apiFetch("/gyms/addNewMember", {
                 method: "POST",
@@ -122,7 +120,7 @@ export default function AddNewMember() {
                         <Input type="text" ph="Escribe el apellido del nuevo miembro" name="surname" value={form.surname} onChange={handleChange} required />
                         <Input type="text" ph="Telefono del nuevo miembro" name="phone" value={form.phone} onChange={handleChange} />
                         <Input type="text" ph="Email del nuevo miembro" name="email" value={form.email} onChange={handleChange} />
-                        <Select name="planId" items={plans} onChange={handleChange} placeholder="-- Selecciona un plan --" />
+                        <Select name="planId" items={plans} onChange={handleChange} value={form.planId} placeholder="-- Selecciona un plan --" />
                     </div>
 
                     <div>

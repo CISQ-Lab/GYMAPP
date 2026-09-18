@@ -8,7 +8,7 @@ export default function Select({ items = [], value, onChange, name, placeholder 
             required
         >
             {/* Opción por defecto deshabilitada */}
-            <option value="" disabled selected>
+            <option value="" disabled>
                 {items?.length === 0 ? "-- No Hay Opciones Disponibles --" : placeholder}
             </option>
 

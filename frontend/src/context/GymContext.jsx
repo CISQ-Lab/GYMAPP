@@ -19,7 +19,6 @@ export function GymProvider({ children }) {
 
             try {
                 const data = await apiFetch("/gyms/getGym");
-                console.log(data.gym);
                 if (data.gym) {
                     setGym(data.gym)
                 }

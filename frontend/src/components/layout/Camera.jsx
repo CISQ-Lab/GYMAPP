@@ -15,13 +15,14 @@ export default function Camera({ setCameraOpen, setFile }) {
     const startCamera = async () => {
 
         try {
+
             const mediaStream = await navigator.mediaDevices.getUserMedia({
                 video: true
             });
 
-            videoRef.current.srcObject = mediaStream;
-            setStream(mediaStream);
             setLoading(false);
+            setStream(mediaStream);
+
 
         } catch (error) {
             showError("No pudo abrirse la camara, sube un archivo o intentalo mas tarde.")
@@ -69,13 +70,11 @@ export default function Camera({ setCameraOpen, setFile }) {
 
     const restart = () => {
         setPhoto(null);
-        startCamera();
     }
 
     const stopCamera = () => {
 
         if (stream) {
-
             stream.getTracks().forEach(track => {
                 track.stop();
             });
@@ -83,19 +82,26 @@ export default function Camera({ setCameraOpen, setFile }) {
             setStream(null);
             setCameraOpen(false)
         }
-        else{
+        else {
             setCameraOpen(false)
         }
     };
 
     useEffect(() => {
-        startCamera();
-    }, [])
+        if (!photo) {
+            startCamera();
+        }
+    }, [photo]);
 
     useEffect(() => {
 
+        if (stream && videoRef.current) {
+            videoRef.current.srcObject = stream;
+        }
+
         return () => {
             if (stream) {
+                
                 stream.getTracks().forEach(track => {
                     track.stop();
                 });
@@ -140,27 +146,27 @@ export default function Camera({ setCameraOpen, setFile }) {
 
             <div className="flex justify-center space-x-5 mt-3">
 
-                {stream ? 
-                    ( photo ? 
-                    <Button type="button" onClick={restart}>
-                        Tomar otra foto
-                    </Button> 
+                {stream ?
+                    (photo ?
+                        <Button type="button" onClick={restart}>
+                            Tomar otra foto
+                        </Button>
+                        :
+                        <>
+                            <Button type="button" onClick={takePhoto}>
+                                Tomar foto
+                            </Button>
+
+
+                            <Button type="button" onClick={stopCamera}>
+                                Apagar cámara
+                            </Button>
+                        </>
+                    )
                     :
-                    <>
-                        <Button type="button" onClick={takePhoto}>
-                            Tomar foto
-                        </Button>
-
-
-                        <Button type="button" onClick={stopCamera}>
-                            Apagar cámara
-                        </Button>
-                    </>
-                    ) 
-                :
-                <Button className="mt-3" type="button" onClick={stopCamera}>
-                    Apagar cámara
-                </Button>
+                    <Button className="mt-3" type="button" onClick={stopCamera}>
+                        Apagar cámara
+                    </Button>
                 }
 
             </div>
