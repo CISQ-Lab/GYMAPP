@@ -115,9 +115,9 @@ export default function AddNewMember() {
 
             <Button type="button" onClick={() => navigate(-1)}> ← Regresar </Button>
             <FormAdd title="Agregar nuevo Miembro" onSubmit={handleSubmit} loading={loading} id="myform">
-                <div className="grid grid-cols-1 2xl:grid-cols-[2fr_1fr] m-5 mr-15">
+                <div className="grid grid-cols-1 xl:grid-cols-[2fr_1fr] m-5 xl:mr-15">
 
-                    <div className="space-y-4">
+                    <div className="space-y-4 mb-5 xl:mb-0">
                         <Input type="text" ph="Escribe el nombre del nuevo miembro" name="name" value={form.name} onChange={handleChange} required />
                         <Input type="text" ph="Escribe el apellido del nuevo miembro" name="surname" value={form.surname} onChange={handleChange} required />
                         <Input type="text" ph="Telefono del nuevo miembro" name="phone" value={form.phone} onChange={handleChange} />

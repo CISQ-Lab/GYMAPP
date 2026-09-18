@@ -1,11 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 import Button from "../buttons/button";
+import Spinner from "./Spinner"
+import showError from "../messages/showError";
 
 export default function Camera({ setCameraOpen, setFile }) {
     const videoRef = useRef(null);
 
     const [photo, setPhoto] = useState(null);
     const [stream, setStream] = useState(null);
+    const [loading, setLoading] = useState(true);
 
 
 
@@ -18,8 +21,10 @@ export default function Camera({ setCameraOpen, setFile }) {
 
             videoRef.current.srcObject = mediaStream;
             setStream(mediaStream);
+            setLoading(false);
 
         } catch (error) {
+            showError("No pudo abrirse la camara, sube un archivo o intentalo mas tarde.")
             console.error("Error de cámara:", error);
         }
     };
@@ -78,6 +83,9 @@ export default function Camera({ setCameraOpen, setFile }) {
             setStream(null);
             setCameraOpen(false)
         }
+        else{
+            setCameraOpen(false)
+        }
     };
 
     useEffect(() => {
@@ -99,42 +107,63 @@ export default function Camera({ setCameraOpen, setFile }) {
     return (
         <>
 
+            <div className=" relative flex flex-col items-center justify-center
+                w-full h-64 border-2 border-dashed rounded-xl cursor-pointer transition-all
+                duration-200 overflow-hidden border-primary hover:bg-gray-800/60 
+                hover:primary mt-5 xl:mt-0">
 
-            {!photo ? <video
-                ref={videoRef}
-                autoPlay
-                playsInline
-                className="scale-x-[-1] relative flex flex-col items-center justify-center w-full h-64 border-2 border-dashed rounded-xl cursor-pointer transition-all duration-200 overflow-hidden border-primary hover:bg-gray-800/60 hover:primary"
-            /> : <div>
-                <h3>Foto tomada</h3>
+                {!photo ? (!loading ?
+                    <video
+                        ref={videoRef}
+                        autoPlay
+                        playsInline
+                        className="scale-x-[-1]" /> :
+                    <Spinner isLoading={loading} />
+                )
 
-                <img
-                    src={photo}
-                    alt="Foto del miembro"
-                    className="scale-x-[-1] mt-3"
-                />
+                    :
+                    <div>
+                        <h3>Foto tomada</h3>
+
+                        <img
+                            src={photo}
+                            alt="Foto del miembro"
+                            className="scale-x-[-1] mt-3"
+                        />
+                    </div>
+                }
+
             </div>
-            }
 
 
 
 
-            {stream && (
-                <div className="flex space-x-5 mt-3">
+            <div className="flex justify-center space-x-5 mt-3">
 
-                    {photo ? <Button type="button" onClick={restart}>
+                {stream ? 
+                    ( photo ? 
+                    <Button type="button" onClick={restart}>
                         Tomar otra foto
-                    </Button> :
+                    </Button> 
+                    :
+                    <>
                         <Button type="button" onClick={takePhoto}>
                             Tomar foto
-                        </Button>}
+                        </Button>
 
 
-                    <Button type="button" onClick={stopCamera}>
-                        Apagar cámara
-                    </Button>
-                </div>
-            )}
+                        <Button type="button" onClick={stopCamera}>
+                            Apagar cámara
+                        </Button>
+                    </>
+                    ) 
+                :
+                <Button className="mt-3" type="button" onClick={stopCamera}>
+                    Apagar cámara
+                </Button>
+                }
+
+            </div>
 
         </>
 
