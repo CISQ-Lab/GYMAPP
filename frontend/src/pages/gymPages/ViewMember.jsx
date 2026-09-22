@@ -2,32 +2,10 @@ import React, { useEffect, useState } from 'react';
 import Button from '../../components/buttons/button';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { SERVER_URL } from '../../config/env';
+import { apiFetch } from "../../services/api"
+import showError from "../../components/messages/showError"
+import useGym from "../../hooks/useGym"
 
-// Sample initial data matching exact database schema
-const initialMemberData = {
-  id: 1084,
-  name: "Carlos",
-  surname: "Mendoza Ramírez",
-  membership_id: 3, // e.g., 1: Básica, 2: Pro, 3: VIP Premium, 4: Familiar
-  membership_status: 1, // 1: Active, 0: Inactive / Expired
-  membership_start: "2025-01-15",
-  membership_end: "2026-01-15",
-  phone: "+52 55 8492 0112",
-  email: "carlos.mendoza@email.com",
-  photo_pat: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=500",
-  status: "Activo - Al día",
-  gym_id: 12
-};
-
-
-
-// Membership type dictionary
-const membershipTypes = {
-  1: { name: "Básica Standard", badge: "bg-slate-100 text-slate-800" },
-  2: { name: "Pase Pro Gym", badge: "bg-blue-100 text-blue-800" },
-  3: { name: "VIP All Access", badge: "bg-indigo-100 text-indigo-800" },
-  4: { name: "Familiar Multi-Club", badge: "bg-purple-100 text-purple-800" }
-};
 
 // SVG Icons generated without third-party dependencies
 const Icons = {
@@ -110,29 +88,57 @@ const Icons = {
 };
 
 export default function ViewMember() {
-  const [member, setMember] = useState(initialMemberData);
-  const [formData, setFormData] = useState(initialMemberData);
+  const [member, setMember] = useState(null);
+  const [formData, setFormData] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [showToast, setShowToast] = useState(false);
+  const [membership, setMembership] = useState(null)
+  const [plans, setPlans] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
+  const { gym } = useGym();
 
-  
+
+
   useEffect(() => {
-    if(!location.state?.member){
-        return;
+    if (!location.state?.member) {
+      return;
     }
-
-    console.log(SERVER_URL)
-
     setMember(location.state?.member);
     setFormData(location.state?.member);
 
-  },[location.state?.member])
+  }, [location.state?.member])
 
-  console.log(member);
-    
-   
+
+  useEffect(() => {
+
+    if (!member?.membership_id) {
+      return;
+    }
+
+    const getMembership = async () => {
+      const data = await apiFetch(`/gyms/getPlan/${member?.membership_id}`);
+      if (data.success) {
+        setMembership(data.plan);
+      }
+    }
+
+    const getPlans = async () => {
+      const data = await apiFetch(`/gyms/${member?.gym_id}/getPlans?active=1`);
+      if (data.success) {
+        setPlans(data.plans);
+      }
+    }
+
+    try {
+      getMembership();
+      getPlans();
+    } catch (error) {
+      showError(error.message);
+    }
+
+  }, [member?.membership_id])
+
 
 
   // Handle standard input changes
@@ -140,8 +146,8 @@ export default function ViewMember() {
     const { name, value, type, checked } = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: type === 'checkbox' ? (checked ? 1 : 0) : 
-              type === 'number' ? (value === '' ? '' : Number(value)) : value
+      [name]: type === 'checkbox' ? (checked ? 1 : 0) :
+        type === 'number' ? (value === '' ? '' : Number(value)) : value
     }));
   };
 
@@ -167,14 +173,15 @@ export default function ViewMember() {
     const today = new Date();
     const diffTime = end - today;
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
     return diffDays > 0 ? diffDays : 0;
   };
 
-  const daysRemaining = getDaysRemaining(member.membership_end);
+  const daysRemaining = getDaysRemaining(member?.membership_end);
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-800 font-sans p-4 sm:p-6 md:p-8">
-      
+
       {/* Toast Notification */}
       {showToast && (
         <div className="fixed top-5 right-5 z-50 flex items-center gap-3 bg-emerald-600 text-white px-5 py-3.5 rounded-xl shadow-xl transition-all">
@@ -194,12 +201,9 @@ export default function ViewMember() {
             <div>
               <h1 className="text-xl font-bold text-slate-900 flex items-center gap-2">
                 Detalles del Miembro
-                <span className="text-xs bg-indigo-50 text-primary px-2.5 py-0.5 rounded-full font-semibold border border-indigo-200">
-                  ID #{member.id}
-                </span>
               </h1>
               <p className="text-xs text-slate-500 mt-0.5">
-                Gimnasio Sucursal ID: <span className="font-semibold text-primary">#{member.gym_id}</span>
+                Gimnasio {gym?.name}
               </p>
             </div>
           </div>
@@ -242,10 +246,10 @@ export default function ViewMember() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
 
           {/* Left Column - Member Summary Card */}
-          {}
+          { }
           <div className="lg:col-span-4 space-y-6">
             <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 text-center relative overflow-hidden">
-              
+
               {/* Primary Accent Banner */}
               <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-r from-primary to-primary/50"></div>
 
@@ -254,7 +258,7 @@ export default function ViewMember() {
                 <div className="relative">
                   <img
                     src={SERVER_URL + member?.photo_pat}
-                    alt={`${member.name} ${member.surname}`}
+                    alt={`${member?.name} ${member?.surname}`}
                     className="w-28 h-28 rounded-full object-cover border-4 border-white shadow-md bg-slate-100"
                     onError={(e) => {
                       e.target.onerror = null;
@@ -271,16 +275,16 @@ export default function ViewMember() {
 
               {/* Basic Info */}
               <h2 className="text-xl font-bold text-slate-900">
-                {member.name} {member.surname}
+                {member?.name} {member?.surname}
               </h2>
               <p className="text-xs text-slate-500 font-medium mt-1 flex items-center justify-center gap-1">
                 <Icons.Mail />
-                {member.email}
+                {member?.email}
               </p>
 
               {/* Status Badges */}
               <div className="mt-4 pt-4 border-t border-slate-100 flex flex-wrap items-center justify-center gap-2">
-                {member.membership_status === 1 ? (
+                {member?.membership_status === 1 ? (
                   <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
                     <Icons.CheckCircle />
                     Membresía Activa
@@ -294,7 +298,7 @@ export default function ViewMember() {
 
                 <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium bg-indigo-50 text-indigo-700 border border-indigo-200">
                   <Icons.Activity />
-                  {member.status}
+                  {member?.isActive ? "Normal" : "Suspendido"}
                 </span>
               </div>
 
@@ -303,7 +307,7 @@ export default function ViewMember() {
                 <div className="flex items-center justify-between text-xs text-slate-500">
                   <span>Tipo de Plan:</span>
                   <span className="font-semibold text-slate-800">
-                    {membershipTypes[member.membership_id]?.name || `ID #${member.membership_id}`}
+                    {membership?.name}
                   </span>
                 </div>
                 <div className="flex items-center justify-between text-xs text-slate-500">
@@ -312,47 +316,24 @@ export default function ViewMember() {
                     {daysRemaining} días
                   </span>
                 </div>
-                
+
                 {/* Progress Bar */}
                 <div className="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
-                  <div 
-                    className="bg-primary h-full rounded-full transition-all duration-500" 
-                    style={{ width: `${Math.min(100, Math.max(5, (daysRemaining / 365) * 100))}%` }}
+                  <div
+                    className="bg-primary h-full rounded-full transition-all duration-500"
+                    style={{ width: `${Math.min(100, Math.max(0, (daysRemaining / membership?.durationDays) * 100))}%` }}
                   ></div>
                 </div>
               </div>
 
             </div>
-
-            {/* Database Technical Reference Box */}
-            <div className="bg-white rounded-2xl p-5 shadow-sm border border-slate-200 space-y-3">
-              <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400">Campos DB Schema</h3>
-              <div className="grid grid-cols-2 gap-2 text-xs font-mono">
-                <div className="p-2 bg-slate-50 rounded-lg">
-                  <span className="block text-slate-400 text-[10px]">id (int)</span>
-                  <span className="font-bold text-slate-700">{member.id}</span>
-                </div>
-                <div className="p-2 bg-slate-50 rounded-lg">
-                  <span className="block text-slate-400 text-[10px]">gym_id (int)</span>
-                  <span className="font-bold text-slate-700">{member.gym_id}</span>
-                </div>
-                <div className="p-2 bg-slate-50 rounded-lg">
-                  <span className="block text-slate-400 text-[10px]">membership_id</span>
-                  <span className="font-bold text-slate-700">{member.membership_id}</span>
-                </div>
-                <div className="p-2 bg-slate-50 rounded-lg">
-                  <span className="block text-slate-400 text-[10px]">membership_status</span>
-                  <span className="font-bold text-slate-700">{member.membership_status}</span>
-                </div>
-              </div>
-            </div>
           </div>
 
           {/* Right Column - Member Data Form & Details */}
-          {}
+          { }
           <div className="lg:col-span-8">
             <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-              
+
               {/* Form Title Header */}
               <div className="border-b border-slate-200 px-6 py-4 flex items-center justify-between bg-slate-50/50">
                 <div className="flex items-center gap-2">
@@ -380,20 +361,20 @@ export default function ViewMember() {
                     {/* name */}
                     <div>
                       <label className="block text-xs font-medium text-slate-600 mb-1">
-                        Nombre <span className="text-slate-400 font-mono text-[10px]">(name - varchar)</span>
+                        Nombre
                       </label>
                       {isEditing ? (
                         <input
                           type="text"
                           name="name"
-                          value={formData.name}
+                          value={formData?.name}
                           onChange={handleInputChange}
                           required
                           className="w-full px-3.5 py-2 rounded-xl border border-slate-300 focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm outline-none transition-all"
                         />
                       ) : (
                         <p className="px-3.5 py-2.5 bg-slate-50 rounded-xl text-sm font-medium text-slate-800 border border-slate-100">
-                          {member.name}
+                          {member?.name}
                         </p>
                       )}
                     </div>
@@ -401,20 +382,20 @@ export default function ViewMember() {
                     {/* surname */}
                     <div>
                       <label className="block text-xs font-medium text-slate-600 mb-1">
-                        Apellidos <span className="text-slate-400 font-mono text-[10px]">(surname - varchar)</span>
+                        Apellidos
                       </label>
                       {isEditing ? (
                         <input
                           type="text"
                           name="surname"
-                          value={formData.surname}
+                          value={formData?.surname}
                           onChange={handleInputChange}
                           required
                           className="w-full px-3.5 py-2 rounded-xl border border-slate-300 focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm outline-none transition-all"
                         />
                       ) : (
                         <p className="px-3.5 py-2.5 bg-slate-50 rounded-xl text-sm font-medium text-slate-800 border border-slate-100">
-                          {member.surname}
+                          {member?.surname}
                         </p>
                       )}
                     </div>
@@ -422,7 +403,7 @@ export default function ViewMember() {
                     {/* email */}
                     <div>
                       <label className="block text-xs font-medium text-slate-600 mb-1">
-                        Correo Electrónico <span className="text-slate-400 font-mono text-[10px]">(email - varchar)</span>
+                        Correo Electrónico
                       </label>
                       {isEditing ? (
                         <input
@@ -436,7 +417,7 @@ export default function ViewMember() {
                       ) : (
                         <p className="px-3.5 py-2.5 bg-slate-50 rounded-xl text-sm font-medium text-slate-800 border border-slate-100 flex items-center gap-2">
                           <Icons.Mail />
-                          {member.email}
+                          {member?.email}
                         </p>
                       )}
                     </div>
@@ -444,20 +425,20 @@ export default function ViewMember() {
                     {/* phone */}
                     <div>
                       <label className="block text-xs font-medium text-slate-600 mb-1">
-                        Teléfono <span className="text-slate-400 font-mono text-[10px]">(phone - varchar)</span>
+                        Teléfono
                       </label>
                       {isEditing ? (
                         <input
                           type="text"
                           name="phone"
-                          value={formData.phone}
+                          value={formData?.phone}
                           onChange={handleInputChange}
                           className="w-full px-3.5 py-2 rounded-xl border border-slate-300 focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm outline-none transition-all"
                         />
                       ) : (
                         <p className="px-3.5 py-2.5 bg-slate-50 rounded-xl text-sm font-medium text-slate-800 border border-slate-100 flex items-center gap-2">
                           <Icons.Phone />
-                          {member.phone}
+                          {member?.phone}
                         </p>
                       )}
                     </div>
@@ -477,24 +458,27 @@ export default function ViewMember() {
                     {/* membership_id */}
                     <div>
                       <label className="block text-xs font-medium text-slate-600 mb-1">
-                        Tipo de Membresía <span className="text-slate-400 font-mono text-[10px]">(membership_id - int)</span>
+                        Tipo de Membresía
                       </label>
                       {isEditing ? (
                         <select
                           name="membership_id"
-                          value={formData.membership_id}
+                          value={formData?.membership_id}
                           onChange={handleInputChange}
                           className="w-full px-3.5 py-2 rounded-xl border border-slate-300 focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm outline-none transition-all bg-white"
                         >
-                          <option value={1}>1 - Básica Standard</option>
-                          <option value={2}>2 - Pase Pro Gym</option>
-                          <option value={3}>3 - VIP All Access</option>
-                          <option value={4}>4 - Familiar Multi-Club</option>
+
+                          {plans?.map((plan) => (
+                            <option key={plan.id} value={plan.id}>
+                              {plan.name}
+                            </option>
+                          ))}
+
                         </select>
                       ) : (
                         <p className="px-3.5 py-2.5 bg-slate-50 rounded-xl text-sm font-medium text-slate-800 border border-slate-100 flex items-center gap-2">
                           <Icons.Award />
-                          {membershipTypes[member.membership_id]?.name || `ID ${member.membership_id}`}
+                          {membership?.name}
                         </p>
                       )}
                     </div>
@@ -502,7 +486,7 @@ export default function ViewMember() {
                     {/* membership_status */}
                     <div>
                       <label className="block text-xs font-medium text-slate-600 mb-1">
-                        Estado <span className="text-slate-400 font-mono text-[10px]">(membership_status - tinyint)</span>
+                        Estado
                       </label>
                       {isEditing ? (
                         <div className="flex items-center gap-4 mt-2">
@@ -511,27 +495,27 @@ export default function ViewMember() {
                               type="radio"
                               name="membership_status"
                               value="1"
-                              checked={Number(formData.membership_status) === 1}
+                              checked={Number(formData?.membership_status) === 1}
                               onChange={() => setFormData(p => ({ ...p, membership_status: 1 }))}
                               className="w-4 h-4 text-primary focus:ring-primary"
                             />
-                            <span className="text-sm font-medium text-slate-700">1 (Activo)</span>
+                            <span className="text-sm font-medium text-slate-700">(Activo)</span>
                           </label>
                           <label className="inline-flex items-center gap-2 cursor-pointer">
                             <input
                               type="radio"
                               name="membership_status"
                               value="0"
-                              checked={Number(formData.membership_status) === 0}
+                              checked={Number(formData?.membership_status) === 0}
                               onChange={() => setFormData(p => ({ ...p, membership_status: 0 }))}
                               className="w-4 h-4 text-rose-600 focus:ring-rose-500"
                             />
-                            <span className="text-sm font-medium text-slate-700">0 (Inactivo)</span>
+                            <span className="text-sm font-medium text-slate-700">(Inactivo)</span>
                           </label>
                         </div>
                       ) : (
                         <p className="px-3.5 py-2.5 bg-slate-50 rounded-xl text-sm font-medium text-slate-800 border border-slate-100">
-                          {member.membership_status === 1 ? '1 - Activo' : '0 - Inactivo'}
+                          {member?.membership_status === 1 ? 'Activa' : 'Inactiva'}
                         </p>
                       )}
                     </div>
@@ -539,20 +523,20 @@ export default function ViewMember() {
                     {/* membership_start */}
                     <div>
                       <label className="block text-xs font-medium text-slate-600 mb-1">
-                        Fecha Inicio <span className="text-slate-400 font-mono text-[10px]">(membership_start - date)</span>
+                        Fecha Inicio
                       </label>
                       {isEditing ? (
                         <input
                           type="date"
                           name="membership_start"
-                          value={formData.membership_start}
+                          value={formData?.membership_start}
                           onChange={handleInputChange}
                           className="w-full px-3.5 py-2 rounded-xl border border-slate-300 focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm outline-none transition-all"
                         />
                       ) : (
                         <p className="px-3.5 py-2.5 bg-slate-50 rounded-xl text-sm font-medium text-slate-800 border border-slate-100 flex items-center gap-2">
                           <Icons.Calendar />
-                          {member.membership_start}
+                          {member?.membership_start}
                         </p>
                       )}
                     </div>
@@ -560,73 +544,20 @@ export default function ViewMember() {
                     {/* membership_end */}
                     <div>
                       <label className="block text-xs font-medium text-slate-600 mb-1">
-                        Fecha Vencimiento <span className="text-slate-400 font-mono text-[10px]">(membership_end - date)</span>
+                        Fecha Vencimiento
                       </label>
                       {isEditing ? (
                         <input
                           type="date"
                           name="membership_end"
-                          value={formData.membership_end}
+                          value={formData?.membership_end}
                           onChange={handleInputChange}
                           className="w-full px-3.5 py-2 rounded-xl border border-slate-300 focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm outline-none transition-all"
                         />
                       ) : (
                         <p className="px-3.5 py-2.5 bg-slate-50 rounded-xl text-sm font-medium text-slate-800 border border-slate-100 flex items-center gap-2">
                           <Icons.Calendar />
-                          {member.membership_end}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                </div>
-
-                <hr className="border-slate-100" />
-
-                {/* Section 3: Branch & System Settings */}
-                <div>
-                  <h4 className="text-xs font-bold text-primary uppercase tracking-wider mb-4 flex items-center gap-2">
-                    <Icons.Building />
-                    Configuración & Sucursal
-                  </h4>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {/* status text */}
-                    <div>
-                      <label className="block text-xs font-medium text-slate-600 mb-1">
-                        Estado Descriptivo <span className="text-slate-400 font-mono text-[10px]">(status - varchar)</span>
-                      </label>
-                      {isEditing ? (
-                        <input
-                          type="text"
-                          name="status"
-                          value={formData.status}
-                          onChange={handleInputChange}
-                          className="w-full px-3.5 py-2 rounded-xl border border-slate-300 focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm outline-none transition-all"
-                        />
-                      ) : (
-                        <p className="px-3.5 py-2.5 bg-slate-50 rounded-xl text-sm font-medium text-slate-800 border border-slate-100">
-                          {member.status}
-                        </p>
-                      )}
-                    </div>
-
-                    {/* gym_id */}
-                    <div>
-                      <label className="block text-xs font-medium text-slate-600 mb-1">
-                        Gimnasio ID <span className="text-slate-400 font-mono text-[10px]">(gym_id - int)</span>
-                      </label>
-                      {isEditing ? (
-                        <input
-                          type="number"
-                          name="gym_id"
-                          value={formData.gym_id}
-                          onChange={handleInputChange}
-                          className="w-full px-3.5 py-2 rounded-xl border border-slate-300 focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm outline-none transition-all"
-                        />
-                      ) : (
-                        <p className="px-3.5 py-2.5 bg-slate-50 rounded-xl text-sm font-medium text-slate-800 border border-slate-100 flex items-center gap-2">
-                          <Icons.Building />
-                          Gimnasio Sucursal #{member.gym_id}
+                          {member?.membership_end}
                         </p>
                       )}
                     </div>

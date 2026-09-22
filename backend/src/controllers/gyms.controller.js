@@ -106,7 +106,7 @@ export async function getPlan(req, res, next) {
     try {
         const { id } = req.params;
         const plan = await GymModel.getPlan(id);
-        if (plan.length === 0) {
+        if (!plan || plan.length === 0) {
             return res.status(404).json({
                 message: "No se encuentra el plan solicitado"
             })
