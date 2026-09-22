@@ -25,14 +25,14 @@ export async function getGymData(userId) {
     return gymRows[0];
 }
 
-export async function getMembers(id){
+export async function getMembers(id) {
     const [members] = await pool.query('SELECT * FROM members WHERE gym_id = ?',
         id
-    ) 
+    )
     return members;
 }
 
-export async function addNewMember(name, surname, membership_id, phone, email, photo_pat, gymId){
+export async function addNewMember(name, surname, membership_id, phone, email, photo_pat, gymId) {
 
     const [data] = await pool.query("SELECT durationDays FROM plans WHERE id = ?",
         membership_id
@@ -43,8 +43,24 @@ export async function addNewMember(name, surname, membership_id, phone, email, p
     const [result] = await pool.query(`INSERT INTO members 
         (name, surname, membership_id, membership_start, membership_end, phone, email, photo_pat, gym_id) VALUES 
         (?, ?, ?, CURDATE(), DATE_ADD(CURDATE(), INTERVAL ? DAY), ?, ?, ?, ?)`,
-       [name, surname, membership_id, days, phone, email, photo_pat, gymId] 
+        [name, surname, membership_id, days, phone, email, photo_pat, gymId]
     )
+    return result;
+}
+
+export async function editMember(form) {
+
+
+    const { formData } = form;
+    const { name, surname, membership_id, membership_status, membership_start,
+        membership_end, phone, email, photo_pat, isActive, id } = formData;
+
+    const [result] = await pool.query(`UPDATE members SET name = ?, surname = ?, membership_id = ?,
+        membership_status = ?, membership_start = ?, membership_end = ?, phone = ?,
+        email = ?, photo_pat = ?, isActive = ? WHERE id = ?`,
+        [name, surname, membership_id, membership_status, membership_start,
+            membership_end, phone, email, photo_pat, isActive, id]);
+
     return result;
 }
 
@@ -53,11 +69,11 @@ export async function getPlans(gymId, active) {
     let query = "SELECT * FROM plans WHERE gym_id = ?";
     const params = [gymId];
 
-    if(active){
+    if (active) {
         query = query + " AND isActive = ?";
         params.push(active);
     }
-    
+
 
     const [planRows] = await pool.query(query, params);
     return planRows;

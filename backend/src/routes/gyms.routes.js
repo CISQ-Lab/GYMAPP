@@ -16,5 +16,6 @@ router.get("/getPlan/:id", authMiddleware.verifyToken, gymsController.getPlan);
 
 router.get("/:id/getMembers", authMiddleware.verifyToken, gymsController.getMembers);
 router.post("/addNewMember", authMiddleware.verifyToken, uploadMemberPhoto.single("foto_perfil"), gymsController.addNewMember);
+router.put("/member/editmember", authMiddleware.verifyToken, gymsController.editMember);
 
 export default router;

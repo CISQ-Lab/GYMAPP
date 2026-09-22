@@ -5,6 +5,7 @@ import { SERVER_URL } from '../../config/env';
 import { apiFetch } from "../../services/api"
 import showError from "../../components/messages/showError"
 import useGym from "../../hooks/useGym"
+import Success from '../../components/messages/success';
 
 
 // SVG Icons generated without third-party dependencies
@@ -90,8 +91,8 @@ const Icons = {
 export default function ViewMember() {
   const [member, setMember] = useState(null);
   const [formData, setFormData] = useState(null);
+  const [oldFormData, setOldFormdata] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
-  const [showToast, setShowToast] = useState(false);
   const [membership, setMembership] = useState(null)
   const [plans, setPlans] = useState(null);
   const navigate = useNavigate();
@@ -106,6 +107,7 @@ export default function ViewMember() {
     }
     setMember(location.state?.member);
     setFormData(location.state?.member);
+    setOldFormdata(location.state?.member);
 
   }, [location.state?.member])
 
@@ -139,25 +141,87 @@ export default function ViewMember() {
 
   }, [member?.membership_id])
 
+  const addDaysToDate = (startDateStr, days) => {
+    if (!startDateStr || !days) return '';
+    const date = new Date(startDateStr);
+    // Ajuste para evitar desfasamientos por zona horaria UTC
+    const [year, month, day] = startDateStr.split('-').map(Number);
+    const localDate = new Date(year, month - 1, day);
+
+    localDate.setDate(localDate.getDate() + Number(days));
+
+    // Retorna formato YYYY-MM-DD para el input type="date"
+    const yyyy = localDate.getFullYear();
+    const mm = String(localDate.getMonth() + 1).padStart(2, '0');
+    const dd = String(localDate.getDate()).padStart(2, '0');
+
+    return `${yyyy}-${mm}-${dd}`;
+  };
 
 
   // Handle standard input changes
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: type === 'checkbox' ? (checked ? 1 : 0) :
-        type === 'number' ? (value === '' ? '' : Number(value)) : value
-    }));
+
+    setFormData(prev => {
+      const updatedValue = type === 'checkbox' ? (checked ? 1 : 0) :
+        type === 'number' ? (value === '' ? '' : Number(value)) : value;
+
+      const nextForm = {
+        ...prev,
+        [name]: updatedValue
+      };
+
+      // Recalcular vencimiento al cambiar el Plan
+      if (name === 'membership_id') {
+        const selectedPlan = plans?.find(p => String(p.id) === String(value));
+        if (selectedPlan && nextForm.membership_start) {
+          nextForm.membership_end = addDaysToDate(
+            nextForm.membership_start,
+            selectedPlan.durationDays // Asegúrate de usar el campo exacto de tu backend (ej. duration_days)
+          );
+        }
+      }
+
+      // Recalcular vencimiento al cambiar la Fecha de Inicio
+      if (name === 'membership_start' && value) {
+        const selectedPlan = plans?.find(p => String(p.id) === String(nextForm.membership_id));
+        if (selectedPlan) {
+          nextForm.membership_end = addDaysToDate(
+            value,
+            selectedPlan.durationDays
+          );
+        }
+      }
+
+      return nextForm;
+    });
   };
 
   // Submit and save updated member details
-  const handleSave = (e) => {
+  const handleSave = async (e) => {
     e.preventDefault();
-    setMember(formData);
-    setIsEditing(false);
-    setShowToast(true);
-    setTimeout(() => setShowToast(false), 3500);
+    try {
+      const data = await apiFetch("/gyms/member/editmember", {
+        method: 'PUT',
+        body: JSON.stringify({
+          formData
+        })
+      }
+
+      );
+
+      if (data.success) {
+        Success(data.message)
+        setMember(formData);
+        setIsEditing(false);
+      }
+
+    } catch (error) {
+      showError("No se pudo editar, devolviendo valores antiguos, " + error.message)
+      setMember(oldFormData);
+      setFormData(oldFormData);
+    } 
   };
 
   // Cancel edit mode and revert changes
@@ -181,14 +245,6 @@ export default function ViewMember() {
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-800 font-sans p-4 sm:p-6 md:p-8">
-
-      {/* Toast Notification */}
-      {showToast && (
-        <div className="fixed top-5 right-5 z-50 flex items-center gap-3 bg-emerald-600 text-white px-5 py-3.5 rounded-xl shadow-xl transition-all">
-          <Icons.CheckCircle />
-          <span className="font-medium text-sm">¡Datos guardados correctamente!</span>
-        </div>
-      )}
 
       <div className="max-w-6xl mx-auto space-y-6">
 
@@ -296,10 +352,17 @@ export default function ViewMember() {
                   </span>
                 )}
 
-                <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium bg-indigo-50 text-indigo-700 border border-indigo-200">
-                  <Icons.Activity />
-                  {member?.isActive ? "Normal" : "Suspendido"}
-                </span>
+                {member?.isActive === 1 ? (
+                  <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium bg-indigo-50 text-indigo-700 border border-indigo-200">
+                    <Icons.Activity />
+                    Miembro Normal
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-rose-50 text-rose-700 border border-rose-200">
+                    <Icons.XCircle />
+                    Miembro suspendido
+                  </span>
+                )}
               </div>
 
               {/* Membership Progress Box */}
@@ -486,7 +549,7 @@ export default function ViewMember() {
                     {/* membership_status */}
                     <div>
                       <label className="block text-xs font-medium text-slate-600 mb-1">
-                        Estado
+                        Estado de la Membresía
                       </label>
                       {isEditing ? (
                         <div className="flex items-center gap-4 mt-2">
@@ -561,26 +624,62 @@ export default function ViewMember() {
                         </p>
                       )}
                     </div>
+
+                    <div>
+
+                      {isEditing && (
+                        <>
+                          <label className="block text-xs font-medium text-slate-600 mb-1">
+                            Usuario activo
+                          </label>
+                          <div className="flex items-center gap-4 mt-2">
+                            <label className="inline-flex items-center gap-2 cursor-pointer">
+                              <input
+                                type="radio"
+                                name="isActive"
+                                value="1"
+                                checked={Number(formData?.isActive) === 1}
+                                onChange={() => setFormData(p => ({ ...p, isActive: 1 }))}
+                                className="w-4 h-4 text-primary focus:ring-primary"
+                              />
+                              <span className="text-sm font-medium text-slate-700">(Activo)</span>
+                            </label>
+                            <label className="inline-flex items-center gap-2 cursor-pointer">
+                              <input
+                                type="radio"
+                                name="isActive"
+                                value="0"
+                                checked={Number(formData?.isActive) === 0}
+                                onChange={() => setFormData(p => ({ ...p, isActive: 0 }))}
+                                className="w-4 h-4 text-rose-600 focus:ring-rose-500"
+                              />
+                              <span className="text-sm font-medium text-slate-700">(Baja)</span>
+                            </label>
+                          </div>
+                        </>
+                      )
+                      }
+                    </div>
                   </div>
                 </div>
 
                 {/* Submit Action Bar */}
                 {isEditing && (
                   <div className="pt-4 border-t border-slate-100 flex items-center justify-end gap-3">
-                    <button
+                    <Button
                       type="button"
                       onClick={handleCancel}
-                      className="px-5 py-2.5 rounded-xl border border-slate-200 text-slate-700 font-medium text-sm hover:bg-slate-50 transition-colors"
+                      className="px-5 py-2.5 rounded-xl border border-slate-200 text-slate-700 font-medium text-sm hover:bg-slate-50 "
                     >
                       Cancelar
-                    </button>
-                    <button
+                    </Button>
+                    <Button
                       type="submit"
-                      className="px-6 py-2.5 rounded-xl bg-primary hover:bg-primary text-white font-medium text-sm shadow-md transition-all flex items-center gap-2"
+                      className="px-6 py-2.5 rounded-xl bg-primary hover:bg-primary text-white font-medium text-sm shadow-md flex items-center gap-2"
                     >
                       <Icons.Save />
                       Guardar Cambios
-                    </button>
+                    </Button>
                   </div>
                 )}
 

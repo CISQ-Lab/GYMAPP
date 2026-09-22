@@ -78,6 +78,30 @@ export async function addNewMember(req, res, next) {
 
 }
 
+export async function editMember(req, res, next){
+
+    try {
+
+        const data = await GymModel.editMember(req.body);
+         
+        if (data.affectedRows === 0) return res.status(400).json({
+            success: false,
+            message: "No fue posible editar el usuario, intentalo mas tarde"
+        })
+
+        return res.status(200).json({
+            success: true,
+            message: "El usuario fue editado con exito!!"
+        })
+        
+    } catch (error) {
+
+
+        next(error);
+        
+    }
+}
+
 export async function getPlans(req, res, next) {
     try {
 
