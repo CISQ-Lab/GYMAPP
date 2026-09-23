@@ -2,11 +2,15 @@ import StatCard from "../../components/cards/StatCard";
 import LogCard from "../../components/cards/logCard";
 import useAuth from "../../hooks/useAuth";
 import useGym from "../../hooks/useGym"
+import Button from "../../components/buttons/button";
+import { useState } from "react";
+import { apiFetch } from "../../services/api";
 
 function Dashboard() {
 
-    const {gym} = useGym();
+    const { gym } = useGym();
     const { user } = useAuth();
+    const [caja, setCaja] = useState(null);
 
     const stats = [
         { title: "Asistencias", value: "30" },
@@ -27,9 +31,21 @@ function Dashboard() {
         { title: "Ingreso", value: "Ana García" },
         { title: "Salida", value: "Maria Lopez" },
         { title: "Salida", value: "Pedro Ramírez" }
+
     ];
 
-    
+    const createCashDrawer = async() => {
+
+        apiFetch("/cashDrawer/createCashDrawer", {
+            method: 'PUT',
+            body: JSON.stringify({
+                gymId: gym?.id
+            })
+        }
+        )
+
+    }
+
 
     return (
         <>
@@ -37,26 +53,36 @@ function Dashboard() {
             <div className="flex justify-between items-center pb-2 font-normal text-gray-950">
 
                 <h2 className="text-2xl ">Bienvenido, {user?.name}!</h2>
-                
+
+                {!caja ? <Button onClick={createCashDrawer}>Abrir Caja</Button> : <Button>Cerrar Caja</Button>}
+
 
             </div>
 
+            {!caja ? <p>Abre una caja para comenzar el dia</p> :
+
+                <>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 ">
+
+                        {
+                            stats.map((stat, index) => (
+                                <StatCard key={index} title={stat.title} value={stat.value} />
+                            ))
+                        }
+
+                    </div>
+
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                        <LogCard title="Actividades Recientes" log={recent} />
+                        <LogCard title="Registros del Día" log={logs} />
+                    </div>
+
+                </>
+
+            }
 
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 ">
-
-                {
-                    stats.map((stat, index) => (
-                        <StatCard key={index} title={stat.title} value={stat.value} />
-                    ))
-                }
-
-            </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                <LogCard title="Actividades Recientes" log={recent} />
-                <LogCard title="Registros del Día" log={logs} />
-            </div>
 
         </>
 
