@@ -5,6 +5,8 @@ import useGym from "../../hooks/useGym"
 import Button from "../../components/buttons/button";
 import { useState } from "react";
 import { apiFetch } from "../../services/api";
+import Success from "../../components/messages/success";
+import showError from "../../components/messages/showError.js"
 
 function Dashboard() {
 
@@ -34,15 +36,25 @@ function Dashboard() {
 
     ];
 
-    const createCashDrawer = async() => {
+    const createCashDrawer = async () => {
 
-        apiFetch("/cashDrawer/createCashDrawer", {
-            method: 'PUT',
-            body: JSON.stringify({
-                gymId: gym?.id
-            })
+        try {
+
+            const data = await apiFetch("/cashDrawer/createCashDrawer", {
+                method: 'PUT',
+                body: JSON.stringify({
+                    gymId: gym?.id
+                })
+            }
+            )
+
+            if(data.success){
+                Success(data.message);
+            }
+
+        } catch (error) {
+            showError(error.message);
         }
-        )
 
     }
 

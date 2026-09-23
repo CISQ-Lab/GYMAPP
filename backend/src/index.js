@@ -8,6 +8,7 @@ import testRoutes from "./routes/test.routes.js"
 import usersRoutes from "./routes/users.routes.js"
 import authRoutes from "./routes/auth.routes.js"
 import gymsRoutes from "./routes/gyms.routes.js"
+import cashDrawerRoutes from "./routes/cashDrawer.routes.js"
 
 import cors from "cors";
 
@@ -26,6 +27,7 @@ app.use("/api", testRoutes);
 app.use("/api/users", usersRoutes)
 app.use("/api/auth", authRoutes)
 app.use("/api/gyms", gymsRoutes)
+app.use("/api/cashDrawer", cashDrawerRoutes)
 
 app.set("view engine", "ejs");
 app.set("views", join(__dirname, "views"));

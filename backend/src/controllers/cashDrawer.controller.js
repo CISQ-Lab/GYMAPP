@@ -1,9 +1,12 @@
-import * as cashDrawerModel from "../models/cashDrawer.model"
+import * as cashDrawerModel from "../models/cashDrawer.model.js"
 
 export async function createCashDrawer(req, res, next) {
     try {
 
-        const data = await cashDrawerModel.createCashDrawer();
+        const {gymId} = req.body;
+        const userId = req.user.id;
+
+        const data = await cashDrawerModel.createCashDrawer(gymId, userId);
         if(data.length === 0){
             return res.status(400).json({
                 success: false,
