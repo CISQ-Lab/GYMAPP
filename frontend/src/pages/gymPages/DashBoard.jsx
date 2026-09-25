@@ -39,27 +39,6 @@ function Dashboard() {
 
     ];
 
-    const createCashDrawer = async () => {
-
-        try {
-
-            const data = await apiFetch("/cashDrawer/createCashDrawer", {
-                method: 'PUT',
-                body: JSON.stringify({
-                    gymId: gym?.id
-                })
-            }
-            )
-
-            if (data.success) {
-                Success(data.message);
-            }
-
-        } catch (error) {
-            showError(error.message);
-        }
-
-    }
 
 
     return (
@@ -68,9 +47,6 @@ function Dashboard() {
             <div className="flex justify-between items-center pb-2 font-normal text-gray-950">
 
                 <h2 className="text-2xl ">Bienvenido, {user?.name}!</h2>
-
-                {!cashDrawer ? <Button onClick={createCashDrawer}>Abrir Caja</Button> : <Button>Cerrar Caja</Button>}
-
 
             </div>
 

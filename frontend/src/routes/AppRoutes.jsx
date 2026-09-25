@@ -17,6 +17,7 @@ import AddNewPlan from "../pages/gymPages/AddNewPlan";
 import EditPlan from "../pages/gymPages/EditPlan";
 import AddNewMember from "../pages/gymPages/AddNewMember";
 import ViewMember from "../pages/gymPages/ViewMember"
+import CloseTurn from "../components/layout/CloseTurn";
 
 function AppRoutes() {
 
@@ -34,6 +35,9 @@ function AppRoutes() {
             <Route element={<ProtectedRoutes />}>
                 <Route element={<Layout />}>
                     <Route path="/dashboard" element={<Dashboard />} />
+
+                    <Route path="/closeturn" element={<CloseTurn/>}/>
+
                     <Route path="/members" element={<Members />} />
                     <Route path="/members/viewmember" element={<ViewMember />}/>
                     <Route path="/members/addMember" element={<AddNewMember/>} />

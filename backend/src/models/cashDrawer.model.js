@@ -11,6 +11,7 @@ export async function getCashDrawer(gymId) {
 
 export async function createCashDrawer(gymId, userId) {
     const startingCash = 0;
+    const createdAt = new Date().toISOString().slice(0, 19).replace('T', ' ');
 
     // Pedimos una conexión individual del pool para manejar la transacción
     const connection = await pool.getConnection();
@@ -40,9 +41,9 @@ export async function createCashDrawer(gymId, userId) {
 
         // 4. Si no hay caja abierta, procedemos a insertar la nueva
         const [result] = await connection.query(
-            `INSERT INTO cash_drawer (starting_cash, user_id, gym_id, status, CREATED_AT) 
-             VALUES (?, ?, ?, 1, NOW())`,
-            [startingCash, userId, gymId]
+            `INSERT INTO cash_drawer (starting_cash, user_id, gym_id, CREATED_AT) 
+             VALUES (?, ?, ?, ?)`,
+            [startingCash, userId, gymId, createdAt]
         );
 
         // 5. Confirmamos los cambios en la base de datos
@@ -59,4 +60,10 @@ export async function createCashDrawer(gymId, userId) {
         // IMPORTANTE: Siempre liberar la conexión devuelta al pool
         connection.release();
     }
+}
+
+export async function closeCD(formData) {
+
+    const [result] = await pool.query();
+    
 }

@@ -164,7 +164,7 @@ export default function Camera({ setCameraOpen, setFile }) {
                         </>
                     )
                     :
-                    <Button className="mt-3" type="button" onClick={stopCamera}>
+                    <Button type="button" onClick={stopCamera}>
                         Apagar cámara
                     </Button>
                 }

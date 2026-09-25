@@ -57,3 +57,27 @@ export async function createCashDrawer(req, res, next) {
 
 
 }
+
+export async function closeCD(req, res, next) {
+
+    const { formData } = req.body;
+    try {
+        const data = await cashDrawerModel.closeCD(formData);
+        if (data.affectedRows === 0) {
+            return res.status(400).json({
+                success: false,
+                message: "No se pudo modificar, intenta mas tarde"
+            })
+        }
+
+        return res.status(400).json({
+            success: true,
+            message: "Cambios aplicados correctamente"
+        })
+
+
+    } catch (error) {
+
+    }
+
+}

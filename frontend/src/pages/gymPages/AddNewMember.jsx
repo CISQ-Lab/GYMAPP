@@ -1,6 +1,6 @@
 import FormAdd from "../../components/forms/FormAdd";
-import Input from "../../components/layout/input";
-import { useState, useEffect, useRef } from "react";
+import Input from "../../components/layout/Input";
+import { useState, useEffect } from "react";
 import { apiFetch } from "../../services/api";
 import showError from "../../components/messages/showError";
 import Success from "../../components/messages/success";
