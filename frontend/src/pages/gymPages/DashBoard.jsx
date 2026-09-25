@@ -2,11 +2,6 @@ import StatCard from "../../components/cards/StatCard";
 import LogCard from "../../components/cards/logCard";
 import useAuth from "../../hooks/useAuth";
 import useGym from "../../hooks/useGym"
-import Button from "../../components/buttons/button";
-import { useState } from "react";
-import { apiFetch } from "../../services/api";
-import Success from "../../components/messages/success";
-import showError from "../../components/messages/showError.js"
 import useCD from "../../hooks/useCD.jsx"
 
 function Dashboard() {
@@ -14,8 +9,6 @@ function Dashboard() {
     const { gym } = useGym();
     const { user } = useAuth();
     const { cashDrawer } = useCD();
-
-    console.log(cashDrawer);
 
     const stats = [
         { title: "Asistencias", value: "30" },

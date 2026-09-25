@@ -66,13 +66,13 @@ export async function closeCD(req, res, next) {
         if (data.affectedRows === 0) {
             return res.status(400).json({
                 success: false,
-                message: "No se pudo modificar, intenta mas tarde"
+                message: "Esta caja ya esta cerrada"
             })
         }
 
-        return res.status(400).json({
+        return res.status(200).json({
             success: true,
-            message: "Cambios aplicados correctamente"
+            message: "Caja cerrada correctamente!"
         })
 
 

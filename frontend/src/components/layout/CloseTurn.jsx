@@ -4,10 +4,14 @@ import FormAdd from "../forms/FormAdd"
 import Input from "./Input"
 import { useEffect } from "react";
 import { apiFetch } from "../../services/api";
+import Success from "../messages/success";
+import showError from "../messages/showError";
+import { useNavigate } from "react-router-dom";
 
 export default function CloseTurn() {
 
-    const {cashDrawer} = useCD();
+    const {cashDrawer, closeTurn} = useCD();
+    const navigate = useNavigate();
     const [formData, setFormData] = useState(
         {
             ending_cash: "",
@@ -16,6 +20,14 @@ export default function CloseTurn() {
             notes: ""
         }
     );
+
+
+    useEffect(() => {
+        if(!cashDrawer){
+            showError("No hay una caja abierta");
+            navigate("/dashboard");
+        }
+    }, [])
 
     const calculateDifference = () => {
         const difference = formData.ending_cash - formData.ending_cash_expected;
@@ -62,12 +74,15 @@ export default function CloseTurn() {
                     formData
                 })
             });
+            if(data.success){
+                Success(data.message);
+                closeTurn();
+                navigate("/dashboard");
+            }
         } catch (error) {
-            
+            showError(error.message);
         }
         
-
-        console.log(formData);
     }
 
     return (

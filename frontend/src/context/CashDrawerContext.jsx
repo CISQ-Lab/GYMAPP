@@ -14,7 +14,7 @@ export function CashDrawerProvider({ children }) {
     useEffect(() => {
 
         async function loadCashDrawer() {
-            if (!user || !authenticated || !gym) {
+            if (!user || !authenticated || !gym?.id) {
                 setCashDrawer(null);
                 return;
             }
@@ -32,10 +32,14 @@ export function CashDrawerProvider({ children }) {
         loadCashDrawer();
     }, [user, authenticated, gym])
 
+    function closeTurn(){
+        setCashDrawer(null);
+    }
+
 
 
     return (
-        <CashDrawerContext.Provider value={{ cashDrawer, setCashDrawer }}>
+        <CashDrawerContext.Provider value={{ cashDrawer, closeTurn, setCashDrawer}}>
             {children}
         </CashDrawerContext.Provider>
     )

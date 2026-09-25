@@ -5,14 +5,16 @@ import useGym from '../../hooks/useGym';
 import useCD from '../../hooks/useCD';
 import Button from '../buttons/button';
 import { NavLink } from 'react-router-dom';
+import showError from '../messages/showError.js';
+import { apiFetch } from '../../services/api.jsx';
+import Success from '../messages/success';
 
 function Navbar() {
   const { gym } = useGym();
 
   const [date, setDate] = useState(new Date());
-  const { cashDrawer } = useCD();
-
-
+  const { cashDrawer, setCashDrawer } = useCD();
+  
   const createCashDrawer = async () => {
 
     try {
@@ -27,6 +29,9 @@ function Navbar() {
 
       if (data.success) {
         Success(data.message);
+        const data2 = await apiFetch(`/cashdrawer/getcashdrawer?gymId=${gym?.id}`)
+        data2.success ? setCashDrawer(data2.caja) : window.location.reload()
+        
       }
 
     } catch (error) {

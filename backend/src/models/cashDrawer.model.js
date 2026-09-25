@@ -62,8 +62,13 @@ export async function createCashDrawer(gymId, userId) {
     }
 }
 
-export async function closeCD(formData) {
+export async function closeCD(form) {
+    const closedAt = new Date().toISOString().slice(0, 19).replace('T', ' ');
 
-    const [result] = await pool.query();
+    const [result] = await pool.query(`UPDATE cash_drawer SET 
+        ending_cash = ?, ending_cash_expected = ?, difference = ?, notes = ?, CLOSED_AT = ? , status = 0
+        WHERE id = ? AND CLOSED_AT IS NULL`,
+    [form.ending_cash, form.ending_cash_expected, form.difference, form.notes, closedAt, form.cdId]);
     
+    return result;
 }
