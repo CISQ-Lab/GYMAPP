@@ -7,12 +7,15 @@ import { useState } from "react";
 import { apiFetch } from "../../services/api";
 import Success from "../../components/messages/success";
 import showError from "../../components/messages/showError.js"
+import useCD from "../../hooks/useCD.jsx"
 
 function Dashboard() {
 
     const { gym } = useGym();
     const { user } = useAuth();
-    const [caja, setCaja] = useState(null);
+    const { cashDrawer } = useCD();
+
+    console.log(cashDrawer);
 
     const stats = [
         { title: "Asistencias", value: "30" },
@@ -48,7 +51,7 @@ function Dashboard() {
             }
             )
 
-            if(data.success){
+            if (data.success) {
                 Success(data.message);
             }
 
@@ -66,12 +69,12 @@ function Dashboard() {
 
                 <h2 className="text-2xl ">Bienvenido, {user?.name}!</h2>
 
-                {!caja ? <Button onClick={createCashDrawer}>Abrir Caja</Button> : <Button>Cerrar Caja</Button>}
+                {!cashDrawer ? <Button onClick={createCashDrawer}>Abrir Caja</Button> : <Button>Cerrar Caja</Button>}
 
 
             </div>
 
-            {!caja ? <p>Abre una caja para comenzar el dia</p> :
+            {!cashDrawer ? <p>Abre una caja para comenzar el dia</p> :
 
                 <>
 

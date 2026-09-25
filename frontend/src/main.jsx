@@ -6,6 +6,7 @@ import App from './App.jsx'
 import { ThemeProvider } from './context/ThemeProvider.jsx'
 import { AuthProvider } from './context/AuthContext.jsx'
 import { GymProvider } from './context/GymContext.jsx'
+import { CashDrawerProvider } from './context/CashDrawerContext.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -13,7 +14,9 @@ createRoot(document.getElementById('root')).render(
       <ThemeProvider>
         <AuthProvider>
           <GymProvider>
-            <App />
+            <CashDrawerProvider>
+              <App />
+            </CashDrawerProvider>
           </GymProvider>
         </AuthProvider>
       </ThemeProvider>
