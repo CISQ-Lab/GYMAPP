@@ -17,7 +17,8 @@ import AddNewPlan from "../pages/gymPages/AddNewPlan";
 import EditPlan from "../pages/gymPages/EditPlan";
 import AddNewMember from "../pages/gymPages/AddNewMember";
 import ViewMember from "../pages/gymPages/ViewMember"
-import CloseTurn from "../components/layout/CloseTurn";
+import CloseTurn from "../pages/gymPages/CloseTurn";
+import CDProtectedRoutes from "../services/CDProtectedRoutes";
 
 function AppRoutes() {
 
@@ -35,21 +36,22 @@ function AppRoutes() {
             <Route element={<ProtectedRoutes />}>
                 <Route element={<Layout />}>
                     <Route path="/dashboard" element={<Dashboard />} />
-
-                    <Route path="/closeturn" element={<CloseTurn/>}/>
-
                     <Route path="/members" element={<Members />} />
-                    <Route path="/members/viewmember" element={<ViewMember />}/>
-                    <Route path="/members/addMember" element={<AddNewMember/>} />
-                    <Route path="/members/editMember" element={<EditPlan/>} />
                     <Route path="/trainers" element={<Trainers />} />
                     <Route path="/plans" element={<Plans />} />
-                    <Route path="/plans/addplan" element={<AddNewPlan/>} />
-                    <Route path="/plans/editplan" element={<EditPlan/>} />
+                    <Route path="/plans/addplan" element={<AddNewPlan />} />
                     <Route path="/products" element={<Products />} />
                     <Route path="/payments" element={<Payments />} />
                     <Route path="/settings" element={<Settings />} />
                     <Route path="/settings/theme" element={<SetTheme />} />
+                    <Route path="/closeturn" element={<CloseTurn />} />
+
+                    <Route element={<CDProtectedRoutes />}>
+                        <Route path="/members/viewmember" element={<ViewMember />} />
+                        <Route path="/members/addMember" element={<AddNewMember />} />
+                        <Route path="/members/editMember" element={<EditPlan />} />
+                        <Route path="/plans/editplan" element={<EditPlan />} />
+                    </Route>
 
                 </Route>
 
