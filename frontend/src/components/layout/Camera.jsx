@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import Button from "../buttons/button";
+import Button from "../buttons/Button";
 import Spinner from "./Spinner"
 import showError from "../messages/showError";
 

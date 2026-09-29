@@ -5,7 +5,7 @@ import { apiFetch } from "../../services/api";
 import showError from "../../components/messages/showError";
 import Success from "../../components/messages/success";
 import useGym from "../../hooks/useGym";
-import Button from "../../components/buttons/button";
+import Button from "../../components/buttons/Button";
 import { useNavigate } from "react-router-dom";
 import Select from "../../components/layout/Select";
 import Camera from "../../components/layout/Camera";

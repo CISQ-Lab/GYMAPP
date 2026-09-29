@@ -1,5 +1,5 @@
 import { SERVER_URL } from '../../config/env';
-import Button from '../buttons/button';
+import Button from '../buttons/Button';
 import { NavLink } from 'react-router-dom';
 import { motion } from 'framer-motion';
 

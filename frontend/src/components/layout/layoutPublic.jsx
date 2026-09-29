@@ -2,7 +2,7 @@ import bg from "../../assets/fondoLogin.webp"
 import NavbarPublic from "./NavBarPublic"
 import { NavLink } from 'react-router-dom';
 import { APP_NAME } from "../../config/env"
-import Spinner from "./spinner"
+import Spinner from "./Spinner"
 const year = new Date().getFullYear();
 
 export default function LayoutPublic({ children }) {

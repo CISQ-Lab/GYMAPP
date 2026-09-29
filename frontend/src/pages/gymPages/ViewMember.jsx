@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import Button from '../../components/buttons/button';
+import Button from '../../components/buttons/Button';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { SERVER_URL } from '../../config/env';
 import { apiFetch } from "../../services/api"

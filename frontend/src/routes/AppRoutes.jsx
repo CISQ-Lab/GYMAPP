@@ -1,5 +1,5 @@
 import { Routes, Route } from "react-router-dom";
-import Dashboard from "../pages/gymPages/Dashboard";
+import Dashboard from "../pages/gymPages/DashBoard";
 import Members from "../pages/gymPages/Members";
 import Trainers from "../pages/gymPages/Trainers";
 import Plans from "../pages/gymPages/Plans";

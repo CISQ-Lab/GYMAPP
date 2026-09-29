@@ -1,11 +1,11 @@
 import FormAdd from "../../components/forms/FormAdd";
-import Input from "../../components/layout/input";
+import Input from "../../components/layout/Input";
 import { useState, useEffect } from "react";
 import { apiFetch } from "../../services/api";
 import showError from "../../components/messages/showError";
 import Success from "../../components/messages/success";
 import useGym from "../../hooks/useGym";
-import Button from "../../components/buttons/button";
+import Button from "../../components/buttons/Button";
 import { useNavigate } from "react-router-dom";
 
 export default function AddNewPlan() {

@@ -1,10 +1,10 @@
 import PlanCard from "../../components/cards/PlanCard";
-import Button from "../../components/buttons/button";
+import Button from "../../components/buttons/Button";
 import { NavLink } from "react-router-dom";
 import { apiFetch } from "../../services/api";
 import { useEffect, useState } from "react";
 import useGym from "../../hooks/useGym";
-import Spinner from "../../components/layout/spinner"
+import Spinner from "../../components/layout/Spinner"
 
 function Plans() {
 

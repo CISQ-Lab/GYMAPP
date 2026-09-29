@@ -1,6 +1,6 @@
 import useAuth from "../hooks/useAuth";
 import {Navigate, Outlet} from "react-router-dom"
-import Spinner from "../components/layout/spinner";
+import Spinner from "../components/layout/Spinner";
 
 export default function ProtectedRoutes(){
 

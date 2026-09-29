@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 
 import useGym from '../../hooks/useGym';
 import useCD from '../../hooks/useCD';
-import Button from '../buttons/button';
+import Button from '../buttons/Button';
 import { NavLink } from 'react-router-dom';
 import showError from '../messages/showError.js';
 import { apiFetch } from '../../services/api.jsx';

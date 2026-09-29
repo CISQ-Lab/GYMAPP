@@ -1,5 +1,5 @@
 import StatCard from "../../components/cards/StatCard";
-import LogCard from "../../components/cards/logCard";
+import LogCard from "../../components/cards/LogCard";
 import useAuth from "../../hooks/useAuth";
 import useGym from "../../hooks/useGym"
 import useCD from "../../hooks/useCD.jsx"

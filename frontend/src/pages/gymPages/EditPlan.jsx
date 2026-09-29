@@ -1,5 +1,5 @@
 import FormAdd from "../../components/forms/FormAdd";
-import Input from "../../components/layout/input";
+import Input from "../../components/layout/Input";
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { apiFetch } from "../../services/api";

@@ -1,4 +1,4 @@
-import Button from "../buttons/button";
+import Button from "../buttons/Button";
 import { useNavigate } from 'react-router-dom';
 
 export default function FormAdd({ children, onSubmit, title, loading }) {

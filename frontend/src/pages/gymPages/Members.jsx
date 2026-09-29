@@ -1,11 +1,11 @@
-import Button from "../../components/buttons/button";
+import Button from "../../components/buttons/Button";
 import { NavLink } from "react-router-dom";
 import Membercard from "../../components/cards/MemberCard";
 import { useState, useEffect } from "react";
 import useGym from "../../hooks/useGym"
 import { apiFetch } from "../../services/api";
 import showError from "../../components/messages/showError"
-import Spinner from "../../components/layout/spinner";
+import Spinner from "../../components/layout/Spinner";
 
 function Members() {
 
