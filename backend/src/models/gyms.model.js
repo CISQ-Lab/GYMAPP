@@ -32,20 +32,52 @@ export async function getMembers(id) {
     return members;
 }
 
-export async function addNewMember(name, surname, membership_id, phone, email, photo_pat, gymId) {
+export async function addNewMember(name, surname, membership_id, phone, email, photo_pat, gymId, userId) {
 
-    const [data] = await pool.query("SELECT durationDays FROM plans WHERE id = ?",
-        membership_id
-    )
+    const connection = await pool.getConnection();
+    let success = true;
 
-    const days = data[0].durationDays;
+    try {
 
-    const [result] = await pool.query(`INSERT INTO members 
+        await connection.beginTransaction();
+
+        const [result] = await connection.query("SELECT id FROM cash_drawer WHERE gym_id = ? AND ending_cash IS NULL", gymId); 
+        const CDId = result[0].id;
+
+        const [data] = await connection.query("SELECT durationDays, price FROM plans WHERE id = ?",
+            membership_id
+        )
+
+        const days = data[0].durationDays;
+        const price = data[0].price;
+
+        await connection.query(`INSERT INTO members 
         (name, surname, membership_id, membership_start, membership_end, phone, email, photo_pat, gym_id) VALUES 
         (?, ?, ?, CURDATE(), DATE_ADD(CURDATE(), INTERVAL ? DAY), ?, ?, ?, ?)`,
-        [name, surname, membership_id, days, phone, email, photo_pat, gymId]
-    )
-    return result;
+            [name, surname, membership_id, days, phone, email, photo_pat, gymId]
+        )
+
+        await connection.query(`INSERT INTO transactions (type, amount, concept, user_id, gym_id, cash_drawer_id) VALUES
+            (?, ?, ?, ?, ?, ?)`, ["ingreso", price, "Inscripción y primera mensualidad", userId, gymId, CDId])
+
+        await connection.query(`UPDATE cash_drawer SET ending_cash_expected = ending_cash_expected + ? WHERE id = ?`, [price, CDId]);
+        
+        await connection.commit();
+
+
+
+
+    } catch (error) {
+        await connection.rollback();
+        success = false;
+        throw error;
+    }
+    finally {
+        connection.release()
+        return success;
+    }
+
+
 }
 
 export async function editMember(form) {

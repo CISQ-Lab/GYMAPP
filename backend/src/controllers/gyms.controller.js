@@ -50,12 +50,14 @@ export async function addNewMember(req, res, next) {
         })
     }
 
+    const userId = req.user.id;
+
     const { name, surname, phone, email, planId, gymId } = req.body;
     const photo_pat = req.file.path;
 
     try {
-        const data = await GymModel.addNewMember(name, surname, planId, phone, email, photo_pat, gymId);
-        if (data.affectedRows === 0) return res.status(400).json({
+        const data = await GymModel.addNewMember(name, surname, planId, phone, email, photo_pat, gymId, userId);
+        if (!data) return res.status(400).json({
             success: false,
             message: "No fue posible agregar el usuario, intentalo mas tarde"
         })

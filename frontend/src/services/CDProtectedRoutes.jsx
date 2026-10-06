@@ -1,10 +1,15 @@
 import useCD from "../hooks/useCD"
 import { Navigate, Outlet } from "react-router-dom";
 import showError from "../components/messages/showError";
+import Spinner from "../components/layout/Spinner";
 
 export default function CDProtectedRoutes(){
 
-    const { cashDrawer } = useCD()
+    const { cashDrawer, loading } = useCD()
+
+    if(loading){
+        return <Spinner></Spinner>
+    }
 
     if (!cashDrawer) {
 

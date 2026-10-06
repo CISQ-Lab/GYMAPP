@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import Select from "../../components/layout/Select";
 import Camera from "../../components/layout/Camera";
 import DropZone from "../../components/layout/Dropzone";
+import Swal from "sweetalert2";
 
 export default function AddNewMember() {
 
@@ -71,6 +72,16 @@ export default function AddNewMember() {
     const handleSubmit = async (e) => {
 
         e.preventDefault();
+
+        Swal.fire({
+            title: "Guardando...",
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            showConfirmButton: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
 
         const formData = new FormData(e.currentTarget);
 

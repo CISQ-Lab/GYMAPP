@@ -14,7 +14,7 @@ function Members() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        if (gym?.id === null) {
+        if (!gym?.id) {
             return
         }
 

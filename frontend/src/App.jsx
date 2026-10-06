@@ -4,11 +4,13 @@
 //import heroImg from './assets/hero.png'
 //import './App.css'
 import AppRoutes from './routes/AppRoutes'
+import Spinner from './components/layout/Spinner'
 
 function App() {
   return (
     <>
       <AppRoutes/>
+      <Spinner></Spinner>
     </>
   )
 }

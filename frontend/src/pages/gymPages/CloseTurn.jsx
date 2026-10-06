@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function CloseTurn() {
 
-    const { cashDrawer, closeTurn } = useCD();
+    const { cashDrawer, closeTurn, loading} = useCD();
     const navigate = useNavigate();
     const [formData, setFormData] = useState(
         {
@@ -23,11 +23,14 @@ export default function CloseTurn() {
 
 
     useEffect(() => {
+        if(loading){
+            return;
+        }
         if (!cashDrawer) {
             showError("No hay una caja abierta");
             navigate("/dashboard");
         }
-    }, [])
+    }, [loading])
 
     const calculateDifference = () => {
         const difference = formData.ending_cash - formData.ending_cash_expected;

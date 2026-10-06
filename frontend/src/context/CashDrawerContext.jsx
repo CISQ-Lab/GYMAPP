@@ -8,6 +8,7 @@ export const CashDrawerContext = createContext();
 export function CashDrawerProvider({ children }) {
 
     const [cashDrawer, setCashDrawer] = useState(null);
+    const [loading, setLoading] = useState(true);
     const { authenticated, user } = useAuth()
     const { gym } = useGym()
 
@@ -23,8 +24,14 @@ export function CashDrawerProvider({ children }) {
                 const data = await apiFetch(`/cashdrawer/getcashdrawer?gymId=${gym?.id}`);
                 if(data.success){
                     setCashDrawer(data.caja);
-                };
+                    setLoading(false);
+                }
+                else{
+                    setCashDrawer(null);
+                    setLoading(false);
+                }
             } catch (error) {
+                setLoading(false);
                 throw error;
             }
         }
@@ -39,7 +46,7 @@ export function CashDrawerProvider({ children }) {
 
 
     return (
-        <CashDrawerContext.Provider value={{ cashDrawer, closeTurn, setCashDrawer}}>
+        <CashDrawerContext.Provider value={{ cashDrawer, loading, closeTurn, setCashDrawer}}>
             {children}
         </CashDrawerContext.Provider>
     )

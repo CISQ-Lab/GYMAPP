@@ -13,7 +13,7 @@ function Dashboard() {
     const stats = [
         { title: "Asistencias", value: "30" },
         { title: "Miembros a punto de vencer", value: "10" },
-        { title: "Ventas hoy", value: "$1000" },
+        { title: "Ventas hoy", value: "$" + cashDrawer?.ending_cash_expected},
         { title: "Ventas del mes", value: "$5000" }
     ];
 
