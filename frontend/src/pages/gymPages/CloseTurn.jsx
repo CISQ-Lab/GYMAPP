@@ -93,8 +93,11 @@ export default function CloseTurn() {
     return (
         <FormAdd title="Cerrar turno" onSubmit={handleSubmit}>
 
+            <p className="m-0">Monto en tu caja: (Dinero contado)</p>
             <Input ph="Monto final" type="number" value={formData.ending_cash} name="ending_cash" onChange={handleChange} required />
+            <p className="m-0">Monto final esperado: (Ventas registradas por el sistema)</p>
             <Input ph="Monto en caja" value={formData.ending_cash_expected} onChange={handleChange} type="number" name="ending_cash_expected" disabled />
+            <p className="m-0">Diferencia: (Positiva = dinero de sobra, negativa = dinero faltante)</p>
             <Input ph="Diferencia" value={formData.difference} onChange={handleChange} type="number" name="difference" disabled />
             <textarea className="border border-black py-2 px-5 w-4/5 h-25 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary "
                 name="notes" placeholder="Notas adicionales" value={formData.notes} onChange={handleChange} />

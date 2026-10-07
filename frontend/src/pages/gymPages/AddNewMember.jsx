@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import Select from "../../components/layout/Select";
 import Camera from "../../components/layout/Camera";
 import DropZone from "../../components/layout/Dropzone";
+import confirmation from "../../components/messages/confirmation"
 import Swal from "sweetalert2";
 
 export default function AddNewMember() {
@@ -69,9 +70,7 @@ export default function AddNewMember() {
         }))
     }
 
-    const handleSubmit = async (e) => {
-
-        e.preventDefault();
+    const handleSubmit = async (formElement) => { // Recibe el formulario directamente
 
         Swal.fire({
             title: "Guardando...",
@@ -83,17 +82,16 @@ export default function AddNewMember() {
             }
         });
 
-        const formData = new FormData(e.currentTarget);
+        // Usamos el formElement que guardamos de forma segura
+        const formData = new FormData(formElement);
 
         if (file && !formData.get("foto_perfil")) {
             formData.append("foto_perfil", file);
         }
         const foto = formData.get("foto_perfil");
 
-
         if (!foto || foto.name === "" || foto.size === 0) {
-
-            showError("Sube una foto del usuario")
+            showError("Sube una foto del usuario");
             return;
         }
 
@@ -103,27 +101,38 @@ export default function AddNewMember() {
             const data = await apiFetch("/gyms/addNewMember", {
                 method: "POST",
                 body: formData
-            })
+            });
 
             if (data.success) {
-                Success(data.message)
-            }
-            else {
+                Success(data.message);
+            } else {
                 showError(data.message);
             }
+        } catch (error) {
+            showError(error.message);
         }
-        catch (error) {
-            showError(error.message)
-        }
-
-
     }
+
+    const confirmAdd = (e) => {
+        e.preventDefault();
+
+        // 1. Guardamos una referencia fija al formulario antes de abrir la alerta
+        const formElement = e.currentTarget;
+
+        // 2. Pasamos un callback () => ... para que se espere a la confirmación
+        confirmation({
+            text: "Recuerda cobrar el costo del plan", onConfirm: () => {
+                handleSubmit(formElement);
+            }, confirmText: "Lo tengo"
+        });
+    }
+
 
     return (
         <>
 
             <Button type="button" onClick={() => navigate(-1)}> ← Regresar </Button>
-            <FormAdd title="Agregar nuevo Miembro" onSubmit={handleSubmit} loading={loading} id="myform">
+            <FormAdd title="Agregar nuevo Miembro" onSubmit={confirmAdd} loading={loading} id="myform">
                 <div className="grid grid-cols-1 xl:grid-cols-[2fr_1fr] m-5 xl:mr-15">
 
                     <div className="space-y-4 mb-5 xl:mb-0">

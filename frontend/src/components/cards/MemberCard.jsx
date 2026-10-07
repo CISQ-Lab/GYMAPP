@@ -86,7 +86,7 @@ function MemberCard({ member }) {
 
 
                 <Button className="flex-1 bg-primary hover:opacity-90 text-white text-xs font-medium py-1.5 rounded-xl transition-colors shadow-sm shadow-primary/20">
-                    Renovar
+                    {isMembershipActive ? "Marcar asistencia" : "Renovar"}
                 </Button>
             </div>
 

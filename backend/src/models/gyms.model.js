@@ -1,4 +1,5 @@
 import pool from "../database/connection.js";
+import { getLocalDateTime } from "../scripts/getLocalDateTime.js";
 
 export async function getGymData(userId) {
 
@@ -35,7 +36,7 @@ export async function getMembers(id) {
 export async function addNewMember(name, surname, membership_id, phone, email, photo_pat, gymId, userId) {
 
     const connection = await pool.getConnection();
-    let success = true;
+    const localTime = getLocalDateTime();
 
     try {
 
@@ -57,24 +58,20 @@ export async function addNewMember(name, surname, membership_id, phone, email, p
             [name, surname, membership_id, days, phone, email, photo_pat, gymId]
         )
 
-        await connection.query(`INSERT INTO transactions (type, amount, concept, user_id, gym_id, cash_drawer_id) VALUES
-            (?, ?, ?, ?, ?, ?)`, ["ingreso", price, "Inscripción y primera mensualidad", userId, gymId, CDId])
+        await connection.query(`INSERT INTO transactions (type, amount, concept, user_id, gym_id, cash_drawer_id, CREATED_AT) VALUES
+            (?, ?, ?, ?, ?, ?, ?)`, ["ingreso", price, "Inscripción y primera mensualidad", userId, gymId, CDId, localTime])
 
         await connection.query(`UPDATE cash_drawer SET ending_cash_expected = ending_cash_expected + ? WHERE id = ?`, [price, CDId]);
         
         await connection.commit();
-
-
-
+        return true;
 
     } catch (error) {
         await connection.rollback();
-        success = false;
         throw error;
     }
     finally {
         connection.release()
-        return success;
     }
 
 

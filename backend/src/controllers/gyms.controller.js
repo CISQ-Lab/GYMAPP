@@ -70,9 +70,16 @@ export async function addNewMember(req, res, next) {
     catch (error) {
 
         fs.unlink(req.file.path, (e) => {
-            if (e) console.error("No se pudo borrar el archivo físicamente:", err);
+            if (e) console.error("No se pudo borrar el archivo físicamente:", e);
             else console.log("Archivo fantasma eliminado correctamente del servidor.");
         })
+
+        if (error.code === 'ER_DUP_ENTRY' || error.errno === 1062) {
+            return res.status(400).json({
+                success: false,
+                message: "Ya existe un miembro registrado con estos datos (correo o teléfono duplicado)."
+            });
+        }
 
         req.body.error = "Este usuario ya esta agregado en la base de datos";
         next(error);
