@@ -19,14 +19,15 @@ export default function Camera({ setCameraOpen, setFile }) {
             const mediaStream = await navigator.mediaDevices.getUserMedia({
                 video: true
             });
-
-            setLoading(false);
             setStream(mediaStream);
 
 
         } catch (error) {
             showError("No pudo abrirse la camara, sube un archivo o intentalo mas tarde.")
             console.error("Error de cámara:", error);
+        }
+        finally{
+            setLoading(false);
         }
     };
 

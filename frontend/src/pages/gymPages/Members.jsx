@@ -21,10 +21,14 @@ function Members() {
         const getMembers = async () => {
             try {
                 const data = await apiFetch(`/gyms/${gym?.id}/getMembers`);
-                data.success && setMembers(data.members);
-                setLoading(false);
+                if(data.success && data.members){
+                    setMembers(data.members);
+                }              
             } catch (error) {
                 showError(error.message);
+            }
+            finally{
+                setLoading(false);
             }
 
 
