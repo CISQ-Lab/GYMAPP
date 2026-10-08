@@ -2,8 +2,38 @@ import { SERVER_URL } from '../../config/env';
 import Button from '../buttons/Button';
 import { NavLink } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { apiFetch } from "../../services/api"
+import showError from "../messages/showError"
+import success from "../messages/success"
+import useGym from "../../hooks/useGym"
 
 function MemberCard({ member }) {
+
+    const { gym } = useGym();
+
+    const checkAssistance = async (memberId) => {
+        try {
+            const data = await apiFetch(`/members/checkAssistance/${memberId}`, {
+                method: 'PUT',
+                body: JSON.stringify({
+                    gymId: gym?.id
+                })
+            });
+
+            if (data.success) {
+                success(data.message)
+                return;
+            }
+            else {
+                showError(data.message);
+            }
+
+        } catch (error) {
+            showError(error.message);
+        }
+
+    }
+
     const isMembershipActive = member.membership_status === 1;
     const isUserActive = member.isActive === 1;
 
@@ -85,7 +115,8 @@ function MemberCard({ member }) {
                 </motion.div>
 
 
-                <Button className="flex-1 bg-primary hover:opacity-90 text-white text-xs font-medium py-1.5 rounded-xl transition-colors shadow-sm shadow-primary/20">
+                <Button className="flex-1 bg-primary hover:opacity-90 text-white text-xs font-medium py-1.5 rounded-xl transition-colors shadow-sm shadow-primary/20"
+                    onClick={isMembershipActive ? () => { checkAssistance(member.id) } : console.log("HOLA")}>
                     {isMembershipActive ? "Marcar asistencia" : "Renovar"}
                 </Button>
             </div>
