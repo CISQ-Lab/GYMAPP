@@ -12,6 +12,21 @@ export function CashDrawerProvider({ children }) {
     const { authenticated, user } = useAuth()
     const { gym } = useGym()
 
+    const refresh = async () => {
+
+        try {
+            const data = await apiFetch(`/cashdrawer/getcashdrawer?gymId=${gym?.id}`);
+            if (data.success) {
+                setCashDrawer(data.caja);
+            }
+            else {
+                setCashDrawer(null);
+            }
+        } catch (error) {
+            throw error;
+        }
+    }
+
     useEffect(() => {
 
         async function loadCashDrawer() {
@@ -22,11 +37,11 @@ export function CashDrawerProvider({ children }) {
 
             try {
                 const data = await apiFetch(`/cashdrawer/getcashdrawer?gymId=${gym?.id}`);
-                if(data.success){
+                if (data.success) {
                     setCashDrawer(data.caja);
                     setLoading(false);
                 }
-                else{
+                else {
                     setCashDrawer(null);
                     setLoading(false);
                 }
@@ -39,14 +54,16 @@ export function CashDrawerProvider({ children }) {
         loadCashDrawer();
     }, [user, authenticated, gym])
 
-    function closeTurn(){
+
+
+    function closeTurn() {
         setCashDrawer(null);
     }
 
 
 
     return (
-        <CashDrawerContext.Provider value={{ cashDrawer, loading, closeTurn, setCashDrawer}}>
+        <CashDrawerContext.Provider value={{ cashDrawer, loading, closeTurn, setCashDrawer, refresh }}>
             {children}
         </CashDrawerContext.Provider>
     )

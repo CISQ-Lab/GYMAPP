@@ -13,6 +13,7 @@ function Dashboard() {
 
     const [numAssistances, setNumAssistances] = useState(0);
     const [logAssistances, setLogAssistances] = useState([]);
+    const [cashToday, setCashToday] = useState(0);
 
     const getNumAssistances = async () => {
         const data = await apiFetch(`/members/attendancestoday?type=count&gymId=${gym?.id}`);
@@ -31,6 +32,10 @@ function Dashboard() {
     };
 
     useEffect(() => {
+        setCashToday(cashDrawer?.ending_cash_expected);
+    }, [cashDrawer?.ending_cash_expected])
+
+    useEffect(() => {
         if (!gym?.id) {
             return;
         }
@@ -41,7 +46,7 @@ function Dashboard() {
     const stats = [
         { title: "Asistencias de hoy", value: numAssistances },
         { title: "Miembros a punto de vencer", value: "10" },
-        { title: "Ventas hoy", value: "$" + (cashDrawer?.ending_cash_expected || "0.00") },
+        { title: "Ventas hoy", value: "$" + cashToday },
         { title: "Ventas del mes", value: "$5,000" }
     ];
 

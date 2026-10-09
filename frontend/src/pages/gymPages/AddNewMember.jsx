@@ -12,6 +12,7 @@ import Camera from "../../components/layout/Camera";
 import DropZone from "../../components/layout/Dropzone";
 import confirmation from "../../components/messages/confirmation"
 import Swal from "sweetalert2";
+import useCD from "../../hooks/useCD";
 
 export default function AddNewMember() {
 
@@ -21,6 +22,7 @@ export default function AddNewMember() {
     const [loading, setLoading] = useState(true);
     const [file, setFile] = useState(null);
     const [cameraOpen, setCameraOpen] = useState(false);
+    const { cashDrawer, refresh } = useCD();
 
 
 
@@ -105,6 +107,9 @@ export default function AddNewMember() {
 
             if (data.success) {
                 Success(data.message);
+                if(cashDrawer){
+                    refresh();
+                }
             } else {
                 showError(data.message);
             }
