@@ -1,13 +1,12 @@
-export default function LogCard({ log, title }) {
+export default function LogCard({ title, children }) {
   return (
-    <div className="flex flex-col justify-between  bg-white shadow-md rounded p-4 m-2 text-gray-800">
-
-      <h3 className="pb-1 border-b-2 border-double">{title}</h3>
-
-      {log.map((log, index) => (
-        <p key={index} className="py-1">{log.title + ": " + log.value}</p>
-      ))}
-
+    <div className="flex flex-col bg-white shadow-sm border border-gray-100 rounded-xl p-5 m-2 text-gray-800">
+      <h3 className="text-base font-semibold text-gray-900 pb-3 mb-2 border-b border-gray-100">
+        {title}
+      </h3>
+      <div className="flex flex-col">
+        {children}
+      </div>
     </div>
   );
 }

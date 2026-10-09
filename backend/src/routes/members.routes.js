@@ -5,6 +5,7 @@ import { Router } from "express"
 const router = Router();
 
 router.put("/checkAssistance/:memberId", authMiddleware.verifyToken, attendancesController.checkAssistance);
+router.get("/attendancestoday", authMiddleware.verifyToken, attendancesController.attendancesToday);
 
 
 export default router;

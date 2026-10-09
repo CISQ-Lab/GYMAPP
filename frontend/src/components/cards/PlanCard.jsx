@@ -54,80 +54,77 @@ export default function PlanCard({ name, onEdit, Delete, ...props }) {
   const deleteConfirmation = () => confirmation({ text: "¿Quieres eliminar el plan? Esto no se puede deshacer.", onConfirm: deletePlan });
 
   return (
-    <div className="group relative bg-neutral-900 border border-neutral-800 hover:border-primary/50 rounded-xl p-5 shadow-md overflow-hidden transition-all duration-200 flex flex-col justify-between">
+    <div className="group relative bg-white border border-gray-100 hover:border-primary/40 rounded-2xl p-5 shadow-sm hover:shadow-md overflow-hidden transition-all duration-200 flex flex-col justify-between">
 
-      {/* Capa de tinte con el color primario */}
-      <div className="absolute inset-0 bg-primary/10 pointer-events-none group-hover:bg-primary/15 transition-colors" />
+      {/* Línea de acento superior con tu color primario (consistente con las StatCards) */}
+      <div className="absolute top-0 left-0 right-0 h-1.5 bg-primary" />
 
       {/* Contenido Superior */}
       <div>
-        {/* Encabezado: Nombre y Estado */}
-        <div className="relative z-10 flex flex-wrap items-start justify-between gap-2 mb-3">
+        {/* Encabezado: Nombre y Badge de Estado */}
+        <div className="flex flex-wrap items-start justify-between gap-2 mb-3 mt-1">
           <div>
             <span className="text-[10px] font-semibold tracking-wider text-primary uppercase block">
               Plan Registrado
             </span>
-            <h3 className="text-lg font-bold text-white group-hover:text-primary transition-colors">
+            <h3 className="text-lg font-bold text-gray-900 group-hover:text-primary transition-colors">
               {name}
             </h3>
           </div>
 
-          {/* Badge de Estado */}
+          {/* Badge de Estado refinado */}
           <span
-            className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border backdrop-blur-sm shrink-0 ${isActive
-              ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
-              : 'bg-neutral-800/80 text-neutral-400 border-neutral-700'
+            className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold uppercase tracking-wide border ${isActive
+                ? 'bg-emerald-50 text-emerald-600 border-emerald-100'
+                : 'bg-gray-100 text-gray-500 border-gray-200'
               }`}
           >
-            <span className={`w-1.5 h-1.5 rounded-full ${isActive ? 'bg-emerald-400 animate-pulse' : 'bg-neutral-500'}`} />
+            <span className={`w-1.5 h-1.5 rounded-full ${isActive ? 'bg-emerald-500 animate-pulse' : 'bg-gray-400'}`} />
             {isActive ? 'Activo' : 'Inactivo'}
           </span>
         </div>
 
         {/* Descripción */}
-        <p className="relative z-10 text-sm text-neutral-300 mb-4 min-h-[40px] line-clamp-2">
+        <p className="text-sm text-gray-600 mb-4 min-h-[40px] line-clamp-2">
           {props.description || 'Sin descripción'}
         </p>
 
         {/* Métricas clave */}
-        <div className="relative z-10 grid grid-cols-2 gap-2 p-3 bg-neutral-950/70 backdrop-blur-md rounded-lg border border-neutral-800/80 mb-4 text-xs">
+        <div className="grid grid-cols-2 gap-2 p-3 bg-gray-50/80 rounded-xl border border-gray-100 mb-4 text-xs">
           <div>
-            <span className="text-neutral-400 block font-medium">Duración</span>
-            <span className="text-neutral-100 font-semibold">{props.duration} días</span>
+            <span className="text-gray-400 block font-medium">Duración</span>
+            <span className="text-gray-900 font-semibold">{props.duration} días</span>
           </div>
           <div>
-            <span className="text-neutral-400 block font-medium">Precio Base</span>
-            <span className="text-white font-bold">{props.price ? `$${props.price}` : 'No definido'}</span>
+            <span className="text-gray-400 block font-medium">Precio Base</span>
+            <span className="text-gray-900 font-bold">{props.price ? `$${props.price}` : 'No definido'}</span>
           </div>
         </div>
       </div>
 
-      {/* Botones Directos de Acción Responsivos */}
-      <div className="relative grid items-center gap-1.5 pt-3 border-t border-neutral-800/80">
+      {/* Botones de Acción Directos */}
+      <div className="grid grid-cols-3 gap-2 pt-3 border-t border-gray-100">
 
         {/* Botón Editar */}
-        <NavLink to="./editplan" state={{ id: props.id }} className="flex-1 sm:flex-initial flex items-center justify-center gap-1 px-2.5 py-1.5 rounded-md
-         bg-neutral-800/80 hover:bg-neutral-700 text-neutral-200 hover:text-white text-xs font-medium transition-colors border border-primary/40">
-          <button
-            type="button"
-            title="Editar plan"
-          >
-            <div className='flex space-x-1'>
-              <svg className="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-              </svg>
-              <span>Editar</span>
-            </div>
-          </button>
+        <NavLink
+          to="./editplan"
+          state={{ id: props.id }}
+          className="flex items-center justify-center gap-1 px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-gray-100 text-gray-700 hover:text-gray-900 text-xs font-medium transition-colors border border-gray-200"
+          title="Editar plan"
+        >
+          <svg className="w-3.5 h-3.5 shrink-0 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+          </svg>
+          <span>Editar</span>
         </NavLink>
 
         {/* Botón Activar / Desactivar */}
         <button
           type="button"
           onClick={toggleStatus}
-          className={`flex-1 sm:flex-initial flex items-center justify-center gap-1 px-2.5 py-1.5 rounded-md text-xs font-medium transition-colors border ${isActive
-            ? 'bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 border-amber-500/20'
-            : 'bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border-emerald-500/20'
+          className={`flex items-center justify-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-medium transition-colors border ${isActive
+              ? 'bg-amber-50 hover:bg-amber-100 text-amber-700 border-amber-200'
+              : 'bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border-emerald-200'
             }`}
           title={isActive ? 'Desactivar plan' : 'Activar plan'}
         >
@@ -138,7 +135,7 @@ export default function PlanCard({ name, onEdit, Delete, ...props }) {
         <button
           type="button"
           onClick={deleteConfirmation}
-          className="flex-1 sm:flex-initial flex items-center justify-center gap-1 px-2.5 py-1.5 rounded-md bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/20 text-xs font-medium transition-colors"
+          className="flex items-center justify-center gap-1 px-2.5 py-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 text-xs font-medium transition-colors"
           title="Eliminar plan"
         >
           <svg className="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">

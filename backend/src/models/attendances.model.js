@@ -33,3 +33,41 @@ export async function checkAssistance(memberId, gymId) {
 
 
 }
+
+export async function countAttendancesToday(gymId) {
+    const [result] = await pool.query("SELECT COUNT(*) AS total FROM attendances WHERE gym_id = ? AND DATE(check_in) = CURDATE()",
+        gymId
+    )
+
+    const num = result[0].total;
+    return num;
+
+
+}
+
+export async function ultimateAttendancesToday(gymId) {
+
+    const [data] = await pool.query(`SELECT TIME(t1.check_in) AS time, t1.status, t2.name, t2.surname
+        FROM attendances t1 JOIN members t2
+        ON t1.member_id = t2.id
+        WHERE t1.gym_id = ? AND DATE(t1.check_in) = CURDATE()
+        ORDER BY time DESC LIMIT 5
+        `, [gymId])
+
+    return data;
+
+}
+
+export async function attendancesToday(gymId) {
+
+    const [data] = await pool.query(`SELECT TIME(t1.check_in) AS time, t1.status, t2.name, t2.surname
+        FROM attendances t1 JOIN members t2
+        ON t1.member_id = t2.id
+        WHERE t1.gym_id = ? AND DATE(t1.check_in) = CURDATE()
+        ORDER BY time DESC
+        `, [gymId])
+
+
+    return data;
+
+}

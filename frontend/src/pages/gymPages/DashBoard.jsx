@@ -1,20 +1,48 @@
 import StatCard from "../../components/cards/StatCard";
 import LogCard from "../../components/cards/LogCard";
 import useAuth from "../../hooks/useAuth";
-import useGym from "../../hooks/useGym"
-import useCD from "../../hooks/useCD.jsx"
+import useGym from "../../hooks/useGym";
+import useCD from "../../hooks/useCD.jsx";
+import { apiFetch } from "../../services/api.jsx";
+import { useState, useEffect } from "react";
 
 function Dashboard() {
-
     const { gym } = useGym();
     const { user } = useAuth();
     const { cashDrawer } = useCD();
 
+    const [numAssistances, setNumAssistances] = useState(0);
+    const [logAssistances, setLogAssistances] = useState([]);
+
+    const getNumAssistances = async () => {
+        const data = await apiFetch(`/members/attendancestoday?type=count&gymId=${gym?.id}`);
+        if (data.success) {
+            setNumAssistances(data.num);
+        }
+    };
+
+    const getLogAssistances = async () => {
+        const data = await apiFetch(`/members/attendancestoday?type=log&gymId=${gym?.id}`);
+        if (data.success) {
+            setLogAssistances(data.attendances);
+        } else {
+            setLogAssistances([]);
+        }
+    };
+
+    useEffect(() => {
+        if (!gym?.id) {
+            return;
+        }
+        getNumAssistances();
+        getLogAssistances();
+    }, [gym?.id]);
+
     const stats = [
-        { title: "Asistencias", value: "30" },
+        { title: "Asistencias de hoy", value: numAssistances },
         { title: "Miembros a punto de vencer", value: "10" },
-        { title: "Ventas hoy", value: "$" + cashDrawer?.ending_cash_expected},
-        { title: "Ventas del mes", value: "$5000" }
+        { title: "Ventas hoy", value: "$" + (cashDrawer?.ending_cash_expected || "0.00") },
+        { title: "Ventas del mes", value: "$5,000" }
     ];
 
     const logs = [
@@ -24,53 +52,79 @@ function Dashboard() {
         { title: "Nuevo plan creado", value: "Plan Premium" }
     ];
 
-    const recent = [
-        { title: "Ingreso", value: "Juan Perez" },
-        { title: "Ingreso", value: "Ana García" },
-        { title: "Salida", value: "Maria Lopez" },
-        { title: "Salida", value: "Pedro Ramírez" }
-
-    ];
-
-
-
     return (
-        <>
-
-            <div className="flex justify-between items-center pb-2 font-normal text-gray-950">
-
-                <h2 className="text-2xl ">Bienvenido, {user?.name}!</h2>
-
+        <div className="pb-8">
+            {/* Encabezado del Dashboard */}
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-gray-100 pb-4">
+                <div>
+                    <h2 className="text-2xl font-bold tracking-tight text-gray-900">
+                        Bienvenido, {user?.name}! 👋
+                    </h2>
+                    <p className="text-sm text-gray-500 mt-0.5">
+                        Aquí tienes el resumen de la actividad para <span className="font-medium text-gray-700">{gym?.name || 'tu gimnasio'}</span>.
+                    </p>
+                </div>
             </div>
 
-            {!cashDrawer ? <p>Abre una caja para comenzar el dia</p> :
-
+            {/* Alerta si la caja está cerrada */}
+            {!cashDrawer ? (
+                <div className="bg-amber-50 border border-amber-200 rounded-xl p-5 flex items-center space-x-4 text-amber-800">
+                    <div className="p-2 bg-amber-100 rounded-lg">
+                        ⚠️
+                    </div>
+                    <div>
+                        <h4 className="font-semibold text-sm">Caja cerrada</h4>
+                        <p className="text-xs text-amber-700 mt-0.5">Debes abrir una caja para comenzar el día y habilitar las operaciones de venta.</p>
+                    </div>
+                </div>
+            ) : (
                 <>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 ">
-
-                        {
-                            stats.map((stat, index) => (
-                                <StatCard key={index} title={stat.title} value={stat.value} />
-                            ))
-                        }
-
+                    {/* Tarjetas de Estadísticas */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                        {stats.map((stat, index) => (
+                            <StatCard key={index} title={stat.title} value={stat.value} />
+                        ))}
                     </div>
 
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                        <LogCard title="Actividades Recientes" log={recent} />
+                    {/* Secciones de Registros y Actividad */}
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <LogCard title="Actividades Recientes">
+                            {logAssistances && logAssistances.length > 0 ? (
+                                <div className="divide-y divide-gray-100">
+                                    {logAssistances.map((item, index) => {
+                                        const isValid = item.status === "valida";
+                                        return (
+                                            <div key={index} className="flex items-center justify-between py-2">
+                                                <div className="flex flex-col">
+                                                    <span className="font-medium text-gray-900 text-sm">
+                                                        {item.name} {item.surname}
+                                                    </span>
+                                                    <span className="text-xs text-gray-400 mt-0.5">
+                                                        {item.time}
+                                                    </span>
+                                                </div>
+                                                <span className={`px-2.5 py-0.5 rounded-full text-xs font-semibold uppercase tracking-wide ${isValid
+                                                    ? "bg-emerald-50 text-emerald-600 border border-emerald-100"
+                                                    : "bg-rose-50 text-rose-600 border border-rose-100"
+                                                    }`}>
+                                                    {item.status}
+                                                </span>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            ) : (
+                                <p className="text-gray-400 text-sm py-8 text-center">
+                                    No hay registros de asistencias hoy
+                                </p>
+                            )}
+                        </LogCard>
+
                         <LogCard title="Registros del Día" log={logs} />
                     </div>
-
                 </>
-
-            }
-
-
-
-        </>
-
-
+            )}
+        </div>
     );
 }
 

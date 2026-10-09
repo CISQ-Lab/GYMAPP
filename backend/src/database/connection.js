@@ -8,8 +8,18 @@ const pool = mysql.createPool({
     database: process.env.DB_NAME,
     port: Number(process.env.DB_PORT),
     dateStrings: true,
+    timezone: '-06:00',
     ssl: {
         rejectUnauthorized: false
+    }
+});
+
+// 👇 CADA VEZ QUE SE ABRE UNA NUEVA CONEXIÓN EN EL POOL, CONFIGURA SU ZONA HORARIA
+pool.on('connection', async (connection) => {
+    try {
+        await connection.promise().query("SET time_zone = '-06:00';");
+    } catch (error) {
+        console.error("Error al establecer la zona horaria en la conexión:", error);
     }
 });
 
