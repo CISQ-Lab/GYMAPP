@@ -19,6 +19,7 @@ import AddNewMember from "../pages/gymPages/AddNewMember";
 import ViewMember from "../pages/gymPages/ViewMember"
 import CloseTurn from "../pages/gymPages/CloseTurn";
 import CDProtectedRoutes from "../services/CDProtectedRoutes";
+import NotFound from "../pages/gymPages/NotFound";
 
 function AppRoutes() {
 
@@ -56,6 +57,8 @@ function AppRoutes() {
                 </Route>
 
             </Route>
+
+            <Route path="*" element={<NotFound />} />
 
 
 

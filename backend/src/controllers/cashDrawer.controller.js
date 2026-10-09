@@ -77,7 +77,29 @@ export async function closeCD(req, res, next) {
 
 
     } catch (error) {
+        next(error);
+    }
 
+}
+
+export async function getMonthlyCash(req, res, next) {
+
+    const { gymId } = req.params;
+    try {
+        const amount = await cashDrawerModel.getMonthlyCash(gymId);
+        if (amount) {
+            return res.status(200).json({
+                success: true,
+                message: "Exito!",
+                amount
+            })
+        }
+        return res.status(200).json({
+            success: false,
+            message: "No se encontro el gimnasio!",
+        })
+    } catch (error) {
+        next(error)
     }
 
 }

@@ -7,19 +7,22 @@ import { ThemeProvider } from './context/ThemeProvider.jsx'
 import { AuthProvider } from './context/AuthContext.jsx'
 import { GymProvider } from './context/GymContext.jsx'
 import { CashDrawerProvider } from './context/CashDrawerContext.jsx'
+import TitleManager from './services/TitleManager.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
-      <ThemeProvider>
-        <AuthProvider>
-          <GymProvider>
-            <CashDrawerProvider>
-              <App />
-            </CashDrawerProvider>
-          </GymProvider>
-        </AuthProvider>
-      </ThemeProvider>
+      <TitleManager>
+        <ThemeProvider>
+          <AuthProvider>
+            <GymProvider>
+              <CashDrawerProvider>
+                <App />
+              </CashDrawerProvider>
+            </GymProvider>
+          </AuthProvider>
+        </ThemeProvider>
+      </TitleManager>
     </BrowserRouter>
   </StrictMode>,
 )

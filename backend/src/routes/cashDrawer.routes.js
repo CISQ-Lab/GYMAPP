@@ -7,5 +7,6 @@ const router = Router();
 router.get("/getCashDrawer", verifyToken, cashDrawerController.getCashDrawer);
 router.put("/createCashDrawer", verifyToken, cashDrawerController.createCashDrawer)
 router.patch("/closeCD", verifyToken, cashDrawerController.closeCD);
+router.get("/getmonthlycash/:gymId", verifyToken, cashDrawerController.getMonthlyCash);
 
 export default router;

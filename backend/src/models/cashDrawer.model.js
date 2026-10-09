@@ -72,3 +72,22 @@ export async function closeCD(form) {
     
     return result;
 }
+
+export async function getMonthlyCash(gymId) {
+
+    const [result] = await pool.query(`SELECT SUM(
+            CASE
+                WHEN status = 0 THEN ending_cash
+                WHEN status = 1 THEN ending_cash_expected
+                ELSE 0
+            END
+        ) AS total_month
+        FROM cash_drawer WHERE gym_id = ? 
+        AND MONTH(CREATED_AT) = MONTH(CURRENT_DATE())
+        AND YEAR(CREATED_AT) = YEAR(CURRENT_DATE())`, [gymId])
+
+    return result[0].total_month;
+
+
+    
+}
