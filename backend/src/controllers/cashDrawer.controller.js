@@ -82,6 +82,33 @@ export async function closeCD(req, res, next) {
 
 }
 
+export async function getTransactionsToday(req, res, next){
+    const {gymId} = req.params;
+    let response = {
+        success: false,
+        message: "No hay registros hoy"
+    };
+
+    try {
+        const data = await cashDrawerModel.getTransactionsToday(gymId);
+        if(data.length !== 0){
+            response = {
+                success: true,
+                message: "Se encontraron las transacciones de hoy",
+                transactions: data
+            }
+
+        }
+
+        return res.status(200).json(response);
+
+
+    } catch (error) {
+        next(error)
+    }
+
+}
+
 export async function getMonthlyCash(req, res, next) {
 
     const { gymId } = req.params;

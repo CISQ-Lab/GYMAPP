@@ -6,6 +6,7 @@ import useCD from "../../hooks/useCD.jsx";
 import { apiFetch } from "../../services/api.jsx";
 import { useState, useEffect } from "react";
 import Spinner from "../../components/layout/Spinner.jsx";
+import Button from "../../components/buttons/Button.jsx"
 
 function Dashboard() {
     const { gym } = useGym();
@@ -16,6 +17,7 @@ function Dashboard() {
     const [logAssistances, setLogAssistances] = useState([]);
     const [cashToday, setCashToday] = useState(0);
     const [cashMonthly, setCashMonthly] = useState(0);
+    const [transactions, setTransactions] = useState([]);
 
     const getNumAssistances = async () => {
         const data = await apiFetch(`/members/attendancestoday?type=count&gymId=${gym?.id}`);
@@ -42,6 +44,13 @@ function Dashboard() {
 
     }
 
+    const getTransactionsToday = async (gymId) => {
+        const data = await apiFetch(`/cashdrawer/gettransactionstoday/${gym?.id}`);
+        if (data.success) {
+            setTransactions(data.transactions)
+        }
+    }
+
     useEffect(() => {
         setCashToday(cashDrawer?.ending_cash_expected);
         getCashMonthly(gym?.id);
@@ -55,22 +64,17 @@ function Dashboard() {
         getNumAssistances();
         getLogAssistances();
         getCashMonthly();
+        getTransactionsToday();
 
     }, [gym?.id, cashDrawer]);
 
     const stats = [
         { title: "Asistencias de hoy", value: numAssistances },
-        { title: "Miembros a punto de vencer", value: "10" },
+        { title: "Miembros a punto de vencer", value: "FALTA" },
         { title: "Ventas hoy", value: "$" + cashToday },
         { title: "Ventas del mes", value: "$" + cashMonthly }
     ];
 
-    const logs = [
-        { title: "Miembro agregado", value: "Juan Perez" },
-        { title: "Pago recibido", value: "$50" },
-        { title: "Miembro eliminado", value: "Maria Lopez" },
-        { title: "Nuevo plan creado", value: "Plan Premium" }
-    ];
 
     if (loading) {
         return (<Spinner isLoading={loading} />)
@@ -88,6 +92,11 @@ function Dashboard() {
                         <p className="text-sm text-gray-500 mt-0.5">
                             Aquí tienes el resumen de la actividad para <span className="font-medium text-gray-700">{gym?.name || 'tu gimnasio'}</span>.
                         </p>
+                    </div>
+
+                    <div className="space-x-3">
+                        <Button>EXAMPLE</Button>
+                        <Button>EXAMPLE</Button>
                     </div>
                 </div>
 
@@ -145,7 +154,47 @@ function Dashboard() {
                                 )}
                             </LogCard>
 
-                            <LogCard title="Registros del Día" log={logs} />
+                            <LogCard title="Transacciones del Día">
+                                {transactions && transactions.length > 0 ? (
+                                    <div className="divide-y divide-gray-100">
+                                        {transactions.map((item, index) => {
+                                            const isIngreso = item.type === "ingreso";
+                                            return (
+                                                <div key={index} className="flex items-center justify-between py-2">
+                                                    {/* Concepto y Hora */}
+                                                    <div className="flex flex-col pr-4">
+                                                        <span className="font-medium text-gray-900 text-sm line-clamp-1">
+                                                            {item.concept}
+                                                        </span>
+                                                        <span className="text-xs text-gray-400 mt-0.5">
+                                                            {item.CREATED_AT}
+                                                        </span>
+                                                    </div>
+
+                                                    {/* Monto y Tipo (Ingreso / Egreso) */}
+                                                    <div className="flex items-center gap-3 shrink-0">
+                                                        <span className={`text-sm font-bold ${isIngreso ? "text-emerald-600" : "text-rose-600"
+                                                            }`}>
+                                                            {isIngreso ? "+" : "-"}${Number(item.amount).toLocaleString('es-MX', { minimumFractionDigits: 2 })}
+                                                        </span>
+
+                                                        <span className={`px-2.5 py-0.5 rounded-full text-xs font-semibold uppercase tracking-wide border ${isIngreso
+                                                                ? "bg-emerald-50 text-emerald-600 border-emerald-100"
+                                                                : "bg-rose-50 text-rose-600 border-rose-100"
+                                                            }`}>
+                                                            {item.type}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                ) : (
+                                    <p className="text-gray-400 text-sm py-8 text-center">
+                                        No hay transacciones registradas hoy
+                                    </p>
+                                )}
+                            </LogCard>
                         </div>
                     </>
                 )}

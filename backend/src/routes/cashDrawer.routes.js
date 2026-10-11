@@ -8,5 +8,6 @@ router.get("/getCashDrawer", verifyToken, cashDrawerController.getCashDrawer);
 router.put("/createCashDrawer", verifyToken, cashDrawerController.createCashDrawer)
 router.patch("/closeCD", verifyToken, cashDrawerController.closeCD);
 router.get("/getmonthlycash/:gymId", verifyToken, cashDrawerController.getMonthlyCash);
+router.get("/gettransactionstoday/:gymId", verifyToken, cashDrawerController.getTransactionsToday);
 
 export default router;
