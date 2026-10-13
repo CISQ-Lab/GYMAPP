@@ -8,6 +8,8 @@ const router = Router();
 router.put("/checkAssistance/:memberId", authMiddleware.verifyToken, attendancesController.checkAssistance);
 router.get("/attendancestoday", authMiddleware.verifyToken, attendancesController.attendancesToday);
 router.get("/memberstofinish/:gymId", authMiddleware.verifyToken, membersController.membersToFinish)
+router.get("/getmembers", authMiddleware.verifyToken);
+router.get("/getStats/:gymId", authMiddleware.verifyToken, membersController.getStats)
 
 
 export default router;
