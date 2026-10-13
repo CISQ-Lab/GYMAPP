@@ -18,6 +18,7 @@ function Dashboard() {
     const [cashToday, setCashToday] = useState(0);
     const [cashMonthly, setCashMonthly] = useState(0);
     const [transactions, setTransactions] = useState([]);
+    const [membersToFinish, setMembersToFinsh] = useState(0);
 
     const getNumAssistances = async () => {
         const data = await apiFetch(`/members/attendancestoday?type=count&gymId=${gym?.id}`);
@@ -51,6 +52,13 @@ function Dashboard() {
         }
     }
 
+    const getMembersToFinish = async (gymId) => {
+        const data = await apiFetch(`/members/memberstofinish/${gym?.id}`);
+        if (data.num !== 0) {
+            setMembersToFinsh(data.num);
+        }
+    }
+
     useEffect(() => {
         setCashToday(cashDrawer?.ending_cash_expected);
         getCashMonthly(gym?.id);
@@ -63,14 +71,15 @@ function Dashboard() {
         }
         getNumAssistances();
         getLogAssistances();
-        getCashMonthly();
-        getTransactionsToday();
+        getCashMonthly(gym?.id);
+        getTransactionsToday(gym?.id);
+        getMembersToFinish(gym?.id);
 
     }, [gym?.id, cashDrawer]);
 
     const stats = [
         { title: "Asistencias de hoy", value: numAssistances },
-        { title: "Miembros a punto de vencer", value: "FALTA" },
+        { title: "Miembros a punto de vencer", value: membersToFinish },
         { title: "Ventas hoy", value: "$" + cashToday },
         { title: "Ventas del mes", value: "$" + cashMonthly }
     ];
