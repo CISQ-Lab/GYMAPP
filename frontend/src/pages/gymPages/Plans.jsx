@@ -5,6 +5,7 @@ import { apiFetch } from "../../services/api";
 import { useEffect, useState } from "react";
 import useGym from "../../hooks/useGym";
 import Spinner from "../../components/layout/Spinner"
+import showError from "../../components/messages/showError";
 
 function Plans() {
 
@@ -17,9 +18,20 @@ function Plans() {
         if (!gym?.id) {
             return;
         }
-        const data = await apiFetch(`/gyms/${gym?.id}/getPlans`);
-        setPlans(data.plans)
-        setLoading(false)
+        try {
+            const data = await apiFetch(`/gyms/${gym?.id}/getPlans`);
+
+            if(data.length !== 0){
+                setPlans(data.plans)
+            }
+
+        } catch (error) {
+            showError(error.message);
+        }
+        finally{
+            setLoading(false);
+        }
+
     }
 
     const deletePlanFromUI = (id) => {
@@ -29,6 +41,9 @@ function Plans() {
     };
 
     useEffect(() => {
+        if(!gym?.id){
+            return;
+        }
         fetchPlans();
     }, [gym?.id])
 
@@ -45,39 +60,39 @@ function Plans() {
             </div>
 
 
-            {loading ? <Spinner isLoading={loading}/> :
+            {loading ? <Spinner isLoading={loading} /> :
 
-                
-                    plans.length !== 0 ?
-                        <div className="mt-5 grid grid-cols-1 place-content-center w-full sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                            {
-                                plans.map((plan) => (
-                                    <PlanCard key={plan.id} name={plan.name} isActive={plan.isActive}
-                                        id={plan.id} Delete={deletePlanFromUI} description={plan.description}
-                                        price={plan.price} duration={plan.durationDays} />
-                                ))
-                            }
-                        </div>
-                        :
-                        <div className="flex flex-col items-center mt-5">
 
-                            <div className="border border-primary p-10 space-y-5 flex flex-col items-center
+                plans.length !== 0 ?
+                    <div className="mt-5 grid grid-cols-1 place-content-center w-full sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                        {
+                            plans.map((plan) => (
+                                <PlanCard key={plan.id} name={plan.name} isActive={plan.isActive}
+                                    id={plan.id} Delete={deletePlanFromUI} description={plan.description}
+                                    price={plan.price} duration={plan.durationDays} />
+                            ))
+                        }
+                    </div>
+                    :
+                    <div className="flex flex-col items-center mt-5">
+
+                        <div className="border border-primary p-10 space-y-5 flex flex-col items-center
                     rounded-2xl bg-primary/30">
 
-                                <p>No hay planes para mostrar</p>
-                                <NavLink to="/plans/addplan">
-                                    <Button>
-                                        + Agrega un plan para comenzar!
-                                    </Button>
-                                </NavLink>
-
-                            </div>
-
+                            <p>No hay planes para mostrar</p>
+                            <NavLink to="/plans/addplan">
+                                <Button>
+                                    + Agrega un plan para comenzar!
+                                </Button>
+                            </NavLink>
 
                         </div>
 
 
-                
+                    </div>
+
+
+
 
             }
 

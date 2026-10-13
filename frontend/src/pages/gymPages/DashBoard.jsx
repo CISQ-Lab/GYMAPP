@@ -7,6 +7,7 @@ import { apiFetch } from "../../services/api.jsx";
 import { useState, useEffect } from "react";
 import Spinner from "../../components/layout/Spinner.jsx";
 import Button from "../../components/buttons/Button.jsx"
+import { NavLink } from "react-router-dom";
 
 function Dashboard() {
     const { gym } = useGym();
@@ -20,15 +21,15 @@ function Dashboard() {
     const [transactions, setTransactions] = useState([]);
     const [membersToFinish, setMembersToFinsh] = useState(0);
 
-    const getNumAssistances = async () => {
-        const data = await apiFetch(`/members/attendancestoday?type=count&gymId=${gym?.id}`);
+    const getNumAssistances = async (gymId) => {
+        const data = await apiFetch(`/members/attendancestoday?type=count&gymId=${gymId}`);
         if (data.success) {
             setNumAssistances(data.num);
         }
     };
 
-    const getLogAssistances = async () => {
-        const data = await apiFetch(`/members/attendancestoday?type=log&gymId=${gym?.id}`);
+    const getLogAssistances = async (gymId) => {
+        const data = await apiFetch(`/members/attendancestoday?type=log&gymId=${gymId}`);
         if (data.success) {
             setLogAssistances(data.attendances);
         } else {
@@ -38,7 +39,7 @@ function Dashboard() {
 
     const getCashMonthly = async (gymId) => {
 
-        const data = await apiFetch(`/cashdrawer/getmonthlycash/${gym?.id}`);
+        const data = await apiFetch(`/cashdrawer/getmonthlycash/${gymId}`);
         if (data.success) {
             setCashMonthly(data.amount)
         }
@@ -46,14 +47,14 @@ function Dashboard() {
     }
 
     const getTransactionsToday = async (gymId) => {
-        const data = await apiFetch(`/cashdrawer/gettransactionstoday/${gym?.id}`);
+        const data = await apiFetch(`/cashdrawer/gettransactionstoday/${gymId}`);
         if (data.success) {
             setTransactions(data.transactions)
         }
     }
 
     const getMembersToFinish = async (gymId) => {
-        const data = await apiFetch(`/members/memberstofinish/${gym?.id}`);
+        const data = await apiFetch(`/members/memberstofinish/${gymId}`);
         if (data.num !== 0) {
             setMembersToFinsh(data.num);
         }
@@ -69,8 +70,8 @@ function Dashboard() {
         if (!gym?.id && !cashDrawer) {
             return;
         }
-        getNumAssistances();
-        getLogAssistances();
+        getNumAssistances(gym?.id);
+        getLogAssistances(gym?.id);
         getCashMonthly(gym?.id);
         getTransactionsToday(gym?.id);
         getMembersToFinish(gym?.id);
@@ -104,8 +105,13 @@ function Dashboard() {
                     </div>
 
                     <div className="space-x-3">
-                        <Button>EXAMPLE</Button>
-                        <Button>EXAMPLE</Button>
+                        <NavLink to="/members/addMember">
+                            <Button>Agregar Miembro</Button>
+                        </NavLink>
+
+                        <NavLink to="/members">
+                            <Button>Registrar Asistencia</Button>
+                        </NavLink>
                     </div>
                 </div>
 
@@ -188,8 +194,8 @@ function Dashboard() {
                                                         </span>
 
                                                         <span className={`px-2.5 py-0.5 rounded-full text-xs font-semibold uppercase tracking-wide border ${isIngreso
-                                                                ? "bg-emerald-50 text-emerald-600 border-emerald-100"
-                                                                : "bg-rose-50 text-rose-600 border-rose-100"
+                                                            ? "bg-emerald-50 text-emerald-600 border-emerald-100"
+                                                            : "bg-rose-50 text-rose-600 border-rose-100"
                                                             }`}>
                                                             {item.type}
                                                         </span>
