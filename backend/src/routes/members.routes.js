@@ -8,8 +8,9 @@ const router = Router();
 router.put("/checkAssistance/:memberId", authMiddleware.verifyToken, attendancesController.checkAssistance);
 router.get("/attendancestoday", authMiddleware.verifyToken, attendancesController.attendancesToday);
 router.get("/memberstofinish/:gymId", authMiddleware.verifyToken, membersController.membersToFinish)
-router.get("/getmembers", authMiddleware.verifyToken);
+router.get("/getrecently/:gymId", authMiddleware.verifyToken, membersController.getMembersRecently);
 router.get("/getStats/:gymId", authMiddleware.verifyToken, membersController.getStats)
+router.get("/search/:gymId", authMiddleware.verifyToken, membersController.search)
 
 
 export default router;
