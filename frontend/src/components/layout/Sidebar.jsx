@@ -22,10 +22,10 @@ function Sidebar({ minimized, onToggle }) {
     const MenuItems = [
         { name: "Dashboard", path: "/dashboard", icon: DashboardIcon },
         { name: "Miembros", path: "/members", icon: MembersIcon },
-        { name: "Entrenadores", path: "/trainers", icon: TrainersIcon },
+        //{ name: "Entrenadores", path: "/trainers", icon: TrainersIcon },
         { name: "Planes", path: "/plans", icon: PlansIcon },
         { name: "Productos", path: "/products", icon: ProductsIcon },
-        { name: "Pagos", path: "/payments", icon: PaymentsIcon },
+        { name: "Caja", path: "/payments", icon: PaymentsIcon },
         { name: "Configuración", path: "/settings", icon: SettingsIcon },
     ];
 

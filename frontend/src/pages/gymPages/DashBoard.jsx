@@ -54,9 +54,9 @@ function Dashboard() {
     }
 
     const getMembersToFinish = async (gymId) => {
-        const data = await apiFetch(`/members/memberstofinish/${gymId}`);
-        if (data.num !== 0) {
-            setMembersToFinsh(data.num);
+        const data = await apiFetch(`/members/getstats/${gymId}`);
+        if (data.success) {
+            setMembersToFinsh(data.stats.toFinish);
         }
     }
 

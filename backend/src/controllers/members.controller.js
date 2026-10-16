@@ -1,5 +1,42 @@
 import * as membersModel from "../models/members.model.js"
 
+export async function getMembers(req, res, next) {
+    const { gymId } = req.params;
+    const filters = req.query;
+    const allowedFilters = ['active', 'finished', 'notFinished', 'toFinsh', 'newsAtMonth']
+    const keys = Object.keys(filters);
+
+    const hasInvalidFilters = keys.some(key => !allowedFilters.includes(key))
+
+    if (hasInvalidFilters) {
+        return res.status(400).json({
+            success: false,
+            message: "Filtro no valido"
+        })
+    }
+
+    try {
+
+        const data = await membersModel.getMembers(gymId, filters);
+        if(data.length === 0){
+            return res.status(200).json({
+                success: false,
+                message: "No se encontraron usuarios"
+            })
+        }
+
+        return res.status(200).json({
+            success: true,
+            message: "Exito!",
+            members: data
+        });
+
+    } catch (error) {
+        next(error);
+    }   
+
+}
+
 export async function getMembersRecently(req, res, next) {
     const { gymId } = req.params;
 
@@ -31,7 +68,6 @@ export async function search(req, res, next) {
     const { gymId } = req.params;
     const { text } = req.query;
 
-    
     let response = {
         success: false,
         message: "No se encontraron usuarios"
@@ -39,7 +75,7 @@ export async function search(req, res, next) {
 
     try {
         const data = await membersModel.search(gymId, text);
-        if (data.length !== 0){
+        if (data.length !== 0) {
             response = {
                 success: true,
                 message: "Exito!",
@@ -78,9 +114,6 @@ export async function getStats(req, res, next) {
         next(error);
 
     }
-
-
-
 }
 
 export async function membersToFinish(req, res, next) {

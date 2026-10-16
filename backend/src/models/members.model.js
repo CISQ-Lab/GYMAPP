@@ -1,5 +1,36 @@
 import pool from "../database/connection.js";
 
+    export async function getMembers(gymId, filters) {
+
+        let query = "SELECT * FROM members WHERE gym_id = ? ";
+        let params = [gymId];
+
+        if(Object.keys(filters).length !== 0){
+
+
+            if(filters.active){
+                query += "AND isActive = ?";
+                params.push(filters.active)
+            }
+            if('toFinish' in filters){
+                query += "AND DATEDIFF(membership_end, CURRENT_DATE()) < 5 AND membership_end > CURRENT_DATE() "
+            }
+            if('finished' in filters){
+                query += "AND (membership_status = 0 OR CURRENT_DATE() > membership_end) "
+            }
+            if('notFinished' in filters){
+                query += "AND (membership_status = 1 OR CURRENT_DATE() < membership_end) "
+            }
+            if('newsAtMonth' in filters){
+                query += "AND MONTH(CREATED_AT) = MONTH(CURDATE()) AND YEAR(CREATED_AT) = YEAR(CURDATE()) "
+            }
+        }
+
+        const [result] = await pool.query(query, params);
+        return result;
+    
+    }
+
 export async function membersToFinish(gymId) {
 
     const [result] = await pool.query(`SELECT COUNT(*) AS num FROM members WHERE gym_id = ?

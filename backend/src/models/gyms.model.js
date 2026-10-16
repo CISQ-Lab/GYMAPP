@@ -42,7 +42,7 @@ export async function addNewMember(name, surname, membership_id, phone, email, p
 
         await connection.beginTransaction();
 
-        const [result] = await connection.query("SELECT id FROM cash_drawer WHERE gym_id = ? AND ending_cash IS NULL", gymId); 
+        const [result] = await connection.query("SELECT id FROM cash_drawer WHERE gym_id = ? AND ending_cash IS NULL", gymId);
         const CDId = result[0].id;
 
         const [data] = await connection.query("SELECT durationDays, price FROM plans WHERE id = ?",
@@ -62,7 +62,7 @@ export async function addNewMember(name, surname, membership_id, phone, email, p
             (?, ?, ?, ?, ?, ?, ?)`, ["ingreso", price, "Inscripción y primera mensualidad", userId, gymId, CDId, localTime])
 
         await connection.query(`UPDATE cash_drawer SET ending_cash_expected = ending_cash_expected + ? WHERE id = ?`, [price, CDId]);
-        
+
         await connection.commit();
         return true;
 
@@ -99,11 +99,13 @@ export async function getPlans(gymId, active) {
     const params = [gymId];
 
     if (active) {
-        query = query + " AND isActive = ?";
+        query = query + " AND isActive = ? ORDER BY durationDays ASC";
         params.push(active);
+        const [planRows] = await pool.query(query, params);
+        return planRows;
     }
 
-
+    query = query + "ORDER BY durationDays ASC";
     const [planRows] = await pool.query(query, params);
     return planRows;
 }

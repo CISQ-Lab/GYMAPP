@@ -20,6 +20,7 @@ import ViewMember from "../pages/gymPages/ViewMember"
 import CloseTurn from "../pages/gymPages/CloseTurn";
 import CDProtectedRoutes from "../services/CDProtectedRoutes";
 import NotFound from "../pages/gymPages/NotFound";
+import SearchMembers from "../pages/gymPages/SearchMembers";
 
 function AppRoutes() {
 
@@ -46,6 +47,7 @@ function AppRoutes() {
                     <Route path="/settings" element={<Settings />} />
                     <Route path="/settings/theme" element={<SetTheme />} />
                     <Route path="/closeturn" element={<CloseTurn />} />
+                    <Route path="/members/search" element={<SearchMembers/>}/>
 
                     <Route element={<CDProtectedRoutes />}>
                         <Route path="/members/viewmember" element={<ViewMember />} />

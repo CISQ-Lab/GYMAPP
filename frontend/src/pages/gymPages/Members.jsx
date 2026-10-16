@@ -117,12 +117,13 @@ function Members() {
                             type="text"
                         />
                     </div>
-                    <p>{"La palabra es: " + wordSearch}</p>
 
                     {/* Estadísticas (StatCards) */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 my-6">
                         {statsConfig.map((stat, index) => (
-                            <StatCard key={index} title={stat.title} value={stat.value} />
+                            <NavLink to="./search"> 
+                                <StatCard key={index} title={stat.title} value={stat.value} />
+                            </NavLink>
                         ))}
                     </div>
 
