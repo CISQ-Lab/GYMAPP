@@ -1,44 +1,60 @@
 import { useState, useEffect } from "react";
-import { NavLink } from "react-router-dom";
 import Button from "../../components/buttons/Button";
 import Membercard from "../../components/cards/MemberCard";
-import StatCard from "../../components/cards/StatCard";
 import Spinner from "../../components/layout/Spinner";
 import showError from "../../components/messages/showError";
 import useGym from "../../hooks/useGym";
 import { apiFetch } from "../../services/api";
+import Select from "../../components/layout/Select"
+import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 function SearchMembers() {
+
+    const navigate = useNavigate();
+    const location = useLocation();
+    const filterStart = location?.state;
+
     const { gym } = useGym();
     const [members, setMembers] = useState([]);
+    const [memberships, setMemberships] = useState([]);
     const [loading, setLoading] = useState(true);
     const [wordSearch, setWordSearch] = useState("");
+
+    const stateFilters = [
+        { title: "Todos", value: "all" },
+        { title: "Activos", value: "active" },
+        { title: "Suspendidos", value: "notActive" },
+        { title: "A punto de expirar", value: "toFinish" },
+        { title: "Membresia expirada", value: "finished" },
+        { title: "Nuevos en el mes", value: "newsAtMonth" }
+    ]
 
     useEffect(() => {
         if (!gym?.id) return;
 
-        const fetchData = async () => {
-            setLoading(true);
-            try {
-                // Ejecutamos ambas peticiones en paralelo para mayor velocidad
-                const [membersRes] = await Promise.all([
-                    apiFetch(`/members/getrecently/${gym.id}`)
-                ]);
-
-
-                if (membersRes.success && membersRes.members) {
-                    setMembers(membersRes.members);
-                }
-            } catch (error) {
-                showError(error.message);
-            } finally {
-                setLoading(false);
+        const getPlans = async () => {
+            const data = await apiFetch(`/gyms/${gym?.id}/getPlans?active=1`);
+            if (data.success) {
+                setMemberships(data.plans)
+                return;
             }
-        };
+        }
 
-        fetchData();
+        const getMembers = async () => {
+            const data = await apiFetch(`/members/getmembers/${gym?.id}?${location?.state}`);
+            if (data.success) {
+                setMembers(data.members)
+                return;
+            }
+        }
+
+        getPlans();
+        getMembers();
+
+        setLoading(false);
+
     }, [gym?.id]);
-
     const handleText = async (e) => {
         const value = e.target.value;
         setWordSearch(value); // Actualizamos el estado para el input
@@ -51,15 +67,6 @@ function SearchMembers() {
                     setMembers(data.members);
                 } else {
                     setMembers([]);
-                }
-            } catch (error) {
-                showError(error.message);
-            }
-        } else {
-            try {
-                const data = await apiFetch(`/members/getrecently/${gym.id}`);
-                if(data.success){
-                    setMembers(data.members);
                 }
             } catch (error) {
                 showError(error.message);
@@ -92,6 +99,25 @@ function SearchMembers() {
                         />
                     </div>
 
+                    <div className="flex space-x-4 mb-4">
+                        <Select items={stateFilters} placeholder="-- Selecciona un estado --">
+                            {stateFilters.map((state) => (
+
+                                <option value={state.value} key={state.value} selected={filterStart == state.value}>{state.title}</option>
+
+                            ))}
+                        </Select>
+                        <Select items={memberships} placeholder="-- Tipo de membresia --">
+                            {
+                                memberships?.map((membership) => (
+                                    <option value={membership.id} key={membership.id} > {membership.name} </option>
+                                ))
+                            }
+                        </Select>
+
+
+                    </div>
+
 
                     {/* Sección: Recientes */}
                     <div className="border-t border-slate-300 pt-4 mb-4">
@@ -107,7 +133,7 @@ function SearchMembers() {
                         </div>
                     ) : (
                         <p className="text-gray-400 text-sm py-8 text-center bg-gray-50 rounded-xl border border-dashed border-gray-200">
-                            {wordSearch.length >= 3 ? "No hay usuarios coincidentes" : "No hay miembros registrados recientemente."}
+                            {wordSearch.length >= 3 ? "No hay usuarios coincidentes" : "No hay resultados."}
                         </p>
                     )}
                 </>

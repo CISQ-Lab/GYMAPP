@@ -15,7 +15,7 @@ function Members() {
 
     // Estado unificado para las estadísticas
     const [statsData, setStatsData] = useState({
-        total: 0,
+        all: 0,
         toFinish: 0,
         finished: 0,
         newsAtMonth: 0
@@ -86,10 +86,10 @@ function Members() {
     };
     // Arreglo para mapear las tarjetas de estadísticas limpiamente
     const statsConfig = [
-        { title: "Total de Miembros", value: statsData.total },
-        { title: "Miembros a punto de vencer", value: statsData.toFinish },
-        { title: "Miembros vencidos", value: statsData.finished },
-        { title: "Nuevos miembros en el mes", value: statsData.newsAtMonth }
+        { title: "Total de Miembros", value: statsData.total,  key: "all"},
+        { title: "Miembros a punto de vencer", value: statsData.toFinish,  key: "toFinish"},
+        { title: "Miembros vencidos", value: statsData.finished,  key: "finished"},
+        { title: "Nuevos miembros en el mes", value: statsData.newsAtMonth, key: "newsAtMonth" }
     ];
 
     return (
@@ -121,7 +121,7 @@ function Members() {
                     {/* Estadísticas (StatCards) */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 my-6">
                         {statsConfig.map((stat, index) => (
-                            <NavLink to="./search"> 
+                            <NavLink to="./search" key={index} state={stat.key}> 
                                 <StatCard key={index} title={stat.title} value={stat.value} />
                             </NavLink>
                         ))}

@@ -107,7 +107,7 @@ export default function AddNewMember() {
 
             if (data.success) {
                 Success(data.message);
-                if(cashDrawer){
+                if (cashDrawer) {
                     refresh();
                 }
             } else {
@@ -145,7 +145,14 @@ export default function AddNewMember() {
                         <Input type="text" ph="Escribe el apellido del nuevo miembro" name="surname" value={form.surname} onChange={handleChange} required />
                         <Input type="text" ph="Telefono del nuevo miembro" name="phone" value={form.phone} onChange={handleChange} />
                         <Input type="text" ph="Email del nuevo miembro" name="email" value={form.email} onChange={handleChange} />
-                        <Select name="planId" items={plans} onChange={handleChange} value={form.planId} placeholder="-- Selecciona un plan --" />
+                        <Select name="planId" items={plans} onChange={handleChange} value={form.planId} placeholder="-- Selecciona un plan --" >
+                            {/* Mapeo seguro de los items */}
+                            {plans?.map((item) => (
+                                <option key={item.id} value={item.id}>
+                                    {item.name} - ${item.price}
+                                </option>
+                            ))}
+                        </Select>
                     </div>
 
                     <div>

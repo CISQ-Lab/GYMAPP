@@ -3,7 +3,7 @@ import * as membersModel from "../models/members.model.js"
 export async function getMembers(req, res, next) {
     const { gymId } = req.params;
     const filters = req.query;
-    const allowedFilters = ['active', 'finished', 'notFinished', 'toFinsh', 'newsAtMonth']
+    const allowedFilters = ['all', 'active', 'finished', 'notFinished', 'toFinish', 'newsAtMonth']
     const keys = Object.keys(filters);
 
     const hasInvalidFilters = keys.some(key => !allowedFilters.includes(key))
