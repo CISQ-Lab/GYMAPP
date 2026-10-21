@@ -86,10 +86,10 @@ function Members() {
     };
     // Arreglo para mapear las tarjetas de estadísticas limpiamente
     const statsConfig = [
-        { title: "Total de Miembros", value: statsData.total,  key: "all"},
-        { title: "Miembros a punto de vencer", value: statsData.toFinish,  key: "toFinish"},
-        { title: "Miembros vencidos", value: statsData.finished,  key: "finished"},
-        { title: "Nuevos miembros en el mes", value: statsData.newsAtMonth, key: "newsAtMonth" }
+        { title: "Total de Miembros", value: statsData.total,  key: "all", type: "normal"},
+        { title: "Miembros a punto de vencer", value: statsData.toFinish,  key: "toFinish", type: "advertencia"},
+        { title: "Miembros vencidos", value: statsData.finished,  key: "finished", type: "peligro"},
+        { title: "Nuevos miembros en el mes", value: statsData.newsAtMonth, key: "newsAtMonth", type: "normal" }
     ];
 
     return (
@@ -122,7 +122,7 @@ function Members() {
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 my-6">
                         {statsConfig.map((stat, index) => (
                             <NavLink to="./search" key={index} state={stat.key}> 
-                                <StatCard key={index} title={stat.title} value={stat.value} />
+                                <StatCard key={index} title={stat.title} value={stat.value} type={stat.type}/>
                             </NavLink>
                         ))}
                     </div>
