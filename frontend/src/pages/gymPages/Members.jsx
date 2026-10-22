@@ -76,7 +76,7 @@ function Members() {
         } else {
             try {
                 const data = await apiFetch(`/members/getrecently/${gym.id}`);
-                if(data.success){
+                if (data.success) {
                     setMembers(data.members);
                 }
             } catch (error) {
@@ -86,9 +86,9 @@ function Members() {
     };
     // Arreglo para mapear las tarjetas de estadísticas limpiamente
     const statsConfig = [
-        { title: "Total de Miembros", value: statsData.total,  key: "all", type: "normal"},
-        { title: "Miembros a punto de vencer", value: statsData.toFinish,  key: "toFinish", type: "advertencia"},
-        { title: "Miembros vencidos", value: statsData.finished,  key: "finished", type: "peligro"},
+        { title: "Total de Miembros", value: statsData.total, key: "all", type: "normal" },
+        { title: "Miembros a punto de vencer", value: statsData.toFinish, key: "toFinish", type: "advertencia" },
+        { title: "Miembros vencidos", value: statsData.finished, key: "finished", type: "peligro" },
         { title: "Nuevos miembros en el mes", value: statsData.newsAtMonth, key: "newsAtMonth", type: "normal" }
     ];
 
@@ -97,9 +97,15 @@ function Members() {
             {/* Cabecera */}
             <div className="flex justify-between items-center mb-5">
                 <h1 className="text-xl font-bold text-gray-800">Miembros</h1>
-                <NavLink to="./addMember">
-                    <Button>+ Agregar nuevo miembro</Button>
-                </NavLink>
+                <div className="space-x-3">
+                    <NavLink to="./addMember">
+                        <Button>+ Agregar nuevo miembro</Button>
+                    </NavLink>
+                    <NavLink to="./search">
+                        <Button>Busqueda avanzada</Button>
+                    </NavLink>
+                </div>
+
             </div>
 
             {loading ? (
@@ -121,8 +127,8 @@ function Members() {
                     {/* Estadísticas (StatCards) */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 my-6">
                         {statsConfig.map((stat, index) => (
-                            <NavLink to="./search" key={index} state={stat.key}> 
-                                <StatCard key={index} title={stat.title} value={stat.value} type={stat.type}/>
+                            <NavLink to="./search" key={index} state={stat.key}>
+                                <StatCard key={index} title={stat.title} value={stat.value} type={stat.type} />
                             </NavLink>
                         ))}
                     </div>

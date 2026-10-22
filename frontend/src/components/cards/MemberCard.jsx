@@ -105,7 +105,7 @@ function MemberCard({ member }) {
             <div className="mt-4 flex gap-2">
                 <motion.div whileHover={{ scale: 1.2 }} whileTap={{ scale: 0.8 }}
                     className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-medium py-1.5 rounded-xl transition-colors">
-                    <NavLink to="./viewmember" state={{ member: member }}
+                    <NavLink to="/members/viewmember" state={{ member: member }}
                     >
                         <Button className="w-full ">
                             Ver

@@ -13,8 +13,6 @@ function SearchMembers() {
 
     const navigate = useNavigate();
     const location = useLocation();
-    let filter = location?.state;
-
 
     const { gym } = useGym();
     const initialUrl = `/members/getmembers/${gym?.id}?`
@@ -33,45 +31,78 @@ function SearchMembers() {
         { title: "Nuevos en el mes", value: "newsAtMonth" }
     ]
 
-    const filters = {
+    const [filters, setFilters] = useState({
         status: "",
         membership: "",
         dateStart: "",
         dateEnd: "",
-    }
+    })
 
     const getMembers = async (filters) => {
         if (!filters) return;
 
-        const data = await apiFetch(`/members/getmembers/${gym?.id}?${filters}`);
+        setLoading(true);
+        url = initialUrl;
+
+        Object.entries(filters).forEach(([key, value]) => {
+
+            if(key === "status" && !value) value = "all";
+
+            if (value) {
+                url += (key + "=" + value + "&")
+            }
+        });
+
+        const data = await apiFetch(url);
         if (data.success) {
             setMembers(data.members)
+            setLoading(false);
             return;
         }
         setMembers([]);
+        setLoading(false);
     }
 
     useEffect(() => {
-        if (!gym?.id) return;
+        if (!gym?.id || !filters) return;
 
-        const getPlans = async () => {
+        const initialiceData = async () => {
             const data = await apiFetch(`/gyms/${gym?.id}/getPlans?active=1`);
             if (data.success) {
                 setMemberships(data.plans)
-                return;
             }
+
+            if (location?.state) {
+                console.log("ENTRE");
+                const value = location?.state;
+                const updatedFilters = {
+                    ...filters,
+                    status: value
+                }
+                setFilters(updatedFilters);
+                await getMembers(updatedFilters);
+            }
+
+            setLoading(false);
         }
 
-        getPlans();
-        getMembers(filter);
+        initialiceData();
 
-        setLoading(false);
+
+
 
     }, [gym?.id]);
 
-    const handleChange = async (e) => {
-        filter = e.target.value;
-        getMembers(filter);
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+
+        const updatedFilters = {
+            ...filters,
+            [name]: value
+        }
+        setFilters(updatedFilters);
+
+        getMembers(updatedFilters);
     }
 
     const handleText = async (e) => {
@@ -115,14 +146,14 @@ function SearchMembers() {
             </div>
 
             <div className="flex space-x-4 mb-4">
-                <Select items={stateFilters} placeholder="-- Selecciona un estado --" onChange={handleChange}>
+                <Select items={stateFilters} placeholder="-- Selecciona un estado --" onChange={handleChange} name="status">
                     {stateFilters.map((state) => (
 
-                        <option value={state.value} key={state.value} selected={filter == state.value}>{state.title}</option>
+                        <option value={state.value} key={state.value} selected={location?.state == state.value}>{state.title}</option>
 
                     ))}
                 </Select>
-                <Select items={memberships} placeholder="-- Tipo de membresia --">
+                <Select items={memberships} placeholder="-- Tipo de membresia --" onChange={handleChange} name="membership">
                     {
                         memberships?.map((membership) => (
                             <option value={membership.id} key={membership.id} > {membership.name} </option>
@@ -134,12 +165,9 @@ function SearchMembers() {
             </div>
 
             {loading ? (
-                <Spinner isLoading={true} />
+                <Spinner isLoading={loading} />
             ) : (
                 <>
-
-
-
                     {/* Sección: Recientes */}
                     <div className="border-t border-slate-300 pt-4 mb-4">
                         <h2 className="text-lg font-semibold text-gray-800">Resultados:</h2>
