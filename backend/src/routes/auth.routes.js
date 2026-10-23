@@ -8,5 +8,6 @@ const router = Router();
 router.post("/login", authController.login);
 router.post("/register", authController.register);
 router.post("/createNewGym", verifyToken, uploadGymLogo.single("gymLogo"), authController.createNewGym);
+router.post("/confirmPassword", verifyToken, authController.confirmPassword)
 
 export default router;

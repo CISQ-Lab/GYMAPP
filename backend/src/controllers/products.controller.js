@@ -2,13 +2,17 @@ import * as productsModel from "../models/products.model.js"
 
 export async function getProducts(req, res, next){
     const {gymId} = req.params;
+    const filters = req.query;
+
+    const validStatus = ["all", "lowStock", "outOfStock"]
+
     let response = {
         success: false,
         message: "No se encontraron productos"
     }
 
     try {
-        const data = await productsModel.getProducts(gymId);
+        const data = await productsModel.getProducts(gymId, filters);
         if(data.length > 0){
             response.success = true;
             response.message = "Exito!";

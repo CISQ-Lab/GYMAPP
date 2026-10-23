@@ -1,9 +1,9 @@
 import Swal from 'sweetalert2';
 
-export default function confirmation({text = "Esto no se puede deshacer.", onConfirm, confirmText = "SI"}) {
+export default function confirmation({title="¿Estas seguro?" ,text = "Esto no se puede deshacer.", onConfirm, confirmText = "SI"}) {
 
     Swal.fire({
-        title: "¿Estas seguro?",
+        title: title,
         text: text,
         icon: "warning",
         showCancelButton: true,

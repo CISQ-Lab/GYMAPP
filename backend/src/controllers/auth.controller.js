@@ -3,6 +3,36 @@ import bcrypt from "bcryptjs";
 import "dotenv/config";
 import jwt from "jsonwebtoken"
 
+export async function confirmPassword(req, res, next) {
+    const id = req.user.id;
+    const { password } = req.body;
+
+    if(!password){
+        return res.status(200).json({
+            success: false,
+            message: "Debe ingresar una contraseña"
+        })
+    }
+
+    try {
+        const isConfirmed = await authModel.confirmPassword(id, password);
+        if (isConfirmed) {
+            return res.status(200).json({
+                success: true,
+                message: "Contraseña correcta"
+            })
+        }
+
+        return res.status(200).json({
+            success: false,
+            message: "Contraseña invalida"
+        })
+
+    } catch (error) {
+        next(error);
+    }
+}
+
 export async function login(req, res, next) {
     try {
         const { email, password } = req.body
@@ -91,7 +121,7 @@ export async function createNewGym(req, res, next) {
 
         const { gymName } = req.body;
 
-        if(!req.file){
+        if (!req.file) {
             return res.status(400).json({
                 message: "Por favor, suba un logo"
             })

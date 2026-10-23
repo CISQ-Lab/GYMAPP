@@ -6,6 +6,7 @@ export default function ProductCard({
   sku,
   stock = 0,
   isActive = true,
+  mode,
   onQuickBuy,
   onAddToCart
 }) {
@@ -108,7 +109,8 @@ export default function ProductCard({
           </div>
 
           {/* Acciones para el Admin POS */}
-          <div className="flex items-center gap-2">
+          {
+            mode ? <div className="flex items-center gap-2">
             {/* Botón: Venta rápida (1 solo artículo) */}
             <button
               type="button"
@@ -144,7 +146,10 @@ export default function ProductCard({
               </svg>
               Al Carrito
             </button>
-          </div>
+          </div> :
+          <p>prueba</p>
+          }
+          
         </div>
       </div>
     </div>
