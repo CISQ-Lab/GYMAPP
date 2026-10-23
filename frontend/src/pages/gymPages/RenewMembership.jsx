@@ -163,12 +163,12 @@ export default function RenewMembership() {
                             </span>
                             {selectedPlan ? (
                                 <>
-                                    <div className="flex justify-between items-center text-sm font-medium text-slate-800">
+                                    <div className="flex justify-between items-center text-sm font-medium mb-2 text-slate-800">
                                         <span>{selectedPlan.name}</span>
                                         <span className="text-emerald-600 font-bold">${selectedPlan.price}</span>
                                     </div>
-                                    <div className="flex justify-between items-center text-sm font-medium text-slate-800">
-                                        <span>Inicio: </span>
+                                    <div className="flex justify-between border-t border-slate-200 items-center text-sm font-medium text-slate-800">
+                                        <span className="mt-3">Inicio: </span>
                                         <span className="font-bold">{dateInit}</span>
                                     </div>
                                     <div className="flex justify-between items-center text-sm font-medium text-slate-800">
