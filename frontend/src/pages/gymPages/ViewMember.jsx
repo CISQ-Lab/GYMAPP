@@ -98,6 +98,8 @@ export default function ViewMember() {
   const navigate = useNavigate();
   const location = useLocation();
   const { gym } = useGym();
+  const [hasError, setHasError] = useState(false);
+  const dateNow = new Date().toISOString().split('T')[0];
 
 
 
@@ -221,7 +223,7 @@ export default function ViewMember() {
       showError("No se pudo editar, devolviendo valores antiguos, " + error.message)
       setMember(oldFormData);
       setFormData(oldFormData);
-    } 
+    }
   };
 
   // Cancel edit mode and revert changes
@@ -312,15 +314,19 @@ export default function ViewMember() {
               {/* Avatar Photo */}
               <div className="relative pt-6 mb-4 flex justify-center">
                 <div className="relative">
-                  <img
-                    src={SERVER_URL + member?.photo_pat}
-                    alt={`${member?.name} ${member?.surname}`}
-                    className="w-28 h-28 rounded-full object-cover border-4 border-white shadow-md bg-slate-100"
-                    onError={(e) => {
-                      e.target.onerror = null;
+                  {!hasError ?
+                    <img
+                      src={SERVER_URL + member?.photo_pat}
+                      alt={`${member?.name} ${member?.surname}`}
+                      className="w-28 h-28 rounded-full object-cover border-4 border-white shadow-md bg-slate-100"
+                      onError={() => setHasError(true)}
+                    /> :
+                    <span className="w-28 h-28 rounded-full object-cover border-4 p-5 border-white shadow-md bg-slate-100">
+                      {member.name.charAt(0)}{member.surname.charAt(0)}
+                    </span>
 
-                    }}
-                  />
+                  }
+
                   {isEditing && (
                     <div className="absolute inset-0 bg-black/40 rounded-full flex items-center justify-center text-white">
                       <Icons.Camera />
@@ -330,7 +336,7 @@ export default function ViewMember() {
               </div>
 
               {/* Basic Info */}
-              <h2 className="text-xl font-bold text-slate-900">
+              <h2 className="text-xl font-bold text-slate-900 mt-7">
                 {member?.name} {member?.surname}
               </h2>
               <p className="text-xs text-slate-500 font-medium mt-1 flex items-center justify-center gap-1">
@@ -340,7 +346,7 @@ export default function ViewMember() {
 
               {/* Status Badges */}
               <div className="mt-4 pt-4 border-t border-slate-100 flex flex-wrap items-center justify-center gap-2">
-                {member?.membership_status === 1 ? (
+                {member?.membership_status === 1 && dateNow < member?.membership_end ? (
                   <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
                     <Icons.CheckCircle />
                     Membresía Activa
@@ -578,7 +584,7 @@ export default function ViewMember() {
                         </div>
                       ) : (
                         <p className="px-3.5 py-2.5 bg-slate-50 rounded-xl text-sm font-medium text-slate-800 border border-slate-100">
-                          {member?.membership_status === 1 ? 'Activa' : 'Inactiva'}
+                          {member?.membership_status === 1 && dateNow < member?.membership_end ? 'Activa' : 'Inactiva'}
                         </p>
                       )}
                     </div>

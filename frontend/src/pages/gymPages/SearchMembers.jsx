@@ -21,6 +21,7 @@ function SearchMembers() {
     const [memberships, setMemberships] = useState([]);
     const [loading, setLoading] = useState(true);
     const [wordSearch, setWordSearch] = useState("");
+    
 
     const stateFilters = [
         { title: "Todos", value: "all" },
@@ -73,7 +74,6 @@ function SearchMembers() {
             }
 
             if (location?.state) {
-                console.log("ENTRE");
                 const value = location?.state;
                 const updatedFilters = {
                     ...filters,

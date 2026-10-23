@@ -21,6 +21,7 @@ import CloseTurn from "../pages/gymPages/CloseTurn";
 import CDProtectedRoutes from "../services/CDProtectedRoutes";
 import NotFound from "../pages/gymPages/NotFound";
 import SearchMembers from "../pages/gymPages/SearchMembers";
+import RenewMembership from "../pages/gymPages/RenewMembership";
 
 function AppRoutes() {
 
@@ -54,6 +55,7 @@ function AppRoutes() {
                         <Route path="/members/addMember" element={<AddNewMember />} />
                         <Route path="/members/editMember" element={<EditPlan />} />
                         <Route path="/plans/editplan" element={<EditPlan />} />
+                        <Route path="/members/renewmembership" element={<RenewMembership />} />
                     </Route>
 
                 </Route>

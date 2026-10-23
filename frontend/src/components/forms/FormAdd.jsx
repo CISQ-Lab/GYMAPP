@@ -1,14 +1,14 @@
 import Button from "../buttons/Button";
 import { useNavigate } from 'react-router-dom';
 
-export default function FormAdd({ children, onSubmit, title, loading }) {
+export default function FormAdd({ children, onSubmit, title, loading, uploadButton = "Subir" }) {
     const navigate = useNavigate();
 
     return (
         <div className="flex items-center justify-center w-full min-h-[calc(100vh-10rem)] p-4">
             <form
                 onSubmit={onSubmit}
-                className="relative w-full max-w-2/3 bg-white border border-primary/20 rounded-2xl shadow-xl shadow-primary/10 overflow-hidden transition-all"
+                className="relative w-full max-w-8/8 bg-white border border-primary/20 rounded-2xl shadow-xl shadow-primary/10 overflow-hidden transition-all"
             >
                 {/* LÍNEA DE ACENTO SUPERIOR CON COLOR PRIMARY */}
                 <div className="h-2 w-full bg-primary" />
@@ -44,7 +44,7 @@ export default function FormAdd({ children, onSubmit, title, loading }) {
                             loading={loading}
                             
                         >
-                            Subir
+                            {uploadButton}
                         </Button>
                     </div>
                 </div>

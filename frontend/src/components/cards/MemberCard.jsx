@@ -1,15 +1,19 @@
 import { SERVER_URL } from '../../config/env';
 import Button from '../buttons/Button';
-import { NavLink } from 'react-router-dom';
+import { useNavigate, NavLink } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { apiFetch } from "../../services/api"
 import showError from "../messages/showError"
 import success from "../messages/success"
 import useGym from "../../hooks/useGym"
+import { useState } from 'react';
 
-function MemberCard({ member }) {
+function MemberCard({ member, type = "normal" }) {
 
     const { gym } = useGym();
+    const [hasError, setHasError] = useState(false);
+    const dateNow = new Date().toISOString().split('T')[0];
+    const navigate = useNavigate();
 
     const checkAssistance = async (memberId) => {
         try {
@@ -34,7 +38,7 @@ function MemberCard({ member }) {
 
     }
 
-    const isMembershipActive = member.membership_status === 1;
+    const isMembershipActive = (member.membership_status === 1 && member.membership_end > dateNow);
     const isUserActive = member.isActive === 1;
 
     return (
@@ -45,14 +49,17 @@ function MemberCard({ member }) {
 
                 {/* Avatar */}
                 <div className="w-12 h-12 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center text-primary font-bold text-base shadow-sm overflow-hidden shrink-0">
-                    {member.photo_pat ? (
+                    {member?.photo_pat && !hasError ? (
                         <img
                             src={`${SERVER_URL}${member.photo_pat.replace(/\\/g, '/')}`}
                             alt={`${member.name}`}
                             className="w-full h-full object-cover"
+                            onError={() => setHasError(true)}
                         />
                     ) : (
                         <span>{member.name.charAt(0)}{member.surname.charAt(0)}</span>
+
+
                     )}
                 </div>
 
@@ -102,24 +109,30 @@ function MemberCard({ member }) {
 
             {/* Acciones */}
 
-            <div className="mt-4 flex gap-2">
-                <motion.div whileHover={{ scale: 1.2 }} whileTap={{ scale: 0.8 }}
-                    className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-medium py-1.5 rounded-xl transition-colors">
-                    <NavLink to="/members/viewmember" state={{ member: member }}
-                    >
+            {type === "normal" && <div className="mt-4 flex gap-2">
+                <NavLink to="/members/viewmember" state={{ member: member }} className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-medium py-1.5 rounded-xl transition-colors">
+                    <motion.div whileHover={{ scale: 1.2 }} whileTap={{ scale: 0.8 }}>
+
                         <Button className="w-full ">
                             Ver
                         </Button>
-                    </NavLink>
-                    <div />
-                </motion.div>
+
+                        <div />
+                    </motion.div>
+                </NavLink>
+
 
 
                 <Button className="flex-1 bg-primary hover:opacity-90 text-white text-xs font-medium py-1.5 rounded-xl transition-colors shadow-sm shadow-primary/20"
-                    onClick={isMembershipActive ? () => { checkAssistance(member.id) } : console.log("HOLA")}>
+                    onClick={isMembershipActive ? () => { checkAssistance(member.id) } :
+                        () => navigate("/members/renewmembership", { state: member })}>
                     {isMembershipActive ? "Marcar asistencia" : "Renovar"}
                 </Button>
             </div>
+
+            }
+
+
 
         </div >
     );
