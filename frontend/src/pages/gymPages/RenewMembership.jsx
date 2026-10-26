@@ -8,11 +8,14 @@ import success from "../../components/messages/success";
 import useGym from "../../hooks/useGym";
 import { apiFetch } from "../../services/api";
 import Button from "../../components/buttons/Button";
+import useCD from "../../hooks/useCD"
+import confirmation from "../../components/messages/confirmation"
 
 export default function RenewMembership() {
     const location = useLocation();
     const navigate = useNavigate();
     const { gym } = useGym();
+    const { cashDrawer, refresh } = useCD();
 
     // Extraer adecuadamente el objeto member de location.state
     const member = location?.state;
@@ -76,41 +79,51 @@ export default function RenewMembership() {
         const selectedId = e.target.value;
         const selectedPlan = plans.find((plan) => String(plan?.id) === String(selectedId));
 
-        
+
         const endDate = CalculateDateEnd(selectedPlan);
         setSelectedPlan(selectedPlan);
         setDateEnd(endDate);
     };
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
 
-        if (!selectedPlan) {
-            showError("Por favor, selecciona un plan para renovar.");
-            return;
-        }
+        confirmation({
+            text: `Recuerda hacer el cobro de $${selectedPlan.price}`, onConfirm: async () => {
+                if (!selectedPlan) {
+                    showError("Por favor, selecciona un plan para renovar.");
+                    return;
+                }
 
-        try {
-            setSubmitting(true);
-            const data = await apiFetch(`/members/${member?.id}/renew`, {
-                method: "POST",
-                body: JSON.stringify({
-                    planId: selectedPlan,
-                    gymId: gym?.id
-                })
-            });
+                try {
+                    setSubmitting(true);
+                    const data = await apiFetch(`/members/renewMembership`, {
+                        method: "POST",
+                        body: JSON.stringify({
+                            membershipId: selectedPlan.id,
+                            memberId: member?.id,
+                            gymId: gym?.id,
+                            CDId: cashDrawer?.id
+                        })
+                    });
 
-            if (data.success) {
-                success(data.message || "Membresía renovada con éxito");
-                navigate("/members"); // Redirigir a la lista de miembros
-            } else {
-                showError(data.message);
-            }
-        } catch (error) {
-            showError(error.message);
-        } finally {
-            setSubmitting(false);
-        }
+                    if (data.success) {
+                        success(data.message || "Membresía renovada con éxito");
+                        refresh();
+                        navigate("/members/viewmember", { state: { member: data.member } }); // Redirigir a la lista de miembros
+                    } else {
+                        showError(data.message);
+                    }
+                } catch (error) {
+                    showError(error.message);
+                } finally {
+                    setSubmitting(false);
+                }
+            }, confirmText: "Renovar"
+        })
+        return;
+
+
     };
 
     // Redirección de seguridad si la vista se abre sin seleccionar un miembro

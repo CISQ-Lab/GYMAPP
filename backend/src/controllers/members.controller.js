@@ -138,3 +138,26 @@ export async function membersToFinish(req, res, next) {
         next(error);
     }
 }
+
+export async function renewMembership(req, res , next){
+    const {membershipId, memberId, gymId, CDId} = req.body;
+    const userId = req.user.id;
+
+    let response = {
+        success: false, 
+        message: "No se pudo renovar la membresia"
+    }
+
+    try {
+        const actualiced = await membersModel.renewMembership(membershipId, memberId, gymId, userId, CDId)
+        if(actualiced.length !== 0){
+            response.success = true;
+            response.message = "Membresia renovada exitosamente!"
+            response.member = actualiced[0]
+        }
+
+        return res.status(200).json(response);
+    } catch (error) {
+        next(error)
+    }
+}

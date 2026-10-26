@@ -12,7 +12,7 @@ import { NavLink } from "react-router-dom";
 function Dashboard() {
     const { gym } = useGym();
     const { user } = useAuth();
-    const { cashDrawer, loading } = useCD();
+    const { cashDrawer, loading, refresh } = useCD();
 
     const [numAssistances, setNumAssistances] = useState(0);
     const [logAssistances, setLogAssistances] = useState([]);

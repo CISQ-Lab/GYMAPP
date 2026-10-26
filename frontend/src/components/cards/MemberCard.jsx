@@ -12,7 +12,7 @@ function MemberCard({ member, type = "normal" }) {
 
     const { gym } = useGym();
     const [hasError, setHasError] = useState(false);
-    const dateNow = new Date().toISOString().split('T')[0];
+    const dateNow = new Date().toLocaleDateString('sv-SE');
     const navigate = useNavigate();
 
     const checkAssistance = async (memberId) => {
@@ -38,7 +38,7 @@ function MemberCard({ member, type = "normal" }) {
 
     }
 
-    const isMembershipActive = (member.membership_status === 1 && member.membership_end > dateNow);
+    const isMembershipActive = (member.membership_status === 1 && member.membership_end >= dateNow);
     const isUserActive = member.isActive === 1;
 
     return (

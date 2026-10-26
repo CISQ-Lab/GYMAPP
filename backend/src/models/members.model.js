@@ -28,7 +28,7 @@ export async function getMembers(gymId, filters) {
             break;
     }
 
-    if(membership){
+    if (membership) {
         query += "AND membership_id = ?";
         params.push(membership);
     }
@@ -67,7 +67,7 @@ export async function getStats(gymId) {
         const [result] = await pool.query(`
             SELECT 
                 SUM(CASE WHEN isActive = 1 THEN 1 ELSE 0 END) AS total,
-                SUM(CASE WHEN DATEDIFF(membership_end, CURRENT_DATE()) < 5 AND membership_end > CURRENT_DATE() THEN 1 ELSE 0 END) AS toFinish,
+                SUM(CASE WHEN DATEDIFF(membership_end, CURRENT_DATE()) < 5 AND membership_end >= CURRENT_DATE() THEN 1 ELSE 0 END) AS toFinish,
                 SUM(CASE WHEN membership_status = 0 OR membership_end < CURDATE() THEN 1 ELSE 0 END) AS finished,
                 SUM(CASE WHEN MONTH(CREATED_AT) = MONTH(CURDATE()) AND YEAR(CREATED_AT) = YEAR(CURDATE()) THEN 1 ELSE 0 END) AS newsAtMonth
             FROM members 
@@ -103,4 +103,46 @@ export async function getNumNewsAtMonthMembers(gymId) {
         AND MONTH(CREATED_AT) = MONTH(CURDATE())
         AND YEAR(CREATED_AT) = YEAR(CURDATE())`, [gymId])
     return result[0].total;
+}
+export async function renewMembership(membershipId, memberId, gymId, userId, CDId) {
+
+    const [membership] = await pool.query("SELECT durationDays, price, name FROM plans WHERE id = ? AND gym_id = ?", [membershipId, gymId])
+    if (!membership.length) throw new Error("El plan seleccionado no existe.");
+    const days = membership[0].durationDays;
+    const price = membership[0].price;
+    const name = membership[0].name;
+
+    const connection = await pool.getConnection();
+
+    try {
+        await connection.beginTransaction();
+
+        await connection.query("SET time_zone = '-06:00'");
+        await connection.query(`UPDATE members SET membership_id = ?, membership_start = CURDATE(),
+            membership_end = DATE_ADD(GREATEST(membership_end, CURDATE()), INTERVAL ? DAY), membership_status = 1 
+            WHERE id = ? AND gym_id = ? AND isActive = 1`, [membershipId, days, memberId, gymId]);
+
+        const [member] = await connection.query("SELECT * FROM members WHERE id = ? AND gym_id = ?", [memberId, gymId])
+        if (!member.length) throw new Error("El socio no existe.");
+        const memberName = member[0].name + ' ' + member[0].surname;
+        const concept = `Renovación de membresia ${name} de ${memberName}`
+
+        await connection.query(`INSERT INTO transactions 
+            (type, amount, concept, CREATED_AT, user_id, gym_id, cash_drawer_id) VALUES
+            ('ingreso', ?, ? , NOW(), ?, ?, ?)`, [price, concept, userId, gymId, CDId])
+
+        await connection.query(`UPDATE cash_drawer SET ending_cash_expected = ending_cash_expected + ? WHERE id = ? AND gym_id = ? and status = 1`,
+            [price, CDId, gymId]
+        )
+
+        await connection.commit();
+        return member;
+    } catch (error) {
+        await connection.rollback();
+        throw (error);
+    }
+    finally {
+        connection.release();
+    }
+
 }

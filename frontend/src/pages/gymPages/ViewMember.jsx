@@ -6,6 +6,7 @@ import { apiFetch } from "../../services/api"
 import showError from "../../components/messages/showError"
 import useGym from "../../hooks/useGym"
 import Success from '../../components/messages/success';
+import { NavLink } from 'react-router-dom';
 
 
 // SVG Icons generated without third-party dependencies
@@ -99,7 +100,7 @@ export default function ViewMember() {
   const location = useLocation();
   const { gym } = useGym();
   const [hasError, setHasError] = useState(false);
-  const dateNow = new Date().toISOString().split('T')[0];
+  const dateNow = new Date().toLocaleDateString('sv-SE'); // 'sv-SE' genera siempre formato YYYY-MM-DD
 
 
 
@@ -145,20 +146,43 @@ export default function ViewMember() {
 
   const addDaysToDate = (startDateStr, days) => {
     if (!startDateStr || !days) return '';
-    const date = new Date(startDateStr);
-    // Ajuste para evitar desfasamientos por zona horaria UTC
     const [year, month, day] = startDateStr.split('-').map(Number);
+
+    // Creamos la fecha local exacta
     const localDate = new Date(year, month - 1, day);
 
+    // Sumamos los días
     localDate.setDate(localDate.getDate() + Number(days));
 
-    // Retorna formato YYYY-MM-DD para el input type="date"
     const yyyy = localDate.getFullYear();
     const mm = String(localDate.getMonth() + 1).padStart(2, '0');
     const dd = String(localDate.getDate()).padStart(2, '0');
 
     return `${yyyy}-${mm}-${dd}`;
   };
+
+  const checkAssistance = async (memberId) => {
+    try {
+      const data = await apiFetch(`/members/checkAssistance/${memberId}`, {
+        method: 'PUT',
+        body: JSON.stringify({
+          gymId: gym?.id
+        })
+      });
+
+      if (data.success) {
+        Success(data.message)
+        return;
+      }
+      else {
+        showError(data.message);
+      }
+
+    } catch (error) {
+      showError(error.message);
+    }
+
+  }
 
 
   // Handle standard input changes
@@ -235,14 +259,22 @@ export default function ViewMember() {
   // Calculate remaining subscription days
   const getDaysRemaining = (endDateStr) => {
     if (!endDateStr) return 0;
-    const end = new Date(endDateStr);
+
+    // 1. Fecha de vencimiento fijada a medianoche local
+    const [year, month, day] = endDateStr.split('-').map(Number);
+    const end = new Date(year, month - 1, day, 0, 0, 0);
+
+    // 2. Fecha actual fijada a medianoche local (00:00:00)
     const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    // 3. Diferencia exacta en días
     const diffTime = end - today;
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
 
-    return diffDays > 0 ? diffDays : 0;
+    // Retorna los días restantes sin descontar horas
+    return diffDays >= 0 ? diffDays : 0;
   };
-
   const daysRemaining = getDaysRemaining(member?.membership_end);
 
   return (
@@ -297,6 +329,27 @@ export default function ViewMember() {
                 </Button>
               </div>
             )}
+
+            {
+              member?.membership_status === 1 && dateNow <= member?.membership_end ?
+
+                <Button
+                  onClick={() => { checkAssistance(member?.id); }}
+                  className="inline-flex items-center gap-2 bg-primary/20 hover:bg-primary text-primary hover:text-white font-medium px-4 py-2.5 rounded-xl shadow-sm 
+                  text-sm transition-colors border border-primary"
+                >
+                  Registrar Asistencia
+                </Button>
+                :
+                <NavLink to="/members/renewMembership" state={member}>
+                  <Button className="inline-flex items-center gap-2 bg-primary/20 hover:bg-primary text-primary hover:text-white font-medium px-4 py-2.5 rounded-xl
+                   shadow-sm text-sm transition-colors border border-primary"
+                  > Renovar Membresia </Button>
+                </NavLink>
+            }
+
+
+
           </div>
         </header>
 
@@ -314,15 +367,15 @@ export default function ViewMember() {
               {/* Avatar Photo */}
               <div className="relative pt-6 mb-4 flex justify-center">
                 <div className="relative">
-                  {!hasError ?
+                  {(!hasError && member) ?
                     <img
                       src={SERVER_URL + member?.photo_pat}
-                      alt={`${member?.name} ${member?.surname}`}
+                      alt={`${member?.name} `}
                       className="w-28 h-28 rounded-full object-cover border-4 border-white shadow-md bg-slate-100"
                       onError={() => setHasError(true)}
                     /> :
                     <span className="w-28 h-28 rounded-full object-cover border-4 p-5 border-white shadow-md bg-slate-100">
-                      {member.name.charAt(0)}{member.surname.charAt(0)}
+                      {member?.name.charAt(0)}{member?.surname.charAt(0)}
                     </span>
 
                   }
@@ -346,7 +399,7 @@ export default function ViewMember() {
 
               {/* Status Badges */}
               <div className="mt-4 pt-4 border-t border-slate-100 flex flex-wrap items-center justify-center gap-2">
-                {member?.membership_status === 1 && dateNow < member?.membership_end ? (
+                {member?.membership_status === 1 && dateNow <= member?.membership_end ? (
                   <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
                     <Icons.CheckCircle />
                     Membresía Activa
@@ -584,7 +637,7 @@ export default function ViewMember() {
                         </div>
                       ) : (
                         <p className="px-3.5 py-2.5 bg-slate-50 rounded-xl text-sm font-medium text-slate-800 border border-slate-100">
-                          {member?.membership_status === 1 && dateNow < member?.membership_end ? 'Activa' : 'Inactiva'}
+                          {member?.membership_status === 1 && dateNow <= member?.membership_end ? 'Activa' : 'Inactiva'}
                         </p>
                       )}
                     </div>

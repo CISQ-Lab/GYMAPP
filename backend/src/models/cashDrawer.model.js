@@ -75,7 +75,7 @@ export async function closeCD(form) {
 
 export async function getTransactionsToday(gymId){
     const [result] = await pool.query(`SELECT type, amount, concept, CREATED_AT FROM transactions 
-        WHERE gym_id = ? AND DATE(CREATED_AT) = CURRENT_DATE() ORDER BY CREATED_AT DESC`, [gymId])
+        WHERE gym_id = ? AND DATE(CREATED_AT) = CURDATE() ORDER BY CREATED_AT DESC`, [gymId])
     return result;
 }
 

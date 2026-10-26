@@ -12,6 +12,7 @@ router.get("/memberstofinish/:gymId", authMiddleware.verifyToken, membersControl
 router.get("/getrecently/:gymId", authMiddleware.verifyToken, membersController.getMembersRecently);
 router.get("/getstats/:gymId", authMiddleware.verifyToken, membersController.getStats)
 router.get("/search/:gymId", authMiddleware.verifyToken, membersController.search)
+router.post("/renewMembership", authMiddleware.verifyToken, membersController.renewMembership)
 
 
 export default router;
