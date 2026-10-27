@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useLocation, useNavigate, NavLink } from "react-router-dom";
+import { useLocation, useNavigate, NavLink, replace } from "react-router-dom";
 import MemberCard from "../../components/cards/MemberCard";
 import FormAdd from "../../components/forms/FormAdd";
 import Select from "../../components/layout/Select";
@@ -110,7 +110,7 @@ export default function RenewMembership() {
                     if (data.success) {
                         success(data.message || "Membresía renovada con éxito");
                         refresh();
-                        navigate("/members/viewmember", { state: { member: data.member } }); // Redirigir a la lista de miembros
+                        navigate("/members/viewmember", { state: { member: data.member, replace: true } }); // Redirigir a la lista de miembros
                     } else {
                         showError(data.message);
                     }

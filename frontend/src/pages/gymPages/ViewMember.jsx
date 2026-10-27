@@ -285,7 +285,7 @@ export default function ViewMember() {
         {/* Top Header */}
         <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
           <div className="flex items-center gap-3">
-            <button className="p-2.5 hover:bg-slate-100 text-slate-500 rounded-xl transition-colors" onClick={() => navigate(-1)}>
+            <button className="p-2.5 hover:bg-slate-100 text-slate-500 rounded-xl transition-colors" onClick={() => navigate("/members")}>
               <Icons.ArrowLeft />
             </button>
             <div>
