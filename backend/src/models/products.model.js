@@ -1,5 +1,23 @@
 import pool from "../database/connection.js"
 
+export async function createNewProduct(name, description, stock, price, sku, gymId, photo_path) {
+    const [result] = await pool.query(
+        `INSERT INTO products (name, description, stock, price, photo_path, sku, isActive, gym_id) 
+         VALUES (?, ?, ?, ?, ?, ?, 1, ?)`,
+        [
+            name?.trim() || null,
+            description?.trim() || null,
+            Number(stock) || 0,
+            Number(price) || 0.00,
+            photo_path?.trim() || null,
+            sku?.trim() || null,
+            gymId
+        ]
+    );
+
+    return result;
+}
+
 export async function getProducts(gymId, filters) {
 
     let query = "SELECT * FROM products WHERE gym_id = ? ";
@@ -18,7 +36,7 @@ export async function getProducts(gymId, filters) {
         }
     }
 
-    if(filters.text){
+    if (filters.text) {
         const searchTerm = `%${filters.text}%`;
 
         query += "AND (name LIKE ? OR sku LIKE ?) ";

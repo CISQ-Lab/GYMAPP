@@ -8,8 +8,8 @@ import { apiFetch } from "../../services/api";
 import showError from "../../components/messages/showError.js"
 import Spinner from "../../components/layout/Spinner.jsx"
 import Select from "../../components/layout/Select.jsx"
-import confirmation from "../../components/messages/confirmation.js";
 import authorize from "../../components/messages/authorize.js"
+import { NavLink } from "react-router-dom";
 
 function Products() {
 
@@ -109,7 +109,9 @@ function Products() {
             <div className="flex justify-between mb-3">
                 <h1>Productos</h1>
                 <div className="space-x-3">
-                    <Button>+ Agregar nuevo producto</Button>
+                    <NavLink to="/products/addnewproduct">
+                        <Button>+ Agregar nuevo producto</Button>
+                    </NavLink>
                     <Button onClick={mode ? () => {
                         authorize({
                             title: "Cambiando al modo de administracion",

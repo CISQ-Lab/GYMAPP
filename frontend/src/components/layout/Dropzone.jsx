@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { useState, useRef } from "react";
 
-export default function DropZone({ name = "Dropzone", setFile }) {
+export default function DropZone({ name = "Dropzone", setFile, title = "Sube una foto del nuevo miembro"}) {
 
     const [preview, setPreview] = useState(null);
     const [isDragging, setIsDragging] = useState(false);
@@ -56,7 +56,7 @@ export default function DropZone({ name = "Dropzone", setFile }) {
         <div className="">
             {/* Dropzone */}
             <div className="flex flex-col gap-2 mb-8">
-                <p className="text-black font-medium">Sube una foto del nuevo miembro</p>
+                <p className="text-black font-medium">{title}</p>
 
                 <div
                     onDragOver={handleDragOver}

@@ -1,3 +1,6 @@
+import { useState } from "react";
+import { SERVER_URL } from "../../config/env";
+
 export default function ProductCard({
   name,
   description,
@@ -15,6 +18,8 @@ export default function ProductCard({
     currency: 'MXN',
   }).format(Number(price) || 0);
 
+  const [imgError, setImgError] = useState(false);
+
   const isOutOfStock = Number(stock) <= 0;
   const isLowStock = Number(stock) > 0 && Number(stock) <= 5;
   const isDisabled = !isActive || isOutOfStock;
@@ -26,13 +31,16 @@ export default function ProductCard({
 
       {/* 1. Cabecera con Imagen / Fallback SVG */}
       <div className="relative h-48 w-full overflow-hidden bg-gray-50 border-b border-gray-100 flex items-center justify-center">
-        {photo_path ? (
+        {(photo_path && !imgError) ? (
           <img
-            src={photo_path}
+            onError={() => setImgError(true)}
+            src={photo_path.startsWith('https') ? photo_path : SERVER_URL + photo_path}
             alt={name}
             className={`h-full w-full object-scale-down transition-transform duration-300 ${
               !isDisabled && 'group-hover:scale-110'
-            }`}
+            }`
+            
+          }
           />
         ) : (
           <div className="flex flex-col items-center justify-center text-gray-400">

@@ -1,7 +1,41 @@
 import * as productsModel from "../models/products.model.js"
+import fs from 'fs'
 
-export async function getProducts(req, res, next){
-    const {gymId} = req.params;
+export async function createNewProduct(req, res, next) {
+
+    const userId = req.user.id;
+    const { gymId, name, description, stock, price, sku } = req.body;
+    const photo_path = req.file?.path;
+    let response = {
+        success: false,
+        message: "No se pudo agregar el producto"
+    }
+
+    try {
+        const data = await productsModel.createNewProduct(name, description, stock, price, sku, gymId, photo_path);
+
+        if (data.affectedRows !== 0) {
+            response.success = true;
+            response.message = "Producto agregado con Exito!"
+        }
+        return res.status(200).json(response);
+    } catch (error) {
+        if (req.file) {
+            fs.unlink(req.file.path, (e) => {
+                if (e) console.error("No se pudo borrar el archivo físicamente:", e);
+                else console.log("Archivo fantasma eliminado correctamente del servidor.");
+            })
+        }
+
+        next(error)
+    }
+
+
+
+}
+
+export async function getProducts(req, res, next) {
+    const { gymId } = req.params;
     const filters = req.query;
 
     const validStatus = ["all", "lowStock", "outOfStock"]
@@ -13,7 +47,7 @@ export async function getProducts(req, res, next){
 
     try {
         const data = await productsModel.getProducts(gymId, filters);
-        if(data.length > 0){
+        if (data.length > 0) {
             response.success = true;
             response.message = "Exito!";
             response.products = data;
@@ -24,8 +58,8 @@ export async function getProducts(req, res, next){
     }
 }
 
-export async function getStats(req, res, next){
-    const {gymId} = req.params;
+export async function getStats(req, res, next) {
+    const { gymId } = req.params;
     let response = {
         success: false,
         message: "No se pudieron calcular las stats"
@@ -33,7 +67,7 @@ export async function getStats(req, res, next){
 
     try {
         const data = await productsModel.getStats(gymId);
-        if(data){
+        if (data) {
             response.success = true;
             response.message = "Exito!";
             response.stats = data;
@@ -44,9 +78,9 @@ export async function getStats(req, res, next){
     }
 }
 
-export async function search(req, res, next){
-    const {gymId} = req.params;
-    const {text} = req.query;
+export async function search(req, res, next) {
+    const { gymId } = req.params;
+    const { text } = req.query;
     let response = {
         success: false,
         message: "No se encontraron coincidencias"
@@ -54,7 +88,7 @@ export async function search(req, res, next){
 
     try {
         const data = await productsModel.search(gymId, text);
-        if(data.length > 0){
+        if (data.length > 0) {
             response.success = true;
             response.message = "Exito!";
             response.products = data;
