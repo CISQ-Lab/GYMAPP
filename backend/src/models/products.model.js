@@ -111,3 +111,42 @@ export async function search(gymId, text) {
 
     return result
 }
+
+export async function sellProduct(productId, gymId, CDId, userId) {
+    const connection = await pool.getConnection();
+
+    try {
+        await connection.beginTransaction();
+
+        await connection.execute(`SET time_zone = '-06:00'`);
+
+        const [product] = await connection.execute(`SELECT stock, price, name FROM products WHERE id = ? AND gym_id = ? FOR UPDATE`, [productId, gymId])
+        if (product.length === 0) {
+            throw new Error('El producto no existe.');
+        }
+        if (product[0].stock <= 0) {
+            throw new Error("No hay stock suficiente");
+        }
+
+        await connection.execute(`UPDATE products SET stock = stock - 1 WHERE id = ? AND gym_id = ?`, [productId, gymId]);
+
+        const concept = `Venta de 1 ${product[0].name}`
+
+        await connection.execute(`INSERT INTO transactions (type, amount, concept, user_id, gym_id, cash_drawer_id, selled) VALUES
+            ('ingreso', ?, ?, ?, ?, ?, 'product')`, [product[0].price, concept, userId, gymId, CDId]);
+
+        await connection.execute(`UPDATE cash_drawer SET ending_cash_expected = ending_cash_expected + ? WHERE id = ? AND gym_id = ?`, [product[0].price, CDId, gymId])
+
+            await connection.commit();
+            return true
+
+    } catch (error) {
+        await connection.rollback();
+        throw error;
+    }
+    finally {
+        connection.release();
+    }
+
+
+}

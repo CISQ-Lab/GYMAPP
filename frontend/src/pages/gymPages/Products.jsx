@@ -10,10 +10,13 @@ import Spinner from "../../components/layout/Spinner.jsx"
 import Select from "../../components/layout/Select.jsx"
 import authorize from "../../components/messages/authorize.js"
 import { NavLink } from "react-router-dom";
+import useCD from "../../hooks/useCD.jsx"
+import Success from "../../components/messages/success.js";
 
 function Products() {
 
     const { gym } = useGym();
+    const { cashDrawer, refresh } = useCD();
     const [loading, setLoading] = useState(true);
     const [products, setProducts] = useState([]);
     const [mode, setMode] = useState(1);
@@ -94,6 +97,36 @@ function Products() {
 
     }
 
+    const onSell = async (productId) => {
+
+        setLoading(true);
+
+        try {
+            const data = await apiFetch(`/products/sellProduct/${productId}`, {
+                method: 'POST',
+                body: JSON.stringify({
+                    gymId: gym?.id,
+                    CDId: cashDrawer?.id
+                })
+            })
+
+            if (data.success) {
+                Success("Vendido!")
+                getProducts(text, filters);
+                getStats();
+                refresh();
+            }
+
+
+        } catch (error) {
+            showError(error.message);
+        }
+        finally{
+            setLoading(false);
+        }
+
+    }
+
     useEffect(() => {
 
         if (!gym?.id) return;
@@ -102,6 +135,8 @@ function Products() {
         getStats();
 
     }, [gym?.id])
+
+
 
 
     return (
@@ -164,7 +199,7 @@ function Products() {
                         products.map((product) => (
                             <ProductCard key={product.id} name={product.name} description={product.description}
                                 price={product.price} photo_path={product.photo_path} sku={product.sku}
-                                isActive={product.isActive} stock={product.stock} mode={mode} />
+                                isActive={product.isActive} stock={product.stock} mode={mode} onQuickBuy={() => onSell(product.id)} />
                         ))
                 }
             </div>

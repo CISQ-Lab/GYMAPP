@@ -98,3 +98,28 @@ export async function search(req, res, next) {
         next(error)
     }
 }
+
+export async function sellProduct(req, res, next) {
+
+    const { productId } = req.params;
+    const { gymId, CDId } = req.body;
+    const userId = req.user.id;
+
+    let response = {
+        success: false,
+        message: "Error al vender el producto"
+    }
+
+    try {
+        const data = await productsModel.sellProduct(productId, gymId, CDId, userId);
+        if (data) {
+            response.success = true;
+            response.message = "Exito!"
+        }
+
+        return res.status(200).json(response);
+    } catch (error) {
+        next(error);
+    }
+
+}

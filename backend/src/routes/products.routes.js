@@ -9,4 +9,5 @@ router.post("/createnewproduct", authMiddleware.verifyToken, uploadProductPhoto.
 router.get("/getProducts/:gymId", authMiddleware.verifyToken, productsController.getProducts)
 router.get("/getStats/:gymId", authMiddleware.verifyToken, productsController.getStats);
 router.get("/search/:gymId", authMiddleware.verifyToken, productsController.search);
+router.post("/sellProduct/:productId", authMiddleware.verifyToken, productsController.sellProduct);
 export default router;

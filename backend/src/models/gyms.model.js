@@ -58,8 +58,8 @@ export async function addNewMember(name, surname, membership_id, phone, email, p
             [name, surname, membership_id, days, phone, email, photo_pat, gymId]
         )
 
-        await connection.query(`INSERT INTO transactions (type, amount, concept, user_id, gym_id, cash_drawer_id, CREATED_AT) VALUES
-            (?, ?, ?, ?, ?, ?, ?)`, ["ingreso", price, "Inscripción y primera mensualidad", userId, gymId, CDId, localTime])
+        await connection.query(`INSERT INTO transactions (type, amount, concept, user_id, gym_id, cash_drawer_id, CREATED_AT, selled) VALUES
+            (?, ?, ?, ?, ?, ?, ?, 'membership')`, ["ingreso", price, "Inscripción y primera mensualidad", userId, gymId, CDId, localTime])
 
         await connection.query(`UPDATE cash_drawer SET ending_cash_expected = ending_cash_expected + ? WHERE id = ?`, [price, CDId]);
 
